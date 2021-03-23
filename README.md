@@ -1,3 +1,3 @@
-# AI-project
+# AIproject
 
-This is for the AI-Project
+This is for the AIProject
