@@ -1,2 +1,5 @@
-public class Status {
+enum Status {
+    Blank,
+    Agent,
+    Box
 }
