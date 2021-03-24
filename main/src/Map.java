@@ -7,7 +7,7 @@ class Map {
 
     public void Map(){}
     // This function adds a new vertex to the graph
-    public void addVertex(Node s)
+    public void addNode(Node s)
     {
         map.put(s, new LinkedList<Edge>());
     }
@@ -20,10 +20,10 @@ class Map {
     {
 
         if (!map.containsKey(node1))
-            addVertex(node1);
+            addNode(node1);
 
         if (!map.containsKey(node2))
-            addVertex(node2);
+            addNode(node2);
         Edge edge = new Edge(node1,node2,weight);
         map.get(node1).add(edge);
         if (bidirectional == true) {
