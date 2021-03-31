@@ -32,12 +32,11 @@ class Map {
     }
 
 
-
     public List<Edge> getAdjacent(Node s) {
         return(map.get(s));
     }
 
-    // Prints the adjancency list of each vertex.
+    // Prints the adjacency list of each vertex.
     @Override
     public String toString()
     {
