@@ -1,4 +1,4 @@
-public class Node {
+public class Node{
     String NodeId;
     boolean isGoal = false;
 
@@ -15,5 +15,10 @@ public class Node {
 
     public boolean isGoal(){
         return isGoal;
+    }
+
+    @Override
+    public String toString(){
+        return "(" + this.NodeId + ")";
     }
 }
