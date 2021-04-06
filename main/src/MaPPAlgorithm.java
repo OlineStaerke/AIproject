@@ -72,12 +72,6 @@ public class MaPPAlgorithm {
                 }
             }
 
-            // repositioning step
-            // An agent can reposition iff: Agent is not on pi. Agent has not moved this iteration.
-            for(Agent agent : agentsInOrder) {
-                    agent.reposition(state.map);
-            }
-
 
             goalIsReached = true;
             for(Agent agent : agentsInOrder)
