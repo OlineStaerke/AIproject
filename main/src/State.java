@@ -3,7 +3,7 @@ import java.util.*;
 public class State {
 
     public Map map;
-    public Agent[] agents;
+    public HashMap<Integer, Agent> agents;
     public ArrayList<Box> boxes;
     public ArrayList<Node> goals;
     public final State parent;
@@ -15,7 +15,7 @@ public class State {
 
     public HashMap<String, Agent> occupiedNodes;
 
-    public State(Agent[] agents, Colour[] agentColours,
+    public State(HashMap<Integer, Agent> agents, Colour[] agentColours,
                  ArrayList<Box> boxes, ArrayList<Node> goals, Map map)
     {
         this.agents = agents;

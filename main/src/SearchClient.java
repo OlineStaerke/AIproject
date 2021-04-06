@@ -54,7 +54,7 @@ public class SearchClient {
         }
 
         Map map = new Map();
-        Agent[] agents = new Agent[10];
+        HashMap<Integer, Agent> agents = new HashMap<>();
         ArrayList<Box> boxes = new ArrayList<>();
         for (int row = 1; row < numRows - 1; ++row) {
             line = levelLines.get(row);
@@ -81,7 +81,7 @@ public class SearchClient {
 
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
-                        agents[c - '0'] = new Agent(node);
+                        agents.put(c - '0', new Agent(node));
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
@@ -113,7 +113,7 @@ public class SearchClient {
 
         // End
         // line is currently "#end"
-        System.out.println(agents[0]);
+        System.out.println(map);
         return new State(agents, agentcolours, boxes, goals, map);
     }
 
