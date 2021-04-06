@@ -5,8 +5,8 @@ public class Plan {
     ArrayList<String> plan;
     HashMap<String, ArrayList<String>> precomputedDistance;
 
-    public void createPlan(Map map, String Source,String Destination) {
-        plan = breathFirstTraversal(map, Source, Destination);
+    public void createPlan(Map map, String Source,String Destination,Set<String> visited) {
+        plan = breathFirstTraversal(map, Source, Destination,visited);
     }
 
     public ArrayList<String> getPlan() {
@@ -14,14 +14,14 @@ public class Plan {
     }
 
 
-    public ArrayList<String> breathFirstTraversal(Map map, String root, String goal) {
+    public ArrayList<String> breathFirstTraversal(Map map, String root, String goal, Set<String> visited) {
         ArrayList<String> route = new ArrayList<>();
 
 
         //if (precomputedDistance.containsKey(root.getNodeId()+goal.getNodeId())) return precomputedDistance.get(root.getNodeId()+goal.getNodeId());
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
 
-        Set<String> visited = new LinkedHashSet<>();
+
         Deque<String> queue = new ArrayDeque<>();
 
 
