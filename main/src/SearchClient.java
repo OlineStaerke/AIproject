@@ -142,12 +142,9 @@ public class SearchClient {
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
         State initialState = SearchClient.parseLevel(serverMessages);
-        System.out.println(initialState);
 
         // TESTING BFS code:
-        Plan plan = new Plan();
-        ArrayList<String> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents.get(0).initialState.NodeId,initialState.agents.get(0).Goal.NodeId);
-        System.out.println("Initialplan:"+initialplan);
+        MaPPAlgorithm.MaPPVanilla(initialState);
 
         // Select search strategy.
         //Frontier frontier;
