@@ -10,7 +10,7 @@ public class MaPPAlgorithm {
         for(Agent agent : state.agents){
             // Finds initial plan with BFS
             // TODO: Make as multi-processed (not multi-threaded!)
-            agent.planPi((Map) state.map);
+            agent.planPi(state.map);
         }
 
         boolean goalIsReached = false;

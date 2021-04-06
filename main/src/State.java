@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class State {
@@ -15,7 +16,7 @@ public class State {
 
     public HashMap<String, Agent> occupiedNodes;
 
-    public State(Agent[] agents, Colour[] agentColours,
+    public State(Agent<Agent> agents, Colour[] agentColours,
                  ArrayList<Box> boxes, ArrayList<Node> goals, Map map)
     {
         this.agents = agents;
@@ -26,7 +27,11 @@ public class State {
         this.jointAction = null;
         this.g = 0;
         occupiedNodes = new HashMap<>();
-        for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
+        System.out.println(this.agents);
+        for(Agent agent : agents){
+
+            occupiedNodes.put(agent.initialState.NodeId, agent);
+        }
         this.map = map;
     }
 

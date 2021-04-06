@@ -136,6 +136,9 @@ public class SearchClient {
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
         State initialState = SearchClient.parseLevel(serverMessages);
         System.out.println(initialState.agents[0]);
+
+        MaPPAlgorithm.MaPPVanilla(initialState);
+
         // Select search strategy.
         //Frontier frontier;
         /*
