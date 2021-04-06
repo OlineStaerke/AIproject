@@ -1,5 +1,5 @@
 public class Node{
-    String NodeId;
+    public String NodeId;
     boolean isGoal = false;
 
     public Node(String id){
@@ -21,4 +21,16 @@ public class Node{
     public String toString(){
         return "(" + this.NodeId + ")";
     }
+
+    @Override
+    public int hashCode() {
+        System.out.println("NODE ID: "+NodeId);
+        System.out.println(Integer.parseInt(NodeId.replaceAll("\\s+","")));
+        return Integer.parseInt(NodeId.replaceAll("\\s+",""));
+    }
+
+
+
+
+
 }

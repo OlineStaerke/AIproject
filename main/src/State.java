@@ -10,6 +10,7 @@ public class State {
     public final Action[] jointAction;
     private final int g;
     public static Colour[] agentColours;
+    public java.util.Map<String, Node> stringToNode;
     //Hashset of string for positions overtaken, each agent would add these positions he finds
     // himself in. This hashset would be public
 

@@ -9,6 +9,7 @@ import java.util.List;
 public class SearchClient {
     public static State parseLevel(BufferedReader serverMessages)
             throws IOException {
+        java.util.Map<String, Node> stringToNode = new HashMap<>();
         // We can assume that the level file is conforming to specification, since the server verifies this.
         // Read domain
         serverMessages.readLine(); // #domain
@@ -63,20 +64,21 @@ public class SearchClient {
                 if (c != '+') {
                     //First add node
                     Node node = new Node(row + " " + col);
-
-                    map.addNode(node);
+                    String node_string = node.NodeId;
+                    stringToNode.put(node_string,node);
+                    map.addNode(node_string);
 
                     //Link nodes between each other
                     if (line.charAt(col + 1) != '+') {
                         // Temporary token to increment the id value for column
                         int tempCol = col + 1;
-                        map.addEdge(node, new Node(row + " " + tempCol), 0, true);
+                        map.addEdge(node_string, (row + " " + tempCol), 0, true);
                     }
                     String nextLine = levelLines.get(row + 1);
                     if (nextLine.charAt(col) != '+') {
                         // Temporary token to increment the id value for row
                         int tempRow = row + 1;
-                        map.addEdge(node, new Node(tempRow + " " + col), 0, true);
+                        map.addEdge(node_string, (tempRow + " " + col), 0, true);
                     }
 
                     //Check if it's an agent
@@ -116,6 +118,8 @@ public class SearchClient {
 
         // End
         // line is currently "#end"
+
+
         return new State(agents, agentcolours, boxes, goals, map);
     }
 
@@ -138,9 +142,12 @@ public class SearchClient {
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
         State initialState = SearchClient.parseLevel(serverMessages);
+        System.out.println(initialState);
 
-
-        MaPPAlgorithm.MaPPVanilla(initialState);
+        // TESTING BFS code:
+        Plan plan = new Plan();
+        ArrayList<String> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents.get(0).initialState.NodeId,initialState.agents.get(0).Goal.NodeId);
+        System.out.println("Initialplan:"+initialplan);
 
         // Select search strategy.
         //Frontier frontier;

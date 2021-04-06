@@ -3,19 +3,19 @@ import java.util.*;
 class Map {
 
     // We use Hashmap to store the edges in the graph
-    private java.util.Map<Node, List<Node>> map = new HashMap<>();
+    public java.util.Map<String, List<String>> map = new HashMap<>();
 
     public void Map(){}
     // This function adds a new vertex to the graph
-    public void addNode(Node s)
+    public void addNode(String s)
     {
-        map.put(s, new LinkedList<Node>());
+        if (!map.containsKey(s)) map.put(s, new LinkedList<String>());
     }
 
     // This function adds the edge
     // between source to destination
-    public void addEdge(Node node1,
-                        Node node2,Integer weight,
+    public void addEdge(String node1,
+                        String node2,Integer weight,
                         boolean bidirectional)
     {
 
@@ -32,7 +32,7 @@ class Map {
     }
 
 
-    public List<Node> getAdjacent(Node s) {
+    public List<String> getAdjacent(String s) {
         return(map.get(s));
     }
 
@@ -42,9 +42,9 @@ class Map {
     {
         StringBuilder builder = new StringBuilder();
 
-        for (Node v : map.keySet()) {
+        for (String v : map.keySet()) {
             builder.append(v.toString() + ": ");
-            for (Node w : map.get(v)) {
+            for (String w : map.get(v)) {
                 builder.append(w.toString() + " ");
             }
             builder.append("\n");
