@@ -5,8 +5,8 @@ public class Plan {
     ArrayList<Node> plan;
     HashMap<String, ArrayList<Node>> precomputedDistance;
 
-    public void createPlan(Node Source,Node Destination) {
-
+    public void createPlan(Map map, Node Source,Node Destination) {
+        plan = breathFirstTraversal(map, Source, Destination);
     }
 
     public ArrayList<Node> getPlan() {

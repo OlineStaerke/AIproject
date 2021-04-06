@@ -19,7 +19,9 @@ public class Agent extends Object {
 
     public void planAltPaths() {}
 
-    public void planPi() {}
+    public void planPi(Map map) {
+        mainPlan.createPlan(map, position, Goal);
+    }
 
     public void ExecuteMove(State state, Node wantedMove) {
         state.occupiedNodes.remove(position.NodeId, this);
