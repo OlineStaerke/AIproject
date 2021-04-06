@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 
 public class Agent extends Object {
     public Plan mainPlan = new Plan();
@@ -28,7 +29,7 @@ public class Agent extends Object {
 
     public void planPi(Map map) {
 
-        mainPlan.createPlan(map, position.NodeId, Goal.NodeId);
+        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,new LinkedHashSet<>());
     }
 
     public void ExecuteMove(State state, Node wantedMove) {
