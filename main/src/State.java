@@ -16,9 +16,10 @@ public class State {
 
     public HashMap<String, Agent> occupiedNodes;
 
-    public State(HashMap<Integer, Agent> agents, Colour[] agentColours,
+    public State(java.util.Map<String, Node> stringToNode, HashMap<Integer, Agent> agents, Colour[] agentColours,
                  HashMap<Integer, Box> boxes, ArrayList<Node> goals, Map map)
     {
+        this.stringToNode = stringToNode;
         this.agents = agents;
         this.agentColours = agentColours;
         this.boxes = boxes;
