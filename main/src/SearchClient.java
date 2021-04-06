@@ -146,7 +146,7 @@ public class SearchClient {
 
         // TESTING BFS code:
         Plan plan = new Plan();
-        ArrayList<String> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents.get(0).initialState.NodeId,initialState.agents.get(0).Goal.NodeId);
+        ArrayList<String> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents.get(0).initialState.NodeId,initialState.agents.get(0).Goal.NodeId,new LinkedHashSet<>());
         System.out.println("Initialplan:"+initialplan);
 
         // Select search strategy.

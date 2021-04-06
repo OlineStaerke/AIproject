@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class MaPPAlgorithm {
-
+/*
 
     public static void MaPPVanilla(State state){
 
@@ -93,5 +93,5 @@ public class MaPPAlgorithm {
 
     }
 
-
+*/
 }
