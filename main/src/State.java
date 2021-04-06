@@ -1,11 +1,10 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class State {
 
     public Map map;
-    public Agent[] agents;
-    public ArrayList<Box> boxes;
+    public HashMap<Integer, Agent> agents;
+    public HashMap<Integer, Box> boxes;
     public ArrayList<Node> goals;
     public final State parent;
     public final Action[] jointAction;
@@ -16,8 +15,8 @@ public class State {
 
     public HashMap<String, Agent> occupiedNodes;
 
-    public State(Agent<Agent> agents, Colour[] agentColours,
-                 ArrayList<Box> boxes, ArrayList<Node> goals, Map map)
+    public State(HashMap<Integer, Agent> agents, Colour[] agentColours,
+                 HashMap<Integer, Box> boxes, ArrayList<Node> goals, Map map)
     {
         this.agents = agents;
         this.agentColours = agentColours;
@@ -27,11 +26,7 @@ public class State {
         this.jointAction = null;
         this.g = 0;
         occupiedNodes = new HashMap<>();
-        System.out.println(this.agents);
-        for(Agent agent : agents){
-
-            occupiedNodes.put(agent.initialState.NodeId, agent);
-        }
+       // for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
         this.map = map;
     }
 

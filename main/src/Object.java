@@ -10,6 +10,10 @@ public class Object implements Comparable<Object> {
     public void setColor(char color) {
         this.color = color;
     }
+    public void setGoal(Node goal) {
+        this.Goal = goal;
+    }
+
 
 
     // Allows comparison and sorting w.r.t priority
