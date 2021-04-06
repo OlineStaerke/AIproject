@@ -116,7 +116,6 @@ public class SearchClient {
 
         // End
         // line is currently "#end"
-        System.out.println(map);
         return new State(agents, agentcolours, boxes, goals, map);
     }
 
@@ -139,12 +138,9 @@ public class SearchClient {
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
         State initialState = SearchClient.parseLevel(serverMessages);
-        System.out.println(initialState);
 
-        // TESTING BFS code:
-        Plan plan = new Plan();
-        ArrayList<Node> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents[0].initialState,initialState.goals.get(0));
-        System.out.println(initialplan);
+
+        MaPPAlgorithm.MaPPVanilla(initialState);
 
         // Select search strategy.
         //Frontier frontier;

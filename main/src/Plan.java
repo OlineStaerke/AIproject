@@ -46,7 +46,6 @@ public class Plan {
             if (!visited.contains(vertex)) {
                 visited.add(vertex);
 
-                System.out.println("vERTEX"+vertex);
                 for (Node v : map.getAdjacent(vertex)) {
                     ArrayList<Node> newroute = new ArrayList<>(route) ;
                     queue.addLast(v);

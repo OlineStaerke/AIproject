@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Agent extends Object {
-    Plan mainPlain = new Plan();
+    public Plan mainPlan = new Plan();
     AlternativePlan altPlans;
     ArrayList<Node> finalPlan;
     Node[] privateZone;
@@ -18,13 +18,14 @@ public class Agent extends Object {
         finalPlan = new ArrayList<>();
         finalPlan.add(node);
         altPlans = new AlternativePlan();
+        position = node;
     }
 
     public void planAltPaths() {}
 
     public void planPi(Map map) {
 
-        //mainPlan.createPlan(map, position, Goal);
+        mainPlan.createPlan(map, position, Goal);
     }
 
     public void ExecuteMove(State state, Node wantedMove) {

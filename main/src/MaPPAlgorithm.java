@@ -7,7 +7,7 @@ public class MaPPAlgorithm {
 
     public static void MaPPVanilla(State state){
 
-        for(Agent agent : state.agents){
+        for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
             // TODO: Make as multi-processed (not multi-threaded!)
             agent.planPi(state.map);
@@ -19,12 +19,11 @@ public class MaPPAlgorithm {
         // Each iteration is a processing of 1 step
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
         while(!goalIsReached){
-
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
-            ArrayList<Agent> agentsInOrder = new ArrayList<>(Arrays.asList(state.agents));
-            Collections.sort(agentsInOrder);
+            var agentsInOrder =  state.AgentsInOrder();
 
             for(Agent agent : agentsInOrder){
+                System.out.println(agent.position);
 
                 if (agent.mainPlan.plan.size() > 0) {
 
