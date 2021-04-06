@@ -14,7 +14,9 @@ public class Object implements Comparable<Object> {
         this.Goal = goal;
     }
 
-
+    public void setPriority(int priority){
+        this.priority = priority;
+    }
 
 
 
