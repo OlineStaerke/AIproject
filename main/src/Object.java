@@ -23,4 +23,6 @@ public class Object implements Comparable<Object> {
     public int compareTo(Object o) {
         return Integer.compare(priority, o.priority);
     }
+
+
 }

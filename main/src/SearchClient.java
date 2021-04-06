@@ -129,7 +129,7 @@ public class SearchClient {
 
 
     public static void main(String[] args)
-            throws IOException {
+            throws IOException, InterruptedException {
         // Use stderr to print to the console.
         System.err.println("SearchClient initializing. I am sending this using the error output stream.");
 
@@ -148,6 +148,7 @@ public class SearchClient {
         Plan plan = new Plan();
         ArrayList<String> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents.get(0).initialState.NodeId,initialState.agents.get(0).Goal.NodeId,new LinkedHashSet<>());
         System.out.println("Initialplan:"+initialplan);
+        MaPPAlgorithm.MaPPVanilla(initialState);
 
         // Select search strategy.
         //Frontier frontier;

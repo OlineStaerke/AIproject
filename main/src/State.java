@@ -28,8 +28,20 @@ public class State {
         this.jointAction = null;
         this.g = 0;
         occupiedNodes = new HashMap<>();
-       // for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
+        for(Agent agent : agents.values()) occupiedNodes.put(agent.initialState.NodeId, agent);
         this.map = map;
+    }
+
+    public ArrayList<Agent> AgentsInOrder(){
+        ArrayList<Agent> sortedAgents = new ArrayList<>(agents.values());
+        Collections.sort(sortedAgents);
+        return sortedAgents;
+
+    }
+
+    public void SetBlanked(boolean val){
+        for(Agent agent: agents.values())
+            agent.blanked = val;
     }
 
 }

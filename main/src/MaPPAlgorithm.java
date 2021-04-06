@@ -5,12 +5,12 @@ import java.util.Collections;
 public class MaPPAlgorithm {
 /*
 
-    public static void MaPPVanilla(State state){
+    public static void MaPPVanilla(State state) throws InterruptedException {
 
-        for(Agent agent : state.agents){
+        for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
             // TODO: Make as multi-processed (not multi-threaded!)
-            agent.planPi((Map) state.map);
+            agent.planPi(state.map);
         }
 
         boolean goalIsReached = false;
@@ -19,33 +19,38 @@ public class MaPPAlgorithm {
         // Each iteration is a processing of 1 step
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
         while(!goalIsReached){
-
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
-            ArrayList<Agent> agentsInOrder = new ArrayList<>(Arrays.asList(state.agents));
-            Collections.sort(agentsInOrder);
+            state.SetBlanked(false);
+            var agentsInOrder =  state.AgentsInOrder();
+            Thread.sleep(1000);
 
             for(Agent agent : agentsInOrder){
+                System.out.println(agent.color);
+                System.out.println(agent.position);
 
                 if (agent.mainPlan.plan.size() > 0) {
 
-                    Node wantedMove = agent.mainPlan.plan.get(0);
+                    String wantedMove = agent.mainPlan.plan.get(0);
+                    System.out.println(wantedMove);
 
                     // Agent has in this step been pushed away from mainPlan (pi).
-                    if (!agent.mainPlan.plan.contains(agent.position)) agent.finalPlan.add(agent.position);
+                    if (agent.blanked){
+                        agent.finalPlan.add(agent.position);
+                    }
 
                     // Agent has been moved by bring blank. Maybe it selected correct move of mainplan
-                    else if (wantedMove.equals(agent.position)){
+                    else if (wantedMove.equals(agent.position.NodeId)){
                         agent.finalPlan.add(agent.position);
                         agent.mainPlan.plan.remove(0);
                     }
 
                     // Agent wants to move into an occupied cell
-                    else if (state.occupiedNodes.containsKey(wantedMove.NodeId)) {
+                    else if (state.occupiedNodes.containsKey(wantedMove)) {
                         // Bring Blank and move
-                        var occupyingAgent = state.occupiedNodes.get(wantedMove.NodeId);
+                        var occupyingAgent = state.occupiedNodes.get(wantedMove);
                         if (occupyingAgent.priority > agent.priority) {
                             occupyingAgent.bringBlank();
-                            agent.ExecuteMove(state, wantedMove);
+                            agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                         }
                         // Do nothing, (NoOP)
                         else {
@@ -54,8 +59,8 @@ public class MaPPAlgorithm {
                     }
 
                     // Empty cell
-                    else if (!state.occupiedNodes.containsKey(wantedMove.NodeId)) {
-                        agent.ExecuteMove(state, wantedMove);
+                    else if (!state.occupiedNodes.containsKey(wantedMove)) {
+                        agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                     }
                     else{
                         agent.finalPlan.add(agent.position);
@@ -76,7 +81,7 @@ public class MaPPAlgorithm {
 
             goalIsReached = true;
             for(Agent agent : agentsInOrder)
-                if (!agent.Goal.equals(agent.position)) {
+                if (!agent.Goal.NodeId.equals(agent.position.NodeId)) {
                     goalIsReached = false;
                     break;
                 }
