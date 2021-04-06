@@ -29,8 +29,6 @@ public class Agent extends Object {
     }
 
     public void planAltPaths() {}
-    public void planAltPaths() {
-    }
 
     public void planPi(Map map) {
 
