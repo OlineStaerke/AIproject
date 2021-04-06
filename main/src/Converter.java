@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public final class Converter {
 
@@ -12,11 +13,17 @@ public final class Converter {
         for (int agent = 0; agent < numAgents; agent++){
 
             ArrayList<Node> finalPlan = agents.get(agent).getFinalPlan();
+            Iterator<Node> iter = finalPlan.iterator();
+            iter.next();
+            while (iter.hasNext()){
 
-            for (Node node: finalPlan) {
-
-
+                String node1 = iter.next().getNodeId();
+                String node2 = iter.next().getNodeId();
+                System.err.println(node1);
+                System.err.println(node2);
             }
         }
     }
+
+
 }
