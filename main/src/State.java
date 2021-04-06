@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+import java.util.*;
+import java.util.Map;
 
 public class State {
 
@@ -10,15 +11,23 @@ public class State {
     public final Action[] jointAction;
     private final int g;
     public static Colour[] agentColours;
+    //Hashset of string for positions overtaken, each agent would add these positions he finds
+    // himself in. This hashset would be public
+
+    public HashMap<String, Agent> occupiedNodes;
 
     public State(Agent[] agents, Colour[] agentColours,
                  ArrayList<Box> boxes, ArrayList<Node> goals)
     {
+        this.agents = agents;
         this.agentColours = agentColours;
         this.boxes = boxes;
         this.goals = goals;
         this.parent = null;
         this.jointAction = null;
         this.g = 0;
+        occupiedNodes = new HashMap<>();
+        for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
     }
+
 }

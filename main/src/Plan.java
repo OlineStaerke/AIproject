@@ -1,11 +1,13 @@
-public class Plan {
-    Action[] plan;
+import java.util.ArrayList;
 
-    public void createPlan(Node Source,Node Destination) {
+public class Plan {
+    ArrayList<Node> plan;
+
+    public void createPlan(Node Source, Node Destination) {
 
     }
 
-    public Action[] getPlan() {
+    public ArrayList<Node> getPlan() {
         return this.plan;
     }
 

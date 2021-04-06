@@ -1,4 +1,4 @@
-public class Object {
+public class Object implements Comparable<Object> {
     int priority;
     char color;
     Node position;
@@ -11,4 +11,10 @@ public class Object {
         this.color = color;
     }
 
+
+    // Allows comparison and sorting w.r.t priority
+    @Override
+    public int compareTo(Object o) {
+        return Integer.compare(priority, o.priority);
+    }
 }
