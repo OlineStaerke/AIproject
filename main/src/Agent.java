@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Agent extends Object {
-    Plan mainPlain;
+    Plan mainPlain = new Plan();
     AlternativePlan altPlans;
     ArrayList<Node> finalPlan;
     Node[] privateZone;
@@ -23,7 +23,8 @@ public class Agent extends Object {
     public void planAltPaths() {}
 
     public void planPi(Map map) {
-        mainPlan.createPlan(map, position, Goal);
+
+        //mainPlan.createPlan(map, position, Goal);
     }
 
     public void ExecuteMove(State state, Node wantedMove) {
@@ -31,7 +32,7 @@ public class Agent extends Object {
         position = wantedMove;
         finalPlan.add(wantedMove);
         state.occupiedNodes.put(position.NodeId, this);
-        mainPlan.plan.remove(0);
+        //mainPlan.plan.remove(0);
     }
 
     // Must update the new position of blanked agent
@@ -40,18 +41,18 @@ public class Agent extends Object {
     // Tries to reposition
     // An agent can reposition iff: Agent is not on pi. Agent has not moved this iteration.
     public void reposition(){
-        if(finalPlan.size() >= 2 &&
-            finalPlan.get(finalPlan.size()-1).equals(finalPlan.get(finalPlan.size()-2)) &&
-            !mainPlan.plan.contains(position)){
+       // if(finalPlan.size() >= 2 &&
+            //finalPlan.get(finalPlan.size()-1).equals(finalPlan.get(finalPlan.size()-2)) &&
+            //!mainPlan.plan.contains(position)){
 
             // Idea: use alt paths. Append alternative path in front of mainPlan, s.t. the agent will start executing.
             // Reuse an alt path or create a new one
-            if (!altPlans.altPaths.containsKey(position))
-                planAltPaths();
-            mainPlan.plan.addAll(0, altPlans.altPaths.get(position).plan);
+            //if (!altPlans.altPaths.containsKey(position))
+              //  planAltPaths();
+            //mainPlan.plan.addAll(0, altPlans.altPaths.get(position).plan);
 
         }
     }
 
 
-}
+

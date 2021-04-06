@@ -17,6 +17,8 @@ public class Plan {
     public ArrayList<Node> breathFirstTraversal(Map map, Node root, Node goal) {
         ArrayList<Node> route = new ArrayList<>();
 
+        System.out.println("GOAL"+goal);
+
         //if (precomputedDistance.containsKey(root.getNodeId()+goal.getNodeId())) return precomputedDistance.get(root.getNodeId()+goal.getNodeId());
         Deque<ArrayList<Node>> routes = new ArrayDeque<>();
 

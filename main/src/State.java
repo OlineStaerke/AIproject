@@ -26,7 +26,7 @@ public class State {
         this.jointAction = null;
         this.g = 0;
         occupiedNodes = new HashMap<>();
-        for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
+       // for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
         this.map = map;
     }
 
