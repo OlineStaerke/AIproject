@@ -133,6 +133,12 @@ public class SearchClient {
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
         State initialState = SearchClient.parseLevel(serverMessages);
         System.out.println(initialState);
+
+        // TESTING BFS code:
+        Plan plan = new Plan();
+        ArrayList<Node> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents[0].initialState,initialState.agents[0].Goal);
+        System.out.println(initialplan);
+
         // Select search strategy.
         //Frontier frontier;
         /*

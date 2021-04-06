@@ -3,13 +3,13 @@ import java.util.*;
 class Map {
 
     // We use Hashmap to store the edges in the graph
-    private java.util.Map<Node, List<Edge>> map = new HashMap<>();
+    private java.util.Map<Node, List<Node>> map = new HashMap<>();
 
     public void Map(){}
     // This function adds a new vertex to the graph
     public void addNode(Node s)
     {
-        map.put(s, new LinkedList<Edge>());
+        map.put(s, new LinkedList<Node>());
     }
 
     // This function adds the edge
@@ -24,15 +24,15 @@ class Map {
 
         if (!map.containsKey(node2))
             addNode(node2);
-        Edge edge = new Edge(node1,node2,weight);
-        map.get(node1).add(edge);
+
+        map.get(node1).add(node2);
         if (bidirectional == true) {
-            map.get(node2).add(edge);
+            map.get(node2).add(node1);
         }
     }
 
 
-    public List<Edge> getAdjacent(Node s) {
+    public List<Node> getAdjacent(Node s) {
         return(map.get(s));
     }
 
@@ -44,7 +44,7 @@ class Map {
 
         for (Node v : map.keySet()) {
             builder.append(v.toString() + ": ");
-            for (Edge w : map.get(v)) {
+            for (Node w : map.get(v)) {
                 builder.append(w.toString() + " ");
             }
             builder.append("\n");
