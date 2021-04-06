@@ -4,14 +4,6 @@ import java.util.Collections;
 
 public class MaPPAlgorithm {
 
-    private static void moveAgent(Agent agent, State state, Node wantedMove){
-        state.occupiedNodes.remove(agent.position.NodeId, agent);
-        agent.position = wantedMove;
-        agent.finalPlan.add(wantedMove);
-        state.occupiedNodes.put(agent.position.NodeId, agent);
-        agent.mainPlan.plan.remove(0);
-    }
-
 
     public static void MaPPVanilla(State state){
 
@@ -54,7 +46,6 @@ public class MaPPAlgorithm {
                         if (occupyingAgent.priority > agent.priority) {
                             occupyingAgent.bringBlank();
                             agent.ExecuteMove(state, wantedMove);
-                            agent.mainPlan.plan.remove(0);
                         }
                         // Do nothing, (NoOP)
                         else {
