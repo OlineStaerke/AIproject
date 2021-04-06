@@ -55,7 +55,7 @@ public class SearchClient {
 
         Map map = new Map();
         HashMap<Integer, Agent> agents = new HashMap<>();
-        ArrayList<Box> boxes = new ArrayList<>();
+        HashMap<Integer, Box> boxes = new HashMap<>();
         for (int row = 1; row < numRows - 1; ++row) {
             line = levelLines.get(row);
             for (int col = 1; col < numCols - 1; ++col) {
@@ -85,7 +85,7 @@ public class SearchClient {
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
-                        boxes.add(new Box(node, c));
+                        boxes.put(c - 'A', new Box(node, c));
                     }
                 }
             }
@@ -99,11 +99,14 @@ public class SearchClient {
         while (!line.startsWith("#")) {
             for (int col = 0; col < line.length(); ++col) {
                 char c = line.charAt(col);
-                //Need to look at this
-                if (('0' <= c && c <= '9') || ('A' <= c && c <= 'Z')) {
-                    Node goal = new Node(row + " " + col);
-                    goal.setGoal();
-                    goals.add(goal);
+                // If the goal is just getting the agent to its goal location
+                Node goal = new Node(row + " " + col);
+                if ('0' <= c && c <= '9') {
+                    agents.get(c - '0').setGoal(goal);
+                }
+                // Else, the box gets the goal of getting to its goal location
+                else if ('A' <= c && c <= 'Z'){
+                    boxes.get(c - 'A').setGoal(goal);
                 }
             }
 

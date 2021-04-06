@@ -4,7 +4,7 @@ public class State {
 
     public Map map;
     public HashMap<Integer, Agent> agents;
-    public ArrayList<Box> boxes;
+    public HashMap<Integer, Box> boxes;
     public ArrayList<Node> goals;
     public final State parent;
     public final Action[] jointAction;
@@ -16,7 +16,7 @@ public class State {
     public HashMap<String, Agent> occupiedNodes;
 
     public State(HashMap<Integer, Agent> agents, Colour[] agentColours,
-                 ArrayList<Box> boxes, ArrayList<Node> goals, Map map)
+                 HashMap<Integer, Box> boxes, ArrayList<Node> goals, Map map)
     {
         this.agents = agents;
         this.agentColours = agentColours;
