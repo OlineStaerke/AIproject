@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
 
 public class SearchClient {
     public static State parseLevel(BufferedReader serverMessages)
@@ -55,24 +56,27 @@ public class SearchClient {
         Map map = new Map();
         Agent[] agents = new Agent[10];
         ArrayList<Box> boxes = new ArrayList<>();
-
-        for (int row = 1; row < numRows; ++row) {
+        for (int row = 1; row < numRows - 1; ++row) {
             line = levelLines.get(row);
-            for (int col = 1; col < line.length(); ++col) {
+            for (int col = 1; col < numCols - 1; ++col) {
                 char c = line.charAt(col);
                 if (c != '+') {
                     //First add node
                     Node node = new Node(row + " " + col);
-                    map.addNode(node);
 
+                    map.addNode(node);
 
                     //Link nodes between each other
                     if (line.charAt(col + 1) != '+') {
-                        map.addEdge(node, new Node(row + " " + col + 1), 0, true);
+                        // Temporary token to increment the id value for column
+                        int tempCol = col + 1;
+                        map.addEdge(node, new Node(row + " " + tempCol), 0, true);
                     }
                     String nextLine = levelLines.get(row + 1);
                     if (nextLine.charAt(col) != '+') {
-                        map.addEdge(node, new Node(row + 1 + " " + col), 0, true);
+                        // Temporary token to increment the id value for row
+                        int tempRow = row + 1;
+                        map.addEdge(node, new Node(tempRow + " " + col), 0, true);
                     }
 
                     //Check if it's an agent
@@ -109,8 +113,8 @@ public class SearchClient {
 
         // End
         // line is currently "#end"
-        System.out.println(map);
-        return new State(map, agents, agentcolours, boxes, goals);
+        System.out.println(agents[0]);
+        return new State(agents, agentcolours, boxes, goals, map);
     }
 
     public void search() {
@@ -136,8 +140,7 @@ public class SearchClient {
 
         // TESTING BFS code:
         Plan plan = new Plan();
-        System.out.println(initialState.goals);
-        ArrayList<Node> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents[0].initialState, initialState.goals.get(0));
+        ArrayList<Node> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents[0].initialState,initialState.agents[0].Goal);
         System.out.println(initialplan);
 
         // Select search strategy.

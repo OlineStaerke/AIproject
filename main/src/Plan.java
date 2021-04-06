@@ -1,14 +1,15 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Plan {
-    Action[] plan;
+    ArrayList<Node> plan;
     HashMap<String, ArrayList<Node>> precomputedDistance;
 
-    public void createPlan(Node Source,Node Destination) {
-
+    public void createPlan(Map map, Node Source,Node Destination) {
+        plan = breathFirstTraversal(map, Source, Destination);
     }
 
-    public Action[] getPlan() {
+    public ArrayList<Node> getPlan() {
         return this.plan;
     }
 
