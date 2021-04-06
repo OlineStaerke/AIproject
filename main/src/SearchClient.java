@@ -1,10 +1,8 @@
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.List;
 
 public class SearchClient {
     public static State parseLevel(BufferedReader serverMessages)
@@ -55,6 +53,8 @@ public class SearchClient {
         }
 
         Map map = new Map();
+        // Iteration value for priority will increase for each loop
+        int priority = 0;
         HashMap<Integer, Agent> agents = new HashMap<>();
         HashMap<Integer, Box> boxes = new HashMap<>();
         for (int row = 1; row < numRows - 1; ++row) {
@@ -83,7 +83,10 @@ public class SearchClient {
 
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
-                        agents.put(c - '0', new Agent(node));
+                        Agent agent = new Agent(node);
+                        agent.setPriority(priority);
+                        agents.put(c - '0', agent);
+                        priority++;
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
@@ -111,7 +114,6 @@ public class SearchClient {
                     boxes.get(c - 'A').setGoal(goal);
                 }
             }
-
             ++row;
             line = serverMessages.readLine();
         }

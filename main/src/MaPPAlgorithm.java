@@ -49,7 +49,7 @@ public class MaPPAlgorithm {
                         // Bring Blank and move
                         var occupyingAgent = state.occupiedNodes.get(wantedMove);
                         if (occupyingAgent.priority > agent.priority) {
-                            occupyingAgent.bringBlank();
+                            occupyingAgent.bringBlank(state.map);
                             agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                         }
                         // Do nothing, (NoOP)

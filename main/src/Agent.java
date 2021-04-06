@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 
 public class Agent extends Object {
     public Plan mainPlan = new Plan();
-    AlternativePlan altPlans;
     ArrayList<Node> finalPlan;
     Node[] privateZone;
     Node initialState;
@@ -20,12 +19,14 @@ public class Agent extends Object {
         // The finalPlan (output plan) of an agent must always contain the initial node)
         finalPlan = new ArrayList<>();
         finalPlan.add(node);
-        altPlans = new AlternativePlan();
         position = node;
     }
 
-    public void planAltPaths() {
+    public ArrayList<Node> getFinalPlan(){
+        return this.finalPlan;
     }
+
+    public void planAltPaths() {}
 
     public void planPi(Map map) {
 
@@ -41,18 +42,12 @@ public class Agent extends Object {
     }
 
     // Must update the new position of blanked agent
-    public void bringBlank() {
+    public void bringBlank(Map map) {
+        mainPlan.createAltPaths(position,map);
         blanked = true;
     }
 
-    // Tries to reposition
-    // An agent can reposition iff: Agent is not on pi. Agent has not moved this iteration.
-    public void reposition(Map map) {
-        if (finalPlan.size() >= 2 && blanked &&  !mainPlan.plan.contains(position.NodeId)) {
-            mainPlan.plan = altPlans.createAltPaths(position, mainPlan, map);
 
-        }
-    }
 }
 
 
