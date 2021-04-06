@@ -120,7 +120,7 @@ public class SearchClient {
         // line is currently "#end"
 
 
-        return new State(agents, agentcolours, boxes, goals, map);
+        return new State(stringToNode,agents, agentcolours, boxes, goals, map);
     }
 
     public void search() {
