@@ -86,6 +86,7 @@ public class SearchClient {
                         Agent agent = new Agent(node);
                         agent.setPriority(priority);
                         agents.put(c - '0', agent);
+                        priority++;
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
