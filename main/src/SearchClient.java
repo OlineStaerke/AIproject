@@ -129,7 +129,7 @@ public class SearchClient {
 
 
     public static void main(String[] args)
-            throws IOException {
+            throws IOException, InterruptedException {
         // Use stderr to print to the console.
         System.err.println("SearchClient initializing. I am sending this using the error output stream.");
 

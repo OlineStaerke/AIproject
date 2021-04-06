@@ -39,4 +39,9 @@ public class State {
 
     }
 
+    public void SetBlanked(boolean val){
+        for(Agent agent: agents.values())
+            agent.blanked = val;
+    }
+
 }

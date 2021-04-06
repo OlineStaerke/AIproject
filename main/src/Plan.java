@@ -5,7 +5,7 @@ public class Plan {
     ArrayList<String> plan;
     HashMap<String, ArrayList<String>> precomputedDistance;
 
-    public void createPlan(Map map, String Source,String Destination) {
+    public void createPlan(Map map, String Source, String Destination) {
         plan = breathFirstTraversal(map, Source, Destination);
     }
 
