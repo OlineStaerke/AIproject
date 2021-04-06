@@ -41,7 +41,8 @@ public class Agent extends Object {
     }
 
     // Must update the new position of blanked agent
-    public void bringBlank() {
+    public void bringBlank(Map map) {
+        mainPlan.createAltPaths(position,map);
         blanked = true;
     }
 

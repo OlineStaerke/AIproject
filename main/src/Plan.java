@@ -9,6 +9,20 @@ public class Plan {
         plan = breathFirstTraversal(map, Source, Destination,visited);
     }
 
+
+    public void createAltPaths(Node start, Map map) {
+        String problem_node = plan.remove(0); //Get the string node where conflict arises.
+        String goal_node = plan.get(0); //Choose a new goal node, to go to.
+        Plan altPlans = new Plan(); // Initialize plan
+        Set<String> visited = new LinkedHashSet<>();
+        visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this.
+        altPlans.createPlan(map, start.getNodeId(), goal_node, visited); //Run BFS
+        plan = altPlans.plan; //Return new plan
+        plan.addAll(plan);
+        //Merge plans
+    }
+
+
     public ArrayList<String> getPlan() {
         return this.plan;
     }
