@@ -20,6 +20,10 @@ public class Agent extends Object {
         altPlans = new AlternativePlan();
     }
 
+    public ArrayList<Node> getFinalPlan(){
+        return this.finalPlan;
+    }
+
     public void planAltPaths() {}
 
     public void planPi(Map map) {
