@@ -10,5 +10,9 @@ public class Object {
     public void setColor(char color) {
         this.color = color;
     }
+    public void setGoal(Node goal) {
+        this.Goal = goal;
+    }
+
 
 }

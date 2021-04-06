@@ -109,8 +109,8 @@ public class SearchClient {
 
         // End
         // line is currently "#end"
-
-        return new State(agents, agentcolours, boxes, goals);
+        System.out.println(map);
+        return new State(map, agents, agentcolours, boxes, goals);
     }
 
     public void search() {
@@ -136,7 +136,8 @@ public class SearchClient {
 
         // TESTING BFS code:
         Plan plan = new Plan();
-        ArrayList<Node> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents[0].initialState,initialState.agents[0].Goal);
+        System.out.println(initialState.goals);
+        ArrayList<Node> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents[0].initialState, initialState.goals.get(0));
         System.out.println(initialplan);
 
         // Select search strategy.

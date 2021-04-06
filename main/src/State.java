@@ -11,14 +11,15 @@ public class State {
     private final int g;
     public static Colour[] agentColours;
 
-    public State(Agent[] agents, Colour[] agentColours,
+    public State(Map map,Agent[] agents, Colour[] agentColours,
                  ArrayList<Box> boxes, ArrayList<Node> goals)
-    {
+    {   this.map = map;
         this.agentColours = agentColours;
         this.boxes = boxes;
         this.goals = goals;
         this.parent = null;
         this.jointAction = null;
         this.g = 0;
+        this.agents = agents;
     }
 }

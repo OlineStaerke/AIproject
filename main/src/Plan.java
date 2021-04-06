@@ -16,7 +16,7 @@ public class Plan {
     public ArrayList<Node> breathFirstTraversal(Map map, Node root, Node goal) {
         ArrayList<Node> route = new ArrayList<>();
 
-        if (precomputedDistance.containsKey(root.getNodeId()+goal.getNodeId())) return precomputedDistance.get(root.getNodeId()+goal.getNodeId());
+        //if (precomputedDistance.containsKey(root.getNodeId()+goal.getNodeId())) return precomputedDistance.get(root.getNodeId()+goal.getNodeId());
         Deque<ArrayList<Node>> routes = new ArrayDeque<>();
 
         Set<Node> visited = new LinkedHashSet<>();
@@ -24,6 +24,7 @@ public class Plan {
 
 
         queue.push(root);
+        System.out.println(root);
 
         ArrayList<Node> root_route = new ArrayList<>();
         root_route.add(root);
@@ -41,12 +42,15 @@ public class Plan {
             }
             if (!visited.contains(vertex)) {
                 visited.add(vertex);
+
+                System.out.println("vERTEX"+vertex);
                 for (Node v : map.getAdjacent(vertex)) {
-                    ArrayList<Node> newroute = route;
+                    ArrayList<Node> newroute = new ArrayList<>(route) ;
                     queue.addLast(v);
                     newroute.add(v);
+                    System.out.println(newroute);
                     routes.addLast(newroute);
-                    precomputedDistance.put(root.getNodeId()+v.getNodeId(), route);
+                    //precomputedDistance.put(root.getNodeId()+v.getNodeId(), route);
 
 
 
