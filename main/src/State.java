@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Map;
 
 public class State {
 
@@ -17,7 +16,7 @@ public class State {
     public HashMap<String, Agent> occupiedNodes;
 
     public State(Agent[] agents, Colour[] agentColours,
-                 ArrayList<Box> boxes, ArrayList<Node> goals)
+                 ArrayList<Box> boxes, ArrayList<Node> goals, Map map)
     {
         this.agents = agents;
         this.agentColours = agentColours;
@@ -28,6 +27,7 @@ public class State {
         this.g = 0;
         occupiedNodes = new HashMap<>();
         for(Agent agent : agents) occupiedNodes.put(agent.initialState.NodeId, agent);
+        this.map = map;
     }
 
 }
