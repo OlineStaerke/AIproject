@@ -50,14 +50,9 @@ public class Agent extends Object {
 
     // Tries to reposition
     // An agent can reposition iff: Agent is not on pi. Agent has not moved this iteration.
-    public void reposition() {
-        if (finalPlan.size() >= 2 && !blanked &&  !mainPlan.plan.contains(position.NodeId)) {
-
-            // Idea: use alt paths. Append alternative path in front of mainPlan, s.t. the agent will start executing.
-            // Reuse an alt path or create a new one
-            //if (!altPlans.altPaths.containsKey(position))
-            //    planAltPaths();
-            //mainPlan.plan.addAll(0, altPlans.altPaths.get(position).plan);
+    public void reposition(Map map) {
+        if (finalPlan.size() >= 2 && blanked &&  !mainPlan.plan.contains(position.NodeId)) {
+            mainPlan.plan = altPlans.createAltPaths(position, mainPlan, map);
 
         }
     }
