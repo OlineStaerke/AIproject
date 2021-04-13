@@ -1,6 +1,8 @@
 public class Node{
     public String NodeId;
     boolean isGoal = false;
+    boolean isTunnel = false;
+
 
     public Node(String id){
         this.NodeId = id;

@@ -19,21 +19,27 @@ public class SearchClient {
 
         // Read colours
         serverMessages.readLine(); // #colours
-        Colour[] agentcolours = new Colour[10];
-        Colour[] boxcolours = new Colour[26];
+        HashMap<Character, String> NameToColor = new HashMap<>();
+
+        //Colour[] agentcolours = new Colour[10];
+        //Colour[] boxcolours = new Colour[26];
         String line = serverMessages.readLine();
         while (!line.startsWith("#")) {
             String[] split = line.split(":");
-            //Colour colour = Colour.fromString(split[0].strip());
-            Colour colour = new Colour();
-            colour.setColour(split[0].strip());
+            // Colour colour = Colour.fromString(split[0].strip());
+            // Colour colour = new Colour();
+            // colour.setColour(split[0].strip());
+            String colour = split[0].strip();
+
             String[] entities = split[1].split(",");
             for (String entity : entities) {
                 char c = entity.strip().charAt(0);
                 if ('0' <= c && c <= '9') {
-                    agentcolours[c - '0'] = colour;
+                    NameToColor.put(c, colour);
+                    //agentcolours[c - '0'] = colour;
                 } else if ('A' <= c && c <= 'Z') {
-                    boxcolours[c - 'A'] = colour;
+                    NameToColor.put(c, colour);
+                    //boxcolours[c - 'A'] = colour;
                 }
             }
             line = serverMessages.readLine();
@@ -55,8 +61,8 @@ public class SearchClient {
         Map map = new Map();
         // Iteration value for priority will increase for each loop
         int priority = 0;
-        HashMap<Integer, Agent> agents = new HashMap<>();
-        HashMap<Integer, Box> boxes = new HashMap<>();
+        HashMap<Character, Agent> agents = new HashMap<>();
+        HashMap<Character, Box> boxes = new HashMap<>();
         for (int row = 1; row < numRows - 1; ++row) {
             line = levelLines.get(row);
             for (int col = 1; col < numCols - 1; ++col) {
@@ -83,14 +89,14 @@ public class SearchClient {
 
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
-                        Agent agent = new Agent(node);
+                        Agent agent = new Agent(node, c);
                         agent.setPriority(priority);
-                        agents.put(c - '0', agent);
+                        agents.put((char) (c - '0'), agent);
                         priority++;
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
-                        boxes.put(c - 'A', new Box(node, c));
+                        boxes.put((char) (c - 'A'), new Box(node, c));
                     }
                 }
             }
@@ -107,11 +113,11 @@ public class SearchClient {
                 // If the goal is just getting the agent to its goal location
                 Node goal = new Node(row + " " + col);
                 if ('0' <= c && c <= '9') {
-                    agents.get(c - '0').setGoal(goal);
+                    agents.get((char) (c - '0')).setGoal(goal);
                 }
                 // Else, the box gets the goal of getting to its goal location
                 else if ('A' <= c && c <= 'Z'){
-                    boxes.get(c - 'A').setGoal(goal);
+                    boxes.get((char) (c - 'A')).setGoal(goal);
                 }
             }
             ++row;
@@ -121,8 +127,8 @@ public class SearchClient {
         // End
         // line is currently "#end"
 
-
-        return new State(stringToNode,agents, agentcolours, boxes, goals, map);
+        System.err.println(NameToColor);
+        return new State(stringToNode,agents, NameToColor, boxes, goals, map);
     }
 
     public void search() {
@@ -147,9 +153,6 @@ public class SearchClient {
         System.out.println(initialState);
 
         // TESTING BFS code:
-        Plan plan = new Plan();
-        ArrayList<String> initialplan = plan.breathFirstTraversal(initialState.map,initialState.agents.get(0).initialState.NodeId,initialState.agents.get(0).Goal.NodeId,new LinkedHashSet<>());
-        System.out.println("Initialplan:"+initialplan);
         MaPPAlgorithm.MaPPVanilla(initialState);
 
         // Select search strategy.

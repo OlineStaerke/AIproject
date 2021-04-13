@@ -1,14 +1,16 @@
-public class Object implements Comparable<Object> {
+public abstract class Object implements Comparable<Object> {
     int priority;
-    char color;
+    char ID;
     Node position;
     Node Goal;
+    Plan mainPlan = new Plan();
 
-    public char getColor(){
-        return color;
+
+    public char getID(){
+        return ID;
     }
-    public void setColor(char color) {
-        this.color = color;
+    public void setID(char ID) {
+        this.ID = ID;
     }
     public void setGoal(Node goal) {
         this.Goal = goal;
@@ -17,6 +19,13 @@ public class Object implements Comparable<Object> {
     public void setPriority(int priority){
         this.priority = priority;
     }
+
+
+    abstract void planPi(Map map);
+
+    abstract void bringBlank(Map map);
+
+
 
 
 

@@ -17,8 +17,10 @@ public class Plan {
         Set<String> visited = new LinkedHashSet<>();
         visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this.
         altPlans.createPlan(map, start.getNodeId(), goal_node, visited); //Run BFS
-        plan = altPlans.plan; //Return new plan
-        plan.addAll(plan);
+        altPlans.plan.remove(0);
+        altPlans.plan.addAll(plan); //Return new plan
+        plan = altPlans.plan;
+        System.err.println(plan);
         //Merge plans
     }
 
