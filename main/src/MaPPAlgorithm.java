@@ -24,7 +24,7 @@ public class MaPPAlgorithm {
             var agentsInOrder =  state.AgentsInOrder();
             Thread.sleep(1000);
 
-            for(Agent agent : agentsInOrder){
+            for(Agent agent : agentsInOrder) {
                 System.err.println(agent);
                 //System.err.println(agent.position);
 
@@ -36,69 +36,62 @@ public class MaPPAlgorithm {
 
 
                     // wantedMove = position: Stay.
-                    if (wantedMove.equals(agent.position.NodeId)){
+                    if (wantedMove.equals(agent.position.NodeId)) {
                         agent.finalPlan.add(agent.position);
                         agent.mainPlan.plan.remove(0);
                     }
+
 
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
                         System.out.println("CONFLICT!");
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
+
+                        // Check here if occupied cell is your box
+                        if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))) {
+
+                        }
                         if (occupyingObject.priority > agent.priority) {
                             Set<String> targetSet = new HashSet<>(agent.mainPlan.plan);
                             targetSet.add(wantedMove);
                             targetSet.add(agent.position.getNodeId());
-
-                        // Check here if occupied cell is your box
-                        if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))){
-
-                        }
-
-                        if (occupyingObject.priority >= agent.priority) {
-
-                            occupyingObject.bringBlank(state,state.map,targetSet);
-                            agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
-                            occupyingObject.bringBlank(state, state.map);
+                            occupyingObject.bringBlank(state, state.map, targetSet);
                             occupyingObject.priority = agent.priority;
-                            //agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
-                            }
 
 
+                            // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
+                            agent.finalPlan.add(agent.position);
 
-                        // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
+                        }
+
+                        // Empty cell
+                        else if (!state.occupiedNodes.containsKey(wantedMove)) {
+                            System.err.println("EXECUTE");
+                            agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
+                        } else {
+                            agent.finalPlan.add(agent.position);
+                        }
+
+                    } else {
                         agent.finalPlan.add(agent.position);
 
-                    }
-
-                    // Empty cell
-                    else if (!state.occupiedNodes.containsKey(wantedMove)) {
-                        agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
-                    }
-                    else{
-                        agent.finalPlan.add(agent.position);
-                    }
-
-                }
-                else{
-                    agent.finalPlan.add(agent.position);
-
-                    // Agent is not in goal, proceed with next subgoal
-                    if (!agent.isInGoal()){
-                        for (Box B: agent.boxes){
-                            if (!B.isInGoal()){
-                                agent.mainPlan.createPlan(state.map, agent.position.NodeId,
-                                        B.position.NodeId, new LinkedHashSet<>());
-                                break;
+                        // Agent is not in goal, proceed with next subgoal
+                        if (!agent.isInGoal()) {
+                            for (Box B : agent.boxes) {
+                                if (!B.isInGoal()) {
+                                    agent.mainPlan.createPlan(state.map, agent.position.NodeId,
+                                            B.position.NodeId, new LinkedHashSet<>());
+                                    break;
+                                }
+                            }
+                            // All boxes are in goals, go to finish.
+                            if (agent.mainPlan.plan.size() == 0) {
+                                agent.planPi(state.map);
                             }
                         }
-                        // All boxes are in goals, go to finish.
-                        if (agent.mainPlan.plan.size() == 0){
-                            agent.planPi(state.map);
-                        }
-                    }
 
+                    }
                 }
             }
 
