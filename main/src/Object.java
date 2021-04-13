@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public abstract class Object implements Comparable<Object> {
 
     abstract void planPi(Map map);
 
-    abstract void bringBlank(State state, Map map, Set<String> visited);
+    abstract void bringBlank(State state, Map map, ArrayList<String> visited);
 
 
 

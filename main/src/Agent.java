@@ -59,7 +59,7 @@ public class Agent extends Object {
 
     // Must update the new position of blanked agent
     @Override
-    public void bringBlank(State state, Map map, Set<String> otherAgentPlan) {
+    public void bringBlank(State state, Map map, ArrayList<String> otherAgentPlan) {
 
         if (!state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
             ExecuteMove(state, state.stringToNode.get(mainPlan.plan.get(0)));
