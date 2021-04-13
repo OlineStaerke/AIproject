@@ -1,0 +1,15 @@
+#domain
+hospital
+#levelname
+Test1
+#colors
+blue: 0
+#initial
++++++++++++++
++0          +
++++++++++++++
+#goal
++++++++++++++
++          0+
++++++++++++++
+#end

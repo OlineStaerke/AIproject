@@ -1,8 +1,11 @@
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import java.util.Objects;
+
 public abstract class Object implements Comparable<Object> {
     int priority;
+    int originalPriority;
     char ID;
     Node position;
     Node Goal;
@@ -19,9 +22,7 @@ public abstract class Object implements Comparable<Object> {
         this.Goal = goal;
     }
 
-    public boolean isInGoal(){
-        return Goal.NodeId.equals(position.NodeId);
-    }
+    abstract boolean isInGoal();
 
     public void setPriority(int priority){
         this.priority = priority;

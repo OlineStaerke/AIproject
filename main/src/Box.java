@@ -1,5 +1,6 @@
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Objects;
 
 public class Box extends Object {
 
@@ -17,6 +18,12 @@ public class Box extends Object {
 
         // Signal to the owner agent, that this box should be moved (extend their mainplan)
 
+    }
+
+    @Override
+    boolean isInGoal() {
+        if (Objects.isNull(Goal)) return true;
+        return Goal.NodeId.equals(position.NodeId);
     }
 
     @Override
