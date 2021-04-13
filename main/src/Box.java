@@ -1,4 +1,5 @@
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Box extends Object {
 
@@ -10,7 +11,7 @@ public class Box extends Object {
         this.ID = id;
     }
 
-    public void bringBlank(State state, Map map){
+    public void bringBlank(State state, Map map, Set<String> visited){
         // Things that Box.bringBlank should do:
         // Create a new path (like agent.bringBlank)
 

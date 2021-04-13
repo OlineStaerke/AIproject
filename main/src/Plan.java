@@ -1,4 +1,5 @@
 import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class Plan {
@@ -10,26 +11,29 @@ public class Plan {
     }
 
 
-    public void createAltPaths(State state, Node start, Map map) {
-        String problem_node = plan.remove(0); //Get the string node where conflict arises.
-        Plan altPlans = new Plan(); // Initialize plan
+    public void createAltPaths(State state, Node start, Map map, Set<String> otherAgentPlan) {
         Set<String> visited = new LinkedHashSet<>();
+
+        String problem_node = plan.get(0);
+
+        Plan altPlans = new Plan(); // Initialize plan
         if (!state.stringToNode.get(problem_node).isTunnel) {
             visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
 
         }
-        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited); //Run BFS
-        altPlans.plan.remove(0); //remove current position
+        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS
 
-        ArrayList<String> reverseplan = altPlans.plan;
+        ArrayList<String> reverseplan = new ArrayList<>(altPlans.plan);
         Collections.reverse(reverseplan); //Reverse the new plan away from teh conflict, to add to get back to the current position.
-        reverseplan.remove(0); //Remove the first element to ensure no replicates.
 
         altPlans.plan.addAll(reverseplan); //Add the reverseplan to the new plan.
 
         altPlans.plan.addAll(plan); //Return new plan
         plan = altPlans.plan;
+        plan.remove(0);
+
         System.err.println(plan);
+
         //Merge plans
     }
 
@@ -38,7 +42,7 @@ public class Plan {
         return this.plan;
     }
 
-    public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited) {
+    public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited,Set<String> otherAgentPlan) {
         ArrayList<String> route = new ArrayList<>();
 
 
@@ -47,23 +51,25 @@ public class Plan {
 
 
         Deque<String> queue = new ArrayDeque<>();
-        Deque<Integer> queue_integer = new ArrayDeque<>();
         queue.push(root);
-        queue_integer.push(0); //Ensure that the agent moves at least one step away from the tunnel.
 
         ArrayList<String> root_route = new ArrayList<>();
         root_route.add(root);
         routes.add(root_route);
 
         while (!queue.isEmpty()) {
+
+
             String vertex = queue.pollFirst();
-            Integer i = queue_integer.pollFirst();
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
 
 
-            if (!node.isTunnel && i==1) {
+
+            if (!otherAgentPlan.contains(node.NodeId) && !node.isTunnel) {
+
                 //precomputedDistance.put(root+goal, route);
+
                 return route;
             }
             if (!visited.contains(vertex)) {
@@ -76,20 +82,10 @@ public class Plan {
                     newroute.add(v);
                     routes.addLast(newroute);
 
-                    //Ensure that the agent moves at least 1 step away from the tunnel.
-                    if (!node.isTunnel) {
-                        queue_integer.addLast(1);}
-                    else {
-                        queue_integer.addLast(0);}
-
-                    //precomputedDistance.put(root.getNodeId()+v.getNodeId(), route);
-
-
-
                 }
 
             }
-            i+=1;
+
         }
         return null;
     }

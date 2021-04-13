@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Agent extends Object {
     ArrayList<Node> finalPlan;
@@ -41,8 +42,8 @@ public class Agent extends Object {
 
     // Must update the new position of blanked agent
     @Override
-    public void bringBlank(State state, Map map) {
-        mainPlan.createAltPaths(state, position,map);
+    public void bringBlank(State state, Map map, Set<String> visited) {
+        mainPlan.createAltPaths(state, position,map, visited);
     }
 
 

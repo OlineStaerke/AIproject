@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 public class MaPPAlgorithm {
 
@@ -24,17 +22,17 @@ public class MaPPAlgorithm {
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
             var agentsInOrder =  state.AgentsInOrder();
-            Thread.sleep(1000);
+            Thread.sleep(500);
 
             for(Agent agent : agentsInOrder){
                 System.err.println(agent);
-                System.err.println(agent.position);
+                //System.err.println(agent.position);
 
                 if (agent.mainPlan.plan.size() > 0) {
 
                     String wantedMove = agent.mainPlan.plan.get(0);
-                    System.err.println(wantedMove);
-                    System.err.println(state.occupiedNodes);
+                    //System.err.println(wantedMove);
+                    //System.err.println(state.occupiedNodes);
 
 
                     // ??
@@ -45,11 +43,15 @@ public class MaPPAlgorithm {
 
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
+                        System.out.println("CONFLICT!");
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
                         if (occupyingObject.priority > agent.priority) {
+                            Set<String> targetSet = new HashSet<>(agent.mainPlan.plan);
+                            targetSet.add(wantedMove);
+                            targetSet.add(agent.position.getNodeId());
 
-                            occupyingObject.bringBlank(state,state.map);
+                            occupyingObject.bringBlank(state,state.map,targetSet);
                             agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                             }
 
