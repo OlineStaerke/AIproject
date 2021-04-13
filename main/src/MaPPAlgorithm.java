@@ -65,15 +65,17 @@ public class MaPPAlgorithm {
 
                         }
 
-                        // Empty cell
-                        else if (!state.occupiedNodes.containsKey(wantedMove)) {
-                            System.err.println("EXECUTE");
-                            agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
-                        } else {
-                            agent.finalPlan.add(agent.position);
-                        }
 
+                    }
+                    // Empty cell
+                    else if (!state.occupiedNodes.containsKey(wantedMove)) {
+                        System.err.println("EXECUTE");
+                        agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                     } else {
+                        agent.finalPlan.add(agent.position);
+                    }
+                }
+                    else {
                         agent.finalPlan.add(agent.position);
 
                         // Agent is not in goal, proceed with next subgoal
@@ -93,7 +95,7 @@ public class MaPPAlgorithm {
 
                     }
                 }
-            }
+
 
             // Boxes are automatically checked in agent.isInGoal
             goalIsReached = true;
