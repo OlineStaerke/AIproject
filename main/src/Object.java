@@ -1,5 +1,6 @@
 public abstract class Object implements Comparable<Object> {
     int priority;
+    int originalPriority;
     char ID;
     Node position;
     Node Goal;
