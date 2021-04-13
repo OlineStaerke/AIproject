@@ -50,6 +50,7 @@ public class State {
         for (Agent A: agents.values()){
             for (Box B: boxes.values()){
                 if(NameToColor.get(A.ID).equals(NameToColor.get(B.ID))){
+                    System.err.println(agents);
                     B.owner = agents.get(A.ID);
                     A.boxes.add(boxes.get(B.ID));
                 }
@@ -64,7 +65,6 @@ public class State {
         ArrayList<Agent> sortedAgents = new ArrayList<>(agents.values());
         Collections.sort(sortedAgents);
         return sortedAgents;
-
     }
 
 
