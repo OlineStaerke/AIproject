@@ -16,6 +16,10 @@ public abstract class Object implements Comparable<Object> {
         this.Goal = goal;
     }
 
+    public boolean isInGoal(){
+        return Goal.NodeId.equals(position.NodeId);
+    }
+
     public void setPriority(int priority){
         this.priority = priority;
     }
@@ -33,6 +37,12 @@ public abstract class Object implements Comparable<Object> {
     @Override
     public int compareTo(Object o) {
         return Integer.compare(priority, o.priority);
+    }
+
+    @Override
+    public String toString(){
+        return "ID: " + ID + ", priority: " + priority + ", position: " + position.toString();
+
     }
 
 

@@ -78,11 +78,18 @@ public class MaPPAlgorithm {
 
             goalIsReached = true;
             for(Agent agent : agentsInOrder)
-                if (!agent.Goal.NodeId.equals(agent.position.NodeId)) {
+                if (!agent.isInGoal()) {
                     goalIsReached = false;
                     break;
                 }
+
             // Add similar loop for boxes.
+            for (Box B : state.boxes.values()){
+                if (!B.isInGoal()){
+                    goalIsReached = false;
+                    break;
+                }
+            }
 
 
 

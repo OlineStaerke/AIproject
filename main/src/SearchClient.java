@@ -91,12 +91,12 @@ public class SearchClient {
                     if ('0' <= c && c <= '9') {
                         Agent agent = new Agent(node, c);
                         agent.setPriority(priority);
-                        agents.put((char) (c - '0'), agent);
+                        agents.put(c, agent);
                         priority++;
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
-                        boxes.put((char) (c - 'A'), new Box(node, c));
+                        boxes.put(c, new Box(node, c));
                     }
                 }
             }
@@ -113,11 +113,11 @@ public class SearchClient {
                 // If the goal is just getting the agent to its goal location
                 Node goal = new Node(row + " " + col);
                 if ('0' <= c && c <= '9') {
-                    agents.get((char) (c - '0')).setGoal(goal);
+                    agents.get(c).setGoal(goal);
                 }
                 // Else, the box gets the goal of getting to its goal location
                 else if ('A' <= c && c <= 'Z'){
-                    boxes.get((char) (c - 'A')).setGoal(goal);
+                    boxes.get(c).setGoal(goal);
                 }
             }
             ++row;
