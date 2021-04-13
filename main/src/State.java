@@ -9,10 +9,11 @@ public class State {
     public final State parent;
     public final Action[] jointAction;
     private final int g;
-    public Colour[] agentColours;
     public java.util.Map<String, Node> stringToNode;
     //Hashset of string for positions overtaken, each agent would add these positions he finds
     // himself in. This hashset would be public
+
+    public HashMap<Character, String> NameToColor;
 
     public HashMap<String, Object> occupiedNodes;
 
@@ -31,22 +32,53 @@ public class State {
         for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
 
         this.map = map;
+        this.NameToColor = NameToColor;
         createTunnels();
-        createObjectAssociations(NameToColor);
+        createObjectAssociations();
     }
 
     private void createTunnels(){
         for (String node: map.map.keySet()){
-            if (map.map.get(node).size() <= 2){
-                Node n = stringToNode.get(node);
-                n.isTunnel = true;
+            Node n = stringToNode.get(node);
+            if (map.map.get(n.NodeId).size() == 1) {
+                n.isTunnel = false;
                 stringToNode.replace(node, n);
+                continue;
             }
+            var o = node.split(" ");
+            int i = Integer.parseInt(o[0]);
+            int j = Integer.parseInt(o[1]);
+
+            boolean E = map.map.containsKey((i+1) + " " + j);
+            boolean W = map.map.containsKey((i-1) + " " + j);
+            boolean N = map.map.containsKey(i + " " + (1+j));
+            boolean S = map.map.containsKey(i + " " + (j-1));
+
+            boolean NE = map.map.containsKey((i+1) + " " + (j+1));
+            boolean NW = map.map.containsKey((i-1) + " " + (j+1));
+            boolean SE = map.map.containsKey((i+1) + " " + (j-1));
+            boolean SW = map.map.containsKey((i-1) + " " + (j-1));
+
+            if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+            if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+
+            if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
+            if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
+
+            if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
+            if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
+
+            stringToNode.replace(node, n);
+
+
+
+
+
 
         }
     }
 
-    private void createObjectAssociations(HashMap<Character, String> NameToColor){
+    private void createObjectAssociations(){
         for (Agent A: agents.values()){
             for (Box B: boxes.values()){
                 if(NameToColor.get(A.ID).equals(NameToColor.get(B.ID))){

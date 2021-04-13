@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public abstract class Object implements Comparable<Object> {
     int priority;
     int originalPriority;
@@ -17,9 +19,7 @@ public abstract class Object implements Comparable<Object> {
         this.Goal = goal;
     }
 
-    public boolean isInGoal(){
-        return Goal.NodeId.equals(position.NodeId);
-    }
+    abstract boolean isInGoal();
 
     public void setPriority(int priority){
         this.priority = priority;

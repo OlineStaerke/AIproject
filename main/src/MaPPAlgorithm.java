@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 public class MaPPAlgorithm {
 
@@ -28,16 +26,15 @@ public class MaPPAlgorithm {
 
             for(Agent agent : agentsInOrder){
                 System.err.println(agent);
-                System.err.println(agent.position);
+                if (agent.hasMoved) continue;
 
                 if (agent.mainPlan.plan.size() > 0) {
 
                     String wantedMove = agent.mainPlan.plan.get(0);
                     System.err.println(wantedMove);
-                    System.err.println(state.occupiedNodes);
 
 
-                    // ??
+                    // wantedMove = position: Stay.
                     if (wantedMove.equals(agent.position.NodeId)){
                         agent.finalPlan.add(agent.position);
                         agent.mainPlan.plan.remove(0);
@@ -47,18 +44,24 @@ public class MaPPAlgorithm {
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
-                        if (occupyingObject.priority > agent.priority) {
 
-                            occupyingObject.bringBlank(state,state.map);
-                            agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
+                        // Check here if occupied cell is your box
+                        if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))){
+
+                        }
+
+                        if (occupyingObject.priority >= agent.priority) {
+
+                            occupyingObject.bringBlank(state, state.map);
+                            occupyingObject.priority = agent.priority;
+                            //agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                             }
 
 
 
-                        // Do nothing, (NoOP)
-                        else {
-                            agent.finalPlan.add(agent.position);
-                        }
+                        // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
+                        agent.finalPlan.add(agent.position);
+
                     }
 
                     // Empty cell
@@ -72,24 +75,34 @@ public class MaPPAlgorithm {
                 }
                 else{
                     agent.finalPlan.add(agent.position);
+
+                    // Agent is not in goal, proceed with next subgoal
+                    if (!agent.isInGoal()){
+                        for (Box B: agent.boxes){
+                            if (!B.isInGoal()){
+                                agent.mainPlan.createPlan(state.map, agent.position.NodeId,
+                                        B.position.NodeId, new LinkedHashSet<>());
+                                break;
+                            }
+                        }
+                        // All boxes are in goals, go to finish.
+                        if (agent.mainPlan.plan.size() == 0){
+                            agent.planPi(state.map);
+                        }
+                    }
+
                 }
             }
 
-
+            // Boxes are automatically checked in agent.isInGoal
             goalIsReached = true;
-            for(Agent agent : agentsInOrder)
+            for(Agent agent : agentsInOrder) {
+                agent.hasMoved = false;
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
-                    break;
-                }
-
-            // Add similar loop for boxes.
-            for (Box B : state.boxes.values()){
-                if (!B.isInGoal()){
-                    goalIsReached = false;
-                    break;
                 }
             }
+
 
 
 

@@ -29,7 +29,6 @@ public class Plan {
 
         altPlans.plan.addAll(plan); //Return new plan
         plan = altPlans.plan;
-        System.err.println(plan);
         //Merge plans
     }
 
