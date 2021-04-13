@@ -27,3 +27,7 @@ java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\searchclient_java\l
 
 Simon:
 java -jar server.jar -l C:\Users\Shadow\Desktop\AI\levels\SAD1.lvl -c "java SearchClient"
+
+Oline:
+
+java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/SAD1.lvl -c "java SearchClient"

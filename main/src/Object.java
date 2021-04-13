@@ -28,7 +28,7 @@ public abstract class Object implements Comparable<Object> {
 
     abstract void planPi(Map map);
 
-    abstract void bringBlank(Map map);
+    abstract void bringBlank(State state, Map map);
 
 
 

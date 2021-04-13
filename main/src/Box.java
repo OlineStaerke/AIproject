@@ -10,7 +10,7 @@ public class Box extends Object {
         this.ID = id;
     }
 
-    public void bringBlank(Map map){
+    public void bringBlank(State state, Map map){
         // Things that Box.bringBlank should do:
         // Create a new path (like agent.bringBlank)
 

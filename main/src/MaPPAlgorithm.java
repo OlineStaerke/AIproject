@@ -49,7 +49,7 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
                         if (occupyingObject.priority > agent.priority) {
 
-                            occupyingObject.bringBlank(state.map);
+                            occupyingObject.bringBlank(state,state.map);
                             agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                             }
 
