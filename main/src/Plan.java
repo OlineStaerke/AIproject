@@ -48,8 +48,6 @@ public class Plan {
 
         Deque<String> queue = new ArrayDeque<>();
         Deque<Integer> queue_integer = new ArrayDeque<>();
-
-
         queue.push(root);
         queue_integer.push(0); //Ensure that the agent moves at least one step away from the tunnel.
 
