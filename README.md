@@ -26,7 +26,7 @@ Mathias:
 java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\searchclient_java\levels\test1.lvl -c "java SearchClient"
 
 Simon:
-java -jar server.jar -l C:\Users\Shadow\Desktop\AI\levels\SAD1.lvl -c "java SearchClient"
+java -jar server.jar -l C:\Users\Shadow\Desktop\AIproject\levels\SAD1.lvl -c "java SearchClient"
 
 Oline:
 
