@@ -84,28 +84,28 @@ public class MaPPAlgorithm {
                         agent.finalPlan.add(agent.position);
                     }
                 }
-                    else {
-                        agent.finalPlan.add(agent.position);
+                else {
+                    agent.finalPlan.add(agent.position);
 
 
-                        // Agent is not in goal, proceed with next subgoal
-                        if (!agent.isInGoal()) {
-                            for (Box B : agent.boxes) {
-                                if (!B.isInGoal()) {
-                                    agent.mainPlan.createPlan(state.map, agent.position.NodeId,
-                                            B.position.NodeId, new LinkedHashSet<>());
-                                    break;
-                                }
-                            }
-                            // All boxes are in goals, go to finish.
-                            if (agent.mainPlan.plan.size() == 0) {
-                                agent.planPi(state.map);
+                    // Agent is not in goal, proceed with next subgoal
+                    if (!agent.isInGoal()) {
+                        for (Box B : agent.boxes) {
+                            if (!B.isInGoal()) {
+                                agent.mainPlan.createPlan(state.map, agent.position.NodeId,
+                                        B.position.NodeId, new LinkedHashSet<>());
+                                break;
                             }
                         }
-
-
+                        // All boxes are in goals, go to finish.
+                        if (agent.mainPlan.plan.size() == 0) {
+                            agent.planPi(state.map);
+                        }
                     }
+
+
                 }
+            }
 
 
             // Boxes are automatically checked in agent.isInGoal
