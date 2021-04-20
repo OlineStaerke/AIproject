@@ -25,7 +25,6 @@ public class MaPPAlgorithm {
             Thread.sleep(1000);
 
             for(Agent agent : agentsInOrder) {
-                if (!agent.position.isTunnel) agent.priority = agent.originalPriority;
                 if (agent.hasMoved) continue;
 
 
