@@ -25,8 +25,6 @@ public class MaPPAlgorithm {
             Thread.sleep(300);
 
             for(Agent agent : agentsInOrder) {
-                if (agent.hasMoved) continue;
-
 
                 System.err.println(agent);
                 System.err.println(agent.mainPlan.plan);
@@ -115,7 +113,6 @@ public class MaPPAlgorithm {
 
             goalIsReached = true;
             for(Agent agent : agentsInOrder) {
-                agent.hasMoved = false;
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }

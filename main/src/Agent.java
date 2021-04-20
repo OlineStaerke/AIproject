@@ -7,7 +7,6 @@ import java.util.Objects;
 public class Agent extends Object {
     ArrayList<Node> finalPlan;
     ArrayList<Box> boxes = new ArrayList<>();
-    boolean hasMoved = false;
 
     public Agent(Node node, char ID) {
         // The finalPlan (output plan) of an agent must always contain the initial node)
@@ -59,8 +58,6 @@ public class Agent extends Object {
     public void bringBlank(State state, Map map, ArrayList<String> otherAgentPlan, String problem_node) {
 
         if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
-            ExecuteMove(state, state.stringToNode.get(mainPlan.plan.get(0)));
-            hasMoved = true;
             return;
         }
 
