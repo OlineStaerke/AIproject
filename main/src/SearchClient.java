@@ -150,11 +150,40 @@ public class SearchClient {
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
         State initialState = SearchClient.parseLevel(serverMessages);
-        System.out.println(initialState);
+        //System.out.println(initialState);
 
         // TESTING BFS code:
         MaPPAlgorithm.MaPPVanilla(initialState);
+        Action[][] plan;
+        try {
+            plan = Converter.getConversion(initialState.agents);
+        }
+        catch (OutOfMemoryError ex){
+            System.err.println("Maximum memory usage exceeded.");
+            plan = null;
+        }
+        if (plan == null)
+        {
+            System.err.println("Unable to solve level.");
+            System.exit(0);
+        }
+        else
+        {
+            System.err.format("Found solution of length %,d.\n", plan.length);
 
+            for (Action[] jointAction : plan)
+            {
+                System.out.print(jointAction[0].name);
+                for (int action = 1; action < jointAction.length; ++action)
+                {
+                    System.out.print("|");
+                    System.out.print(jointAction[action].name);
+                }
+                System.out.println();
+                // We must read the server's response to not fill up the stdin buffer and block the server.
+                serverMessages.readLine();
+            }
+        }
         // Select search strategy.
         //Frontier frontier;
         /*

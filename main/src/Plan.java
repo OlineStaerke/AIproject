@@ -11,7 +11,8 @@ public class Plan {
     }
 
 
-    public void createAltPaths(State state, Node start, Map map, Set<String> otherAgentPlan) {
+    public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan) {
+        System.err.println("Find new path");
         Set<String> visited = new LinkedHashSet<>();
 
         String problem_node = plan.get(0);
@@ -42,7 +43,7 @@ public class Plan {
         return this.plan;
     }
 
-    public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited,Set<String> otherAgentPlan) {
+    public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited,ArrayList<String> otherAgentPlan) {
         ArrayList<String> route = new ArrayList<>();
 
 
@@ -64,13 +65,17 @@ public class Plan {
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
 
+            //!otherAgentPlan.contains(node.NodeId) &&
+
+            if (!node.isTunnel) {
+                System.err.println(otherAgentPlan.get(route.size())+" "+node.getNodeId());
+                if (otherAgentPlan.get(route.size())!=node.getNodeId()) {
 
 
-            if (!otherAgentPlan.contains(node.NodeId) && !node.isTunnel) {
+                    //precomputedDistance.put(root+goal, route);
 
-                //precomputedDistance.put(root+goal, route);
-
-                return route;
+                    return route;
+                }
             }
             if (!visited.contains(vertex)) {
                 visited.add(vertex);

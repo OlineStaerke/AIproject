@@ -53,11 +53,9 @@ public class MaPPAlgorithm {
                         if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))) {
 
                         }
-                        if (occupyingObject.priority > agent.priority) {
-                            Set<String> targetSet = new HashSet<>(agent.mainPlan.plan);
-                            targetSet.add(wantedMove);
-                            targetSet.add(agent.position.getNodeId());
-                            occupyingObject.bringBlank(state, state.map, targetSet);
+                        if (occupyingObject.priority >= agent.priority) {
+
+                            occupyingObject.bringBlank(state, state.map, agent.mainPlan.plan);
                             occupyingObject.priority = agent.priority;
 
 
