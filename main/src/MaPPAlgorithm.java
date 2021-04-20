@@ -27,6 +27,7 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
                 System.err.println(agent);
                 //System.err.println(agent.position);
+                if (agent.hasMoved) continue;
 
                 if (agent.mainPlan.plan.size() > 0) {
 
