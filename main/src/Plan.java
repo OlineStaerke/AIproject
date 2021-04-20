@@ -19,23 +19,21 @@ public class Plan {
 
         Plan altPlans = new Plan(); // Initialize plan
         if (!state.stringToNode.get(problem_node).isTunnel) {
+            System.err.println("problemnde:"+problem_node);
+            System.err.println("startnode:"+start);
+
             visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
 
         }
-        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS
-        createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>());
-        //ArrayList<String> reverseplan = new ArrayList<>(altPlans.plan);
-        //Collections.reverse(reverseplan); //Reverse the new plan away from teh conflict, to add to get back to the current position.
 
-        //altPlans.plan.addAll(reverseplan); //Add the reverseplan to the new plan.
-
+        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS, to cerate new alternative plan
+        createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
+        System.err.println("AltPlan"+altPlans.plan);
         altPlans.plan.addAll(plan); //Return new plan
-        plan = altPlans.plan;
-        plan.remove(0);
+        plan = altPlans.plan; //Overwrite old plan
+        plan.remove(0); //Remove first index
+        System.err.println(plan);// .
 
-        System.err.println(plan);
-
-        //Merge plans
     }
 
 
@@ -62,22 +60,27 @@ public class Plan {
 
 
             String vertex = queue.pollFirst();
+
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
 
             //!otherAgentPlan.contains(node.NodeId) &&
 
-            if (!node.isTunnel) {
-                System.err.println(otherAgentPlan.get(route.size())+" "+node.getNodeId());
-                if (otherAgentPlan.get(route.size())!=node.getNodeId()) {
 
 
-                    //precomputedDistance.put(root+goal, route);
-
-                    return route;
-                }
-            }
             if (!visited.contains(vertex)) {
+                if (!node.isTunnel) {
+                    System.err.println(otherAgentPlan.get(route.size())+" "+node.getNodeId());
+                    if (!otherAgentPlan.get(route.size()-1).equals(node.getNodeId())) {
+
+
+                        //precomputedDistance.put(root+goal, route);
+
+                        return route;
+                    }
+                }
+                System.err.println("veretex"+vertex);
+                System.err.println("visited"+visited);
                 visited.add(vertex);
 
                 for (String v : map.getAdjacent(vertex)) {
