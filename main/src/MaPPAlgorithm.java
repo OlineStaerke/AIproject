@@ -31,6 +31,8 @@ public class MaPPAlgorithm {
                 System.err.println(agent);
                 System.err.println(agent.mainPlan.plan);
                 System.err.println("finalplan size:"+agent.finalPlan.size());
+                System.err.println("finalplan:"+agent.finalPlan);
+
 
 
                 if (agent.mainPlan.plan.size() > 0) {
@@ -62,8 +64,8 @@ public class MaPPAlgorithm {
 
                         }
                         if (occupyingObject.priority >= agent.priority) {
-                            System.err.println("Mainplan:"+ agent.mainPlan.plan);
-                            occupyingObject.bringBlank(state, state.map, agent.mainPlan.plan);
+                            //System.err.println("Mainplan:"+ agent.mainPlan.plan);
+                            occupyingObject.bringBlank(state, state.map, agent.mainPlan.plan,agent.position.NodeId);
                             if (occupyingObject.position.isTunnel) {
                                 occupyingObject.priority = agent.priority;
 
