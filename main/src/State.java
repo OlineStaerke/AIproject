@@ -28,8 +28,7 @@ public class State {
         this.jointAction = null;
         this.g = 0;
         occupiedNodes = new HashMap<>();
-        for(Agent agent : agents.values()) occupiedNodes.put(agent.position.NodeId, agent);
-        for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
+        UpdateOccupiedNodes();
 
         this.map = map;
         this.NameToColor = NameToColor;
@@ -101,6 +100,13 @@ public class State {
         ArrayList<Agent> sortedAgents = new ArrayList<>(agents.values());
         Collections.sort(sortedAgents);
         return sortedAgents;
+    }
+
+    public void UpdateOccupiedNodes(){
+        occupiedNodes = new HashMap<>();
+        for(Agent agent : agents.values()) occupiedNodes.put(agent.position.NodeId, agent);
+        for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
+
     }
 
 

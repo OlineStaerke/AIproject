@@ -28,7 +28,6 @@ public class Agent extends Object {
 
 
     public void ExecuteMove(State state, Node wantedMove) {
-        state.occupiedNodes.remove(position.NodeId, this);
         position = wantedMove;
         finalPlan.add(wantedMove);
         state.occupiedNodes.put(position.NodeId, this);

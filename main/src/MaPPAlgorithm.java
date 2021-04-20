@@ -106,6 +106,8 @@ public class MaPPAlgorithm {
 
 
             // Boxes are automatically checked in agent.isInGoal
+            state.UpdateOccupiedNodes();
+
             goalIsReached = true;
             for(Agent agent : agentsInOrder) {
                 agent.hasMoved = false;
