@@ -9,10 +9,6 @@ public class Agent extends Object {
     ArrayList<Box> boxes = new ArrayList<>();
     boolean hasMoved = false;
 
-
-
-    //Hashset of string for positions overtaken, each agent would add these positions he finds
-    // himself in. This hashset would be public
     public Agent(Node node, char ID) {
         // The finalPlan (output plan) of an agent must always contain the initial node)
         finalPlan = new ArrayList<>();
@@ -36,9 +32,6 @@ public class Agent extends Object {
         state.occupiedNodes.put(position.NodeId, this);
         mainPlan.plan.remove(0);
         if (!wantedMove.isTunnel) priority = originalPriority;
-
-
-
     }
 
     @Override
