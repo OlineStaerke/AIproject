@@ -5,27 +5,40 @@ public class MaPPAlgorithm {
 
     public static void MaPPVanilla(State state) throws InterruptedException {
 
-        // TODO: Make as multi-processed (not multi-threaded!)
-        for(Agent agent : state.agents.values()) agent.planPi(state.map);
-        for(Box B : state.boxes.values()) B.planPi(state.map);
+        for(Agent agent : state.agents.values()){
+            // Finds initial plan with BFS
+            // TODO: Make as multi-processed (not multi-threaded!)
+            agent.planPi(state.map);
 
+        }
 
         boolean goalIsReached = false;
 
+        // TODO: Check if node.equals works (it might be pointing towards reference in memory, not actual value@Mathias
         // Each iteration is a processing of 1 step
+        // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
         while(!goalIsReached){
             System.err.println();
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
             var agentsInOrder =  state.AgentsInOrder();
+            Thread.sleep(1000);
 
             for(Agent agent : agentsInOrder) {
-                // See hasMoved assignment from bringBlank
                 if (agent.hasMoved) continue;
+
+
+                System.err.println(agent);
+                System.err.println(agent.mainPlan.plan);
+                System.err.println("finalplan size:"+agent.finalPlan.size());
+
 
                 if (agent.mainPlan.plan.size() > 0) {
 
                     String wantedMove = agent.mainPlan.plan.get(0);
+                    System.err.println(wantedMove);
+                    System.err.println(state.occupiedNodes);
+
 
                     // wantedMove = position: Stay.
                     if (wantedMove.equals(agent.position.NodeId)) {
@@ -36,17 +49,12 @@ public class MaPPAlgorithm {
 
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
-
+                        System.out.println("CONFLICT!");
+                        // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
                         // Check here if occupied cell is your box
                         if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))) {
-                            // Two scenarios:
-                            // 1: The box is blocking the owner agent
-                            // 2: The box should be moved
-
-
-
 
                         }
                         if (occupyingObject.priority >= agent.priority) {
@@ -55,10 +63,12 @@ public class MaPPAlgorithm {
                             if (occupyingObject.position.isTunnel) occupyingObject.priority = agent.priority;
 
 
-                            // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                            agent.finalPlan.add(agent.position);
+
 
                         }
+                        // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
+                        agent.finalPlan.add(agent.position);
+
 
 
                     }
@@ -69,26 +79,26 @@ public class MaPPAlgorithm {
                         agent.finalPlan.add(agent.position);
                     }
                 }
-                else {
-                    agent.finalPlan.add(agent.position);
+                    else {
+                        agent.finalPlan.add(agent.position);
 
-                    // Agent is not in goal, proceed with next subgoal
-                    if (!agent.isInGoal()) {
-                        for (Box B : agent.boxes) {
-                            if (!B.isInGoal()) {
-                                agent.mainPlan.createPlan(state.map, agent.position.NodeId,
-                                        B.position.NodeId, new LinkedHashSet<>());
-                                break;
+                        // Agent is not in goal, proceed with next subgoal
+                        if (!agent.isInGoal()) {
+                            for (Box B : agent.boxes) {
+                                if (!B.isInGoal()) {
+                                    agent.mainPlan.createPlan(state.map, agent.position.NodeId,
+                                            B.position.NodeId, new LinkedHashSet<>());
+                                    break;
+                                }
+                            }
+                            // All boxes are in goals, go to finish.
+                            if (agent.mainPlan.plan.size() == 0) {
+                                agent.planPi(state.map);
                             }
                         }
-                        // All boxes are in goals, go to finish.
-                        if (agent.mainPlan.plan.size() == 0) {
-                            agent.planPi(state.map);
-                        }
-                    }
 
+                    }
                 }
-            }
 
 
             // Boxes are automatically checked in agent.isInGoal

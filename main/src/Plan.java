@@ -12,6 +12,7 @@ public class Plan {
 
 
     public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan, String Destination) {
+        System.err.println("Alternative plan");
         Set<String> visited = new LinkedHashSet<>();
         String problem_node = plan.get(0);
 
@@ -48,13 +49,9 @@ public class Plan {
 
         //Start runnning BFS
         while (!queue.isEmpty()) {
-
-
             String vertex = queue.pollFirst();
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
-
-
 
             if (!visited.contains(vertex)) {
 
@@ -73,11 +70,8 @@ public class Plan {
                     queue.addLast(v);
                     newroute.add(v);
                     routes.addLast(newroute);
-
                 }
-
             }
-
         }
         return null;
     }
@@ -111,7 +105,6 @@ public class Plan {
 
 
                 for (String v : map.getAdjacent(vertex)) {
-
                     ArrayList<String> newroute = new ArrayList<>(route) ;
                     queue.addLast(v);
                     newroute.add(v);
