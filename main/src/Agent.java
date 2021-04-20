@@ -56,7 +56,7 @@ public class Agent extends Object {
 
     // Must update the new position of blanked agent
     @Override
-    public void bringBlank(State state, Map map, ArrayList<String> otherAgentPlan) {
+    public void bringBlank(State state, Map map, ArrayList<String> otherAgentPlan, String problem_node) {
 
         if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
             ExecuteMove(state, state.stringToNode.get(mainPlan.plan.get(0)));
@@ -64,7 +64,7 @@ public class Agent extends Object {
             return;
         }
 
-        mainPlan.createAltPaths(state, position,map,otherAgentPlan, Goal.NodeId);
+        mainPlan.createAltPaths(state, position,map,otherAgentPlan, Goal.NodeId, problem_node);
     }
 
 
