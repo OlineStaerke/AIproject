@@ -19,22 +19,20 @@ public class MaPPAlgorithm {
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
         while(!goalIsReached){
             System.err.println();
-            System.err.println(state.occupiedNodes);
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
             var agentsInOrder =  state.AgentsInOrder();
-            Thread.sleep(1000);
+            //Thread.sleep(1000);
 
             for(Agent agent : agentsInOrder) {
-                System.err.println(agent);
-                System.err.println(agent.mainPlan.plan);
-
-                if (agent.hasMoved) continue;
+                //System.err.println(agent);
+                //System.err.println(agent.position);
 
                 if (agent.mainPlan.plan.size() > 0) {
 
                     String wantedMove = agent.mainPlan.plan.get(0);
                     System.err.println(wantedMove);
+                    System.err.println(state.occupiedNodes);
 
 
                     // wantedMove = position: Stay.
@@ -106,7 +104,14 @@ public class MaPPAlgorithm {
                 }
             }
 
+
+
+
+
         }
+
+
+
 
 
     }
