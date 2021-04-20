@@ -94,6 +94,8 @@ public class State {
     }
 
     public ArrayList<Agent> AgentsInOrder(){
+        for (Agent A: agents.values()) if (!A.position.isTunnel) A.priority = A.originalPriority;
+
         ArrayList<Agent> sortedAgents = new ArrayList<>(agents.values());
         Collections.sort(sortedAgents);
         return sortedAgents;
