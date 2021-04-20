@@ -58,7 +58,7 @@ public class Agent extends Object {
     @Override
     public void bringBlank(State state, Map map, ArrayList<String> otherAgentPlan) {
 
-        if (!state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
+        if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
             ExecuteMove(state, state.stringToNode.get(mainPlan.plan.get(0)));
             hasMoved = true;
             return;

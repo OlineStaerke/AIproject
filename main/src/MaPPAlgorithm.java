@@ -22,7 +22,7 @@ public class MaPPAlgorithm {
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
             var agentsInOrder =  state.AgentsInOrder();
-            Thread.sleep(1000);
+            Thread.sleep(300);
 
             for(Agent agent : agentsInOrder) {
                 if (agent.hasMoved) continue;
@@ -62,9 +62,12 @@ public class MaPPAlgorithm {
 
                         }
                         if (occupyingObject.priority >= agent.priority) {
-
+                            System.err.println("Mainplan:"+ agent.mainPlan.plan);
                             occupyingObject.bringBlank(state, state.map, agent.mainPlan.plan);
-                            if (occupyingObject.position.isTunnel) occupyingObject.priority = agent.priority;
+                            if (occupyingObject.position.isTunnel) {
+                                occupyingObject.priority = agent.priority;
+
+                            }
 
 
                         }
