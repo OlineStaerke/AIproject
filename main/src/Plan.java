@@ -15,13 +15,15 @@ public class Plan {
     public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan, String Destination) {
         System.err.println("Alternative plan");
         Set<String> visited = new LinkedHashSet<>();
-        String problem_node = plan.get(0);
+        //String problem_node = plan.get(0);
+        //System.err.println("Problem Node:"+problem_node);
 
         Plan altPlans = new Plan(); // Initialize plan
-        if (!state.stringToNode.get(problem_node).isTunnel) {
-            visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
+        //if (!state.stringToNode.get(problem_node).isTunnel) {
+            //System.err.println("NOT Tunnel");
+            // visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
 
-        }
+        //}
 
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS, to cerate new alternative plan
         createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
@@ -58,9 +60,16 @@ public class Plan {
 
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
                 if (!node.isTunnel) {
-                    System.err.println(otherAgentPlan.get(route.size())+" "+node.getNodeId());
-                    if (!otherAgentPlan.get(route.size()-1).equals(node.getNodeId())) {
-                        return route;
+
+                    if (otherAgentPlan.size()>=route.size()) {
+                        if (!otherAgentPlan.get(route.size()).equals(node.getNodeId())) {
+                            return route;
+                        }
+                    }
+                    else {
+                        if (!otherAgentPlan.get(otherAgentPlan.size()-1).equals(node.getNodeId())) {
+                            return route;
+                        }
                     }
                 }
                 visited.add(vertex);
