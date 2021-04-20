@@ -35,6 +35,8 @@ public class Agent extends Object {
         finalPlan.add(wantedMove);
         state.occupiedNodes.put(position.NodeId, this);
         mainPlan.plan.remove(0);
+        if (!wantedMove.isTunnel) priority = originalPriority;
+
 
 
     }
