@@ -7,6 +7,7 @@ public class Plan {
     HashMap<String, ArrayList<String>> precomputedDistance;
 
     public void createPlan(Map map, String Source,String Destination,Set<String> visited) {
+        if (Destination == null) return;
         plan = breathFirstTraversal(map, Source, Destination,visited);
     }
 
@@ -78,6 +79,8 @@ public class Plan {
 
 
     public ArrayList<String> breathFirstTraversal(Map map, String root, String goal, Set<String> visited) {
+        if (goal == null) return new ArrayList<>();
+
         ArrayList<String> route = new ArrayList<>();
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
         Deque<String> queue = new ArrayDeque<>();

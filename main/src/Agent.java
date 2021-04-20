@@ -49,6 +49,7 @@ public class Agent extends Object {
 
     @Override
     public void planPi(Map map) {
+        if (Goal == null) return;
         mainPlan.createPlan(map, position.NodeId, Goal.NodeId,new LinkedHashSet<>());
     }
 

@@ -55,6 +55,10 @@ public class MaPPAlgorithm {
 
                         // Check here if occupied cell is your box
                         if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))) {
+                            // Two cases:
+                            // Box should be moved
+                            // Box should not be moved, but is blocking for same color agent
+
 
                         }
                         if (occupyingObject.priority >= agent.priority) {
