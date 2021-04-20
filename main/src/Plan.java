@@ -12,27 +12,20 @@ public class Plan {
 
 
     public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan, String Destination) {
-        System.err.println("Find new path");
         Set<String> visited = new LinkedHashSet<>();
-
         String problem_node = plan.get(0);
 
         Plan altPlans = new Plan(); // Initialize plan
         if (!state.stringToNode.get(problem_node).isTunnel) {
-            System.err.println("problemnde:"+problem_node);
-            System.err.println("startnode:"+start);
-
             visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
 
         }
 
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS, to cerate new alternative plan
         createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
-        System.err.println("AltPlan"+altPlans.plan);
         altPlans.plan.addAll(plan); //Return new plan
         plan = altPlans.plan; //Overwrite old plan
         plan.remove(0); //Remove first index
-        System.err.println(plan);// .
 
     }
 
@@ -43,44 +36,35 @@ public class Plan {
 
     public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited,ArrayList<String> otherAgentPlan) {
         ArrayList<String> route = new ArrayList<>();
-
-
-        //if (precomputedDistance.containsKey(root.getNodeId()+goal.getNodeId())) return precomputedDistance.get(root.getNodeId()+goal.getNodeId());
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
-
-
         Deque<String> queue = new ArrayDeque<>();
         queue.push(root);
 
+        //Adding root to the list of routes to start with
         ArrayList<String> root_route = new ArrayList<>();
         root_route.add(root);
         routes.add(root_route);
 
+
+        //Start runnning BFS
         while (!queue.isEmpty()) {
 
 
             String vertex = queue.pollFirst();
-
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
-
-            //!otherAgentPlan.contains(node.NodeId) &&
 
 
 
             if (!visited.contains(vertex)) {
+
+                //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
                 if (!node.isTunnel) {
                     System.err.println(otherAgentPlan.get(route.size())+" "+node.getNodeId());
                     if (!otherAgentPlan.get(route.size()-1).equals(node.getNodeId())) {
-
-
-                        //precomputedDistance.put(root+goal, route);
-
                         return route;
                     }
                 }
-                System.err.println("veretex"+vertex);
-                System.err.println("visited"+visited);
                 visited.add(vertex);
 
                 for (String v : map.getAdjacent(vertex)) {
@@ -101,31 +85,27 @@ public class Plan {
 
     public ArrayList<String> breathFirstTraversal(Map map, String root, String goal, Set<String> visited) {
         ArrayList<String> route = new ArrayList<>();
-
-
-        //if (precomputedDistance.containsKey(root.getNodeId()+goal.getNodeId())) return precomputedDistance.get(root.getNodeId()+goal.getNodeId());
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
-
-
         Deque<String> queue = new ArrayDeque<>();
-
-
         queue.push(root);
 
+        //Adding root to the list of routes to start with
         ArrayList<String> root_route = new ArrayList<>();
         root_route.add(root);
         routes.add(root_route);
 
 
+        //Start runnning BFS
         while (!queue.isEmpty()) {
             String vertex = queue.pollFirst();
             route = routes.pollFirst();
 
+            //If we are in goal, stop BFS
             if (vertex.equals(goal)) {
-                //precomputedDistance.put(root+goal, route);
-
                 return route;
             }
+
+            //If not in goal, check neighbours not in visited.
             if (!visited.contains(vertex)) {
                 visited.add(vertex);
 
@@ -135,14 +115,9 @@ public class Plan {
                     ArrayList<String> newroute = new ArrayList<>(route) ;
                     queue.addLast(v);
                     newroute.add(v);
-
                     routes.addLast(newroute);
-                    //precomputedDistance.put(root.getNodeId()+v.getNodeId(), route);
-
-
 
                 }
-
             }
         }
         return route;
