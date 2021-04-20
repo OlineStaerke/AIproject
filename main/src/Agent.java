@@ -16,6 +16,8 @@ public class Agent extends Object {
         position = node;
         this.ID = ID;
         Goal = null;
+        setPriority();
+
     }
 
     public ArrayList<Node> getFinalPlan(){

@@ -25,9 +25,9 @@ public abstract class Object implements Comparable<Object> {
 
     abstract boolean isInGoal();
 
-    public void setPriority(int priority){
-        this.priority = priority;
-        this.originalPriority = priority;
+    public void setPriority(){
+        this.priority = ID - '0';
+        this.originalPriority = ID - '0';
     }
 
 

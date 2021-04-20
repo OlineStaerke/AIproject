@@ -90,7 +90,6 @@ public class SearchClient {
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
                         Agent agent = new Agent(node, c);
-                        agent.setPriority(priority);
                         agents.put(c, agent);
                         priority++;
                     }
