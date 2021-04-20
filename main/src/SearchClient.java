@@ -156,6 +156,7 @@ public class SearchClient {
         Action[][] plan;
         try {
             plan = Converter.getConversion(initialState.agents);
+            System.err.println(Arrays.deepToString(plan));
         }
         catch (OutOfMemoryError ex){
             System.err.println("Maximum memory usage exceeded.");
