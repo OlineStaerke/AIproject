@@ -80,6 +80,7 @@ public class MaPPAlgorithm {
                     else {
                         agent.finalPlan.add(agent.position);
 
+
                         // Agent is not in goal, proceed with next subgoal
                         if (!agent.isInGoal()) {
                             for (Box B : agent.boxes) {
@@ -95,6 +96,7 @@ public class MaPPAlgorithm {
                             }
                         }
 
+
                     }
                 }
 
@@ -106,6 +108,7 @@ public class MaPPAlgorithm {
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
+                else agent.priority = 11;
             }
 
 

@@ -71,6 +71,8 @@ public class State {
             stringToNode.replace(node, n);
 
 
+            System.err.println(node);
+            System.err.println(n.isTunnel);
 
 
 
