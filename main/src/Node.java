@@ -26,7 +26,6 @@ public class Node{
 
     @Override
     public int hashCode() {
-        System.out.println("NODE ID: "+NodeId);
         System.out.println(Integer.parseInt(NodeId.replaceAll("\\s+","")));
         return Integer.parseInt(NodeId.replaceAll("\\s+",""));
     }

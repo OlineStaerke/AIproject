@@ -22,11 +22,15 @@ public class MaPPAlgorithm {
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
             var agentsInOrder =  state.AgentsInOrder();
-            //Thread.sleep(1000);
+            Thread.sleep(1000);
 
             for(Agent agent : agentsInOrder) {
-                //System.err.println(agent);
-                //System.err.println(agent.position);
+                if (!agent.position.isTunnel) agent.priority = agent.originalPriority;
+                if (agent.hasMoved) continue;
+
+
+                System.err.println(agent);
+                System.err.println(agent.mainPlan.plan);
 
                 if (agent.mainPlan.plan.size() > 0) {
 
@@ -55,7 +59,7 @@ public class MaPPAlgorithm {
                         if (occupyingObject.priority >= agent.priority) {
 
                             occupyingObject.bringBlank(state, state.map, agent.mainPlan.plan);
-                            occupyingObject.priority = agent.priority;
+                            if (occupyingObject.position.isTunnel) occupyingObject.priority = agent.priority;
 
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
@@ -67,7 +71,6 @@ public class MaPPAlgorithm {
                     }
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
-                        System.err.println("EXECUTE");
                         agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                     } else {
                         agent.finalPlan.add(agent.position);

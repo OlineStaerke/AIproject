@@ -127,7 +127,6 @@ public class SearchClient {
         // End
         // line is currently "#end"
 
-        System.err.println(NameToColor);
         return new State(stringToNode,agents, NameToColor, boxes, goals, map);
     }
 
@@ -154,7 +153,6 @@ public class SearchClient {
 
         // TESTING BFS code:
         MaPPAlgorithm.MaPPVanilla(initialState);
-        System.out.println("HELLOO");
         Action[][] plan;
         try {
             plan = Converter.getConversion(initialState.agents);

@@ -27,6 +27,7 @@ public abstract class Object implements Comparable<Object> {
 
     public void setPriority(int priority){
         this.priority = priority;
+        this.originalPriority = priority;
     }
 
 

@@ -66,7 +66,6 @@ public class Agent extends Object {
         if (!state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
             ExecuteMove(state, state.stringToNode.get(mainPlan.plan.get(0)));
             hasMoved = true;
-
             return;
         }
 
