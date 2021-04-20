@@ -68,7 +68,7 @@ public class Agent extends Object {
             return;
         }
 
-        mainPlan.createAltPaths(state, position,map,otherAgentPlan);
+        mainPlan.createAltPaths(state, position,map,otherAgentPlan, Goal.NodeId);
     }
 
 

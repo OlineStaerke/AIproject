@@ -154,6 +154,7 @@ public class SearchClient {
 
         // TESTING BFS code:
         MaPPAlgorithm.MaPPVanilla(initialState);
+        System.out.println("HELLOO");
         Action[][] plan;
         try {
             plan = Converter.getConversion(initialState.agents);

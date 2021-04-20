@@ -22,10 +22,10 @@ public class MaPPAlgorithm {
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
             var agentsInOrder =  state.AgentsInOrder();
-            Thread.sleep(1000);
+            //Thread.sleep(1000);
 
             for(Agent agent : agentsInOrder) {
-                System.err.println(agent);
+                //System.err.println(agent);
                 //System.err.println(agent.position);
 
                 if (agent.mainPlan.plan.size() > 0) {

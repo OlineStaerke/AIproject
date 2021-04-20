@@ -11,7 +11,7 @@ public class Plan {
     }
 
 
-    public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan) {
+    public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan, String Destination) {
         System.err.println("Find new path");
         Set<String> visited = new LinkedHashSet<>();
 
@@ -23,11 +23,11 @@ public class Plan {
 
         }
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS
+        createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>());
+        //ArrayList<String> reverseplan = new ArrayList<>(altPlans.plan);
+        //Collections.reverse(reverseplan); //Reverse the new plan away from teh conflict, to add to get back to the current position.
 
-        ArrayList<String> reverseplan = new ArrayList<>(altPlans.plan);
-        Collections.reverse(reverseplan); //Reverse the new plan away from teh conflict, to add to get back to the current position.
-
-        altPlans.plan.addAll(reverseplan); //Add the reverseplan to the new plan.
+        //altPlans.plan.addAll(reverseplan); //Add the reverseplan to the new plan.
 
         altPlans.plan.addAll(plan); //Return new plan
         plan = altPlans.plan;
