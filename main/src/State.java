@@ -41,7 +41,7 @@ public class State {
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
             if (map.map.get(n.NodeId).size() == 1) {
-                n.isTunnel = false;
+                n.isTunnel = true;
                 stringToNode.replace(node, n);
                 continue;
             }

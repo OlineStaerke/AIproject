@@ -63,8 +63,6 @@ public class MaPPAlgorithm {
                             if (occupyingObject.position.isTunnel) occupyingObject.priority = agent.priority;
 
 
-
-
                         }
                         // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
                         agent.finalPlan.add(agent.position);
