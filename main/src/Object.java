@@ -25,6 +25,9 @@ public abstract class Object implements Comparable<Object> {
 
     abstract boolean isInGoal();
 
+    abstract boolean passedProblem();
+
+
     public void setPriority(){
         this.priority = ID - '0';
         this.originalPriority = ID - '0';
@@ -33,7 +36,7 @@ public abstract class Object implements Comparable<Object> {
 
     abstract void planPi(Map map);
 
-    abstract void bringBlank(State state, Map map, ArrayList<String> visited, String problem_node);
+    abstract void bringBlank(State state, Map map, Agent otherAgent, String problem_node);
 
 
 

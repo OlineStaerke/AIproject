@@ -1,3 +1,4 @@
+import java.security.cert.CertificateRevokedException;
 import java.util.*;
 
 public class MaPPAlgorithm {
@@ -17,41 +18,50 @@ public class MaPPAlgorithm {
         // TODO: Check if node.equals works (it might be pointing towards reference in memory, not actual value@Mathias
         // Each iteration is a processing of 1 step
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
+        ArrayList<Agent> newAgentsInOrder =  state.AgentsInOrder();
         while(!goalIsReached){
             System.err.println();
 
+
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
-            var agentsInOrder =  state.AgentsInOrder();
-            Thread.sleep(300);
+
+            Thread.sleep(500);
+
+            System.err.println("-----------------------------------");
+            System.err.println(state.occupiedNodes);
+
+            ArrayList<Agent> agentsInOrder = new ArrayList<>(newAgentsInOrder);
+            ArrayList<Agent> checkInOrder = new ArrayList<>(newAgentsInOrder);
+
+
 
             for(Agent agent : agentsInOrder) {
-                if (agent.hasMoved) continue;
-
+                checkInOrder.remove(agent);
 
                 System.err.println(agent);
-                System.err.println(agent.mainPlan.plan);
-                System.err.println("finalplan size:"+agent.finalPlan.size());
-                System.err.println("finalplan:"+agent.finalPlan);
-
+                System.err.println("mainplan:"+ agent.mainPlan.plan);
 
 
                 if (agent.mainPlan.plan.size() > 0) {
 
+
                     String wantedMove = agent.mainPlan.plan.get(0);
-                    System.err.println(wantedMove);
-                    System.err.println(state.occupiedNodes);
+                    System.err.println("wantedmove:" + wantedMove);
 
 
                     // wantedMove = position: Stay.
                     if (wantedMove.equals(agent.position.NodeId)) {
                         agent.finalPlan.add(agent.position);
+                        agent.finalPlanString.add(agent.position.getNodeId());
                         agent.mainPlan.plan.remove(0);
+
+
                     }
 
 
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
-                        System.out.println("CONFLICT!");
+                        System.out.println("CONFLICT! I am agent:"+agent.ID);
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
@@ -63,19 +73,31 @@ public class MaPPAlgorithm {
 
 
                         }
-                        if (occupyingObject.priority >= agent.priority) {
-                            //System.err.println("Mainplan:"+ agent.mainPlan.plan);
-                            occupyingObject.bringBlank(state, state.map, agent.mainPlan.plan,agent.position.NodeId);
-                            if (occupyingObject.position.isTunnel) {
-                                occupyingObject.priority = agent.priority;
+                        System.err.println("CHECK"+checkInOrder);
+                        if (checkInOrder.contains(occupyingObject) || occupyingObject.mainPlan.plan.size()<=0) {
+                            System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
-                            }
+                            occupyingObject.bringBlank(state, state.map, agent,agent.position.NodeId);
+                            newAgentsInOrder.remove(occupyingObject);
+                            newAgentsInOrder.add(0,(Agent) occupyingObject);
+
+                            //((Agent) occupyingObject).conflicts = new ArrayList<>();
+                            ((Agent) occupyingObject).conflicts.add(agent);
+                            agent.problemnode = wantedMove;
+                            //((Agent) occupyingObject).conflicts.addAll(agent.conflicts);
+                            //agent.conflicts = new ArrayList<>();
+                            agent.mainPlan.plan.add(0,agent.position.getNodeId());
+
+
+
 
 
                         }
-                        // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                        agent.finalPlan.add(agent.position);
 
+                        // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
+
+                        agent.finalPlan.add(agent.position);
+                        agent.finalPlanString.add(agent.position.getNodeId());
 
 
                     }
@@ -83,14 +105,19 @@ public class MaPPAlgorithm {
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
                         agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                     } else {
+
                         agent.finalPlan.add(agent.position);
+                        agent.finalPlanString.add(agent.position.getNodeId());
                     }
                 }
                     else {
+                        //agent.setAgentsFree(state);
                         agent.finalPlan.add(agent.position);
+                        agent.finalPlanString.add(agent.position.getNodeId());
 
 
                         // Agent is not in goal, proceed with next subgoal
+                    /***
                         if (!agent.isInGoal()) {
                             for (Box B : agent.boxes) {
                                 if (!B.isInGoal()) {
@@ -104,7 +131,7 @@ public class MaPPAlgorithm {
                                 agent.planPi(state.map);
                             }
                         }
-
+***/
 
                     }
                 }
@@ -115,12 +142,16 @@ public class MaPPAlgorithm {
 
             goalIsReached = true;
             for(Agent agent : agentsInOrder) {
-                agent.hasMoved = false;
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
+                    if (agent.mainPlan.plan.size()==0) agent.setAgentsFree(state);
                 }
                 else agent.priority = 11;
+
+
             }
+
+
 
 
 

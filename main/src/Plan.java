@@ -9,24 +9,44 @@ public class Plan {
     public void createPlan(Map map, String Source,String Destination,Set<String> visited) {
         if (Destination == null) return;
         plan = breathFirstTraversal(map, Source, Destination,visited);
+        //plan.remove(0);
     }
 
 
-    public void createAltPaths(State state, Node start, Map map, ArrayList<String> otherAgentPlan, String Destination, String problem_node) {
-        System.err.println("Alternative plan");
+    public void createAltPaths(State state, Node start, Map map, Agent otherAgent, String Destination, String problem_node) {
+        System.err.println("### NOW COMPUTING Alternative plan ###");
+        System.err.println("Problem node:"+problem_node);
+
         Set<String> visited = new LinkedHashSet<>();
 
         Plan altPlans = new Plan(); // Initialize plan
-        if (!state.stringToNode.get(problem_node).isTunnel) {
-            visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
+        //if (!state.stringToNode.get(problem_node).isTunnel) {
+        //visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
+
+        //}
+
+        ArrayList<String> allPlans = new ArrayList<>();
+        allPlans.addAll(otherAgent.mainPlan.plan);
+        //allPlans.addAll(otherAgent.finalPlanString);
+        //allPlans.add(otherAgent.position.getNodeId());
+        allPlans.addAll(state.occupiedNodesString());
+        System.err.println("!!OtherPlan:"+allPlans);
+        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
+
+        if (altPlans.plan==null) {
+            altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
         }
 
-        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,otherAgentPlan); //Run BFS, to cerate new alternative plan
-        createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
-        altPlans.plan.addAll(plan); //Return new plan
+
+        //createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
+
+        altPlans.plan.remove(0);
+        //altPlans.plan.addAll(plan); //Return new plan
         plan = altPlans.plan; //Overwrite old plan
-        plan.remove(0); //Remove first index
+
+        System.err.println("PLan to goal:"+plan);
+        //plan.remove(0); //Remove first index
 
     }
 
@@ -35,7 +55,8 @@ public class Plan {
         return this.plan;
     }
 
-    public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited,ArrayList<String> otherAgentPlan) {
+    public ArrayList<String> breathFirstTraversal_altpath(State state, Map map, String root, Set<String> visited,ArrayList<String> otherAgentPlan, Boolean second) {
+
         ArrayList<String> route = new ArrayList<>();
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
         Deque<String> queue = new ArrayDeque<>();
@@ -47,23 +68,29 @@ public class Plan {
         routes.add(root_route);
 
 
+
+
         //Start runnning BFS
         while (!queue.isEmpty()) {
             String vertex = queue.pollFirst();
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
+            
+            
 
             if (!visited.contains(vertex)) {
 
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
-                if (!node.isTunnel) {
 
-                    if (!otherAgentPlan.contains(node.getNodeId())) {
+                    if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)) {
+                        System.err.println("found alternative route:"+route);
+                        route.add(node.getNodeId());
+                        route.add(node.getNodeId());
 
                         return route;
                     }
 
-                }
+
                 visited.add(vertex);
 
                 for (String v : map.getAdjacent(vertex)) {

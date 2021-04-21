@@ -17,6 +17,10 @@ public class State {
 
     public HashMap<String, Object> occupiedNodes;
 
+    public ArrayList<String> occupiedNodesString() {
+        return new ArrayList<>(occupiedNodes.keySet());
+    }
+
     public State(java.util.Map<String, Node> stringToNode, HashMap<Character, Agent> agents, HashMap<Character,
             String> NameToColor, HashMap<Character, Box> boxes, ArrayList<Node> goals, Map map)
     {
@@ -39,11 +43,12 @@ public class State {
     private void createTunnels(){
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
-            if (map.map.get(n.NodeId).size() == 1) {
-                n.isTunnel = true;
-                stringToNode.replace(node, n);
-                continue;
-            }
+            System.err.println("Node:" +n.getNodeId());
+            //if (map.map.get(n.NodeId).size() == 1) {
+              //  n.isTunnel = true;
+               // stringToNode.replace(node, n);
+                //continue;
+            //}
             var o = node.split(" ");
             int i = Integer.parseInt(o[0]);
             int j = Integer.parseInt(o[1]);
@@ -57,6 +62,13 @@ public class State {
             boolean NW = map.map.containsKey((i-1) + " " + (j+1));
             boolean SE = map.map.containsKey((i+1) + " " + (j-1));
             boolean SW = map.map.containsKey((i-1) + " " + (j-1));
+
+            if ((S & !SE & !SW)) n.isTunnel = true;
+            if ((N & !NE & !NW)) n.isTunnel = true;
+            if ((E & !SE & !NE)) n.isTunnel = true;
+            if ((W & !SW & !NW)) n.isTunnel = true;
+
+
 
             if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
             if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
