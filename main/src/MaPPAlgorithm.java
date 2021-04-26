@@ -9,7 +9,7 @@ public class MaPPAlgorithm {
         for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
             // TODO: Make as multi-processed (not multi-threaded!)
-            agent.planPi(state.map);
+            agent.planPi(state.map, new LinkedHashSet());
 
         }
 
@@ -36,16 +36,16 @@ public class MaPPAlgorithm {
             ArrayList<Agent> checkInOrder = new ArrayList<>(newAgentsInOrder);
             System.err.println("Agents in order :"+agentsInOrder);
 
-            agentsInOrder = new ArrayList<>(newAgentsInOrder);
+
+            //agentsInOrder = new ArrayList<>(newAgentsInOrder);
 
             for(Agent agent : agentsInOrder) {
-                System.err.println("//////////////////////");
 
-                if (agent.blank ) {
-                    System.err.println("ALT PLAN"+agent.mainPlan.altplan);
-                }
-                else {
-                System.err.println("MAINPLAN"+agent.mainPlan.plan);}
+                System.err.println("//////////////////////");
+                System.err.println("stateblankplan:"+state.blankPlan.size());
+
+
+                System.err.println("MAINPLAN"+agent.mainPlan.plan);
                 System.err.println("BLANK:"+agent.blank);
                 System.err.println("CONFLICTS:"+agent.conflicts);
                 checkInOrder.remove(agent);
@@ -54,22 +54,16 @@ public class MaPPAlgorithm {
 
 
 
-                if (((agent.mainPlan.plan.size()> 0 && !agent.blank) || (agent.blank && agent.mainPlan.altplan.size()>0)) && (state.blankPlan.size()<=0||agent.blank)) {
-                    if (state.blankPlan.size()>0) {
-                        state.blankPlan.remove(0);
-                    }
-                    String wantedMove;
-                    if (agent.blank) {
-                        wantedMove = agent.mainPlan.altplan.get(0);
+                if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()<=0||agent.blank)) {
 
-                    }
-                    else { wantedMove= agent.mainPlan.plan.get(0);}
+
+                    String wantedMove= agent.mainPlan.plan.get(0);
 
 
 
                     // wantedMove = position: Stay.
                     if (wantedMove.equals(agent.position.NodeId)) {
-                        agent.ExecuteMove(state,state.stringToNode.get(wantedMove));
+                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove));
                         /**
                         System.err.println("A");
                         agent.finalPlan.add(agent.position);
@@ -97,7 +91,7 @@ public class MaPPAlgorithm {
                        // if (checkInOrder.contains(occupyingObject) || occupyingObject.mainPlan.plan.size()<=0) {
                             System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
-                            occupyingObject.bringBlank(state, state.map, agent,agent.position.NodeId, agent);
+                            occupyingObject.bringBlank(state, state.map, agent);
                             //newAgentsInOrder.remove(occupyingObject);
                             //newAgentsInOrder.add(0,(Agent) occupyingObject);
                             ((Agent) occupyingObject).blank = true;
@@ -137,7 +131,7 @@ public class MaPPAlgorithm {
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
 
-                        agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
+                        agent.ExecuteMove(agent,state, state.stringToNode.get(wantedMove));
                     } else {
 
                         agent.finalPlan.add(agent.position);
@@ -185,10 +179,10 @@ public class MaPPAlgorithm {
                     //if (agent.mainPlan.plan.size()==0) agent.blank = false;//agent.setAgentsFree(state);
 
                 }
-                if (agent.blank && agent.mainPlan.altplan.size()==0 && !agent.isInGoal()) {
-                    agent.setAgentsFree(state);
-                }
-                if (agent.mainPlan.plan.size()>0 && agent.blank) {
+                //if (agent.blank && agent.mainPlan.plan.size()==0 && !agent.isInGoal()) {
+                //    agent.setAgentsFree(state);
+                //}
+                if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }
 
@@ -199,7 +193,22 @@ public class MaPPAlgorithm {
             if (noroutes) {
                 for(Agent agent : agentsInOrder) {
 
-                    if (agent.blank) agent.planPi(state.map); agent.blank = false;
+
+                   if (!agent.isInGoal()) {
+
+                       System.err.println("AGENT!");
+
+                       agent.blank = true;
+                       System.err.println("OCC"+state.occupiedNodes);
+                       LinkedHashSet visited = new LinkedHashSet();
+                       //visited.remove(agent.position.NodeId);
+
+                       agent.planPi(state.map,visited);
+                       if (agent.mainPlan.plan.size()>0) {
+                           state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
+                           break;
+                       }
+                   }
                 }
 
                 }

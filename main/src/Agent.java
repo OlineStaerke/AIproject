@@ -25,6 +25,11 @@ public class Agent extends Object {
 
 
     }
+
+    public Agent() {
+
+    }
+
     public static class CustomComparator implements Comparator<Agent> {
         @Override
         public int compare(Agent o1, Agent o2) {
@@ -60,35 +65,48 @@ public class Agent extends Object {
     public void planAltPaths() {}
 
 
-    public void ExecuteMove(State state, Node wantedMove) {
-        if(blank) {
-            position = wantedMove;
-            finalPlan.add(wantedMove);
-            finalPlanString.add(wantedMove.getNodeId());
-            state.occupiedNodes.put(position.NodeId, this);
-            mainPlan.altplan.remove(0);
+    public void ExecuteMove(Agent agent,State state, Node wantedMove) {
 
-            if (state.blankPlan.size()>0) {
-                state.blankPlan.remove(0);
-            }
-
-        }
-        else {
             position = wantedMove;
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());
             state.occupiedNodes.put(position.NodeId, this);
             mainPlan.plan.remove(0);
             //if (!wantedMove.isTunnel) priority = originalPriority;
-            if (wantedMove.getNodeId().equals(problemnode)) {
-                problemnode = null;
+            if (blank) {
+                if (state.blankPlan.size()>0) {
+                    state.blankPlan.remove(0);
+                }
             }
-            if (state.blankPlan.size()>0) {
-                state.blankPlan.remove(0);
+            if (isInGoal() && mainPlan.plan.size()==0) {
+                blank = false;
+
+            }
+
+
+            if (mainPlan.plan.size()==0 && blank && conflicts!=null) {
+                blank = false;
+                conflicts.blank = true;
+                System.err.println("SIIZE"+conflicts.mainPlan.plan.size());
+                conflicts.bringBlank(state,state.map,conflicts);
+                if (conflicts.conflicts == agent) {
+                    agent.conflicts = null;
+                }
+                /**
+                if (conflicts.mainPlan.plan.size()==0) {
+                    if (conflicts.isInGoal()) System.err.println("NO PLAN");
+                    else {
+                        System.err.println("TRUE PLAN");
+                        conflicts.planPi(state.map, new LinkedHashSet());
+                    }
+                    //new LinkedHashSet(state.occupiedNodes.keySet()
+                }
+                 **/
+
             }
         }
 
-    }
+
 
     @Override
     boolean isInGoal() {
@@ -110,27 +128,30 @@ public class Agent extends Object {
         else return false;
     }
 
+
     @Override
-    public void planPi(Map map) {
+    public void planPi(Map map, LinkedHashSet visited) {
         if (Goal == null) return;
-        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,new LinkedHashSet<>());
+        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,visited);
         distance_to_goal = mainPlan.plan.size();
     }
 
     // Must update the new position of blanked agent
     @Override
-    public void bringBlank(State state, Map map, Agent otherAgent, String problem_node, Agent agent) {
+    public void bringBlank(State state, Map map, Agent otherAgent) {
         if (isInGoal()) {
             setPriority();
         }
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
         if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
-            mainPlan.altplan = new ArrayList<>(mainPlan.plan);
+            state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
 
-        mainPlan.createAltPaths(state, position,map,otherAgent, Goal.NodeId, problem_node, agent);
+        mainPlan.createAltPaths(state, position,map,otherAgent, Goal.NodeId);
     }
+
+
 
 
 }

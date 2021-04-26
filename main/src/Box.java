@@ -14,7 +14,7 @@ public class Box extends Object {
         this.ID = id;
     }
 
-    public void bringBlank(State state, Map map, Agent otherAgent, String problem_node){
+    public void bringBlank(State state, Map map, Agent otheragent){
         // Things that Box.bringBlank should do:
         // Create a new path (like agent.bringBlank)
 
@@ -29,16 +29,13 @@ public class Box extends Object {
     }
 
     @Override
-    void planPi(Map map) {
-        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,new LinkedHashSet<>());
+    public void planPi(Map map, LinkedHashSet visited) {
+        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,visited);
 
 
     }
 
-    @Override
-    void bringBlank(State state, Map map, Agent otherAgent, String problem_node, Agent agent) {
 
-    }
 
     @Override
     boolean passedProblem() {

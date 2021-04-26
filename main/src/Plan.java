@@ -4,30 +4,39 @@ import java.util.*;
 
 public class Plan {
     ArrayList<String> plan;
-    ArrayList<String> altplan;
     HashMap<String, ArrayList<String>> precomputedDistance;
 
     public void createPlan(Map map, String Source,String Destination,Set<String> visited) {
         if (Destination == null) return;
+        System.err.println("dest"+Destination);
+
         plan = breathFirstTraversal(map, Source, Destination,visited);
+        System.err.println("PLAN:"+plan);
+        if (!plan.get(plan.size()-1).equals(Destination)) {
+            plan = new ArrayList<>();
+        }
+
+
 
         //plan.remove(0);
     }
 
 
-    public void createAltPaths(State state, Node start, Map map, Agent otherAgent, String Destination, String problem_node,Agent agent) {
+    public void createAltPaths(State state, Node start, Map map, Agent otherAgent, String Destination) {
         System.err.println("### NOW COMPUTING Alternative plan ###");
         //System.err.println("Problem node:"+problem_node);
 
 
 
-        Set<String> visited = new LinkedHashSet<>();
+        Set<String> visited = new LinkedHashSet<>(state.occupiedNodes.keySet());
+        visited.remove(start.getNodeId());
 
         Plan altPlans = new Plan(); // Initialize plan
         //if (!state.stringToNode.get(problem_node).isTunnel) {
         //visited.add(problem_node); //add problem node to visited, so that the algorithm does not enter this, if we are NOT in a tunnel.
 
         //}
+
 
         ArrayList<String> allPlans = new ArrayList<>();
         allPlans.addAll(otherAgent.mainPlan.plan);
@@ -58,6 +67,8 @@ public class Plan {
 
 
 
+
+
         //altPlans.plan.remove(0);
         /***
         if (agent.priority>=otherAgent.priority)  {
@@ -69,11 +80,11 @@ public class Plan {
         else {
          ***/
             //altPlans.plan.addAll(plan); //Return new plan
-        altplan = altPlans.plan; //Overwrite old plan
+        plan = altPlans.plan; //Overwrite old plan
         //}
         System.err.println("PLan to goal:"+plan);
         //plan.remove(0); //Remove first index
-        ArrayList<String> planblank = new ArrayList<>(altplan);
+        ArrayList<String> planblank = new ArrayList<>(plan);
         state.blankPlan = planblank;
 
     }
@@ -110,7 +121,7 @@ public class Plan {
 
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
 
-                    if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)) {
+                    if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)) {//|| second
                         //System.err.println("found alternative route:"+route);
                         route.add(node.getNodeId());
                         //route.add(node.getNodeId());

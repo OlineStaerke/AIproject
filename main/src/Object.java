@@ -35,9 +35,11 @@ public abstract class Object implements Comparable<Object> {
     }
 
 
-    abstract void planPi(Map map);
 
-    abstract void bringBlank(State state, Map map, Agent otherAgent, String problem_node, Agent agent);
+
+    public abstract void planPi(Map map, LinkedHashSet visited);
+
+    abstract void bringBlank(State state, Map map, Agent otherAgent);
 
 
 
