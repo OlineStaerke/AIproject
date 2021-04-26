@@ -16,6 +16,7 @@ public class State {
     public HashMap<Character, String> NameToColor;
 
     public HashMap<String, Object> occupiedNodes;
+    public ArrayList<String> blankPlan = new ArrayList<>();
 
     public ArrayList<String> occupiedNodesString() {
         return new ArrayList<>(occupiedNodes.keySet());

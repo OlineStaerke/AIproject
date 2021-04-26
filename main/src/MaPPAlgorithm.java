@@ -19,41 +19,69 @@ public class MaPPAlgorithm {
         // Each iteration is a processing of 1 step
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
         ArrayList<Agent> newAgentsInOrder =  state.AgentsInOrder();
+        ArrayList<Agent> agentsInOrder = new ArrayList<>(newAgentsInOrder);
+        Collections.sort(agentsInOrder,new Agent.CustomComparator());
         while(!goalIsReached){
             System.err.println();
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
 
-            Thread.sleep(500);
+            Thread.sleep(100);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
 
-            ArrayList<Agent> agentsInOrder = new ArrayList<>(newAgentsInOrder);
+
             ArrayList<Agent> checkInOrder = new ArrayList<>(newAgentsInOrder);
+            System.err.println("Agents in order :"+agentsInOrder);
 
-
+            agentsInOrder = new ArrayList<>(newAgentsInOrder);
 
             for(Agent agent : agentsInOrder) {
+                System.err.println("//////////////////////");
+
+                if (agent.blank ) {
+                    System.err.println("ALT PLAN"+agent.mainPlan.altplan);
+                }
+                else {
+                System.err.println("MAINPLAN"+agent.mainPlan.plan);}
+                System.err.println("BLANK:"+agent.blank);
+                System.err.println("CONFLICTS:"+agent.conflicts);
                 checkInOrder.remove(agent);
 
                 System.err.println(agent);
-                System.err.println("mainplan:"+ agent.mainPlan.plan);
 
 
-                if (agent.mainPlan.plan.size() > 0) {
 
+                if (((agent.mainPlan.plan.size()> 0 && !agent.blank) || (agent.blank && agent.mainPlan.altplan.size()>0)) && (state.blankPlan.size()<=0||agent.blank)) {
+                    if (state.blankPlan.size()>0) {
+                        state.blankPlan.remove(0);
+                    }
+                    String wantedMove;
+                    if (agent.blank) {
+                        wantedMove = agent.mainPlan.altplan.get(0);
 
-                    String wantedMove = agent.mainPlan.plan.get(0);
-                    System.err.println("wantedmove:" + wantedMove);
+                    }
+                    else { wantedMove= agent.mainPlan.plan.get(0);}
+
 
 
                     // wantedMove = position: Stay.
                     if (wantedMove.equals(agent.position.NodeId)) {
+                        agent.ExecuteMove(state,state.stringToNode.get(wantedMove));
+                        /**
+                        System.err.println("A");
                         agent.finalPlan.add(agent.position);
                         agent.finalPlanString.add(agent.position.getNodeId());
                         agent.mainPlan.plan.remove(0);
+
+
+                        if (agent.blank && state.blankPlan.size()>0) {
+                            state.blankPlan.remove(0);
+                        }
+                         **/
+
 
 
                     }
@@ -65,34 +93,39 @@ public class MaPPAlgorithm {
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
-                        // Check here if occupied cell is your box
-                        if (state.NameToColor.get(agent.ID).equals(state.NameToColor.get(occupyingObject.ID))) {
-                            // Two cases:
-                            // Box should be moved
-                            // Box should not be moved, but is blocking for same color agent
 
-
-                        }
-                        System.err.println("CHECK"+checkInOrder);
-                        if (checkInOrder.contains(occupyingObject) || occupyingObject.mainPlan.plan.size()<=0) {
+                       // if (checkInOrder.contains(occupyingObject) || occupyingObject.mainPlan.plan.size()<=0) {
                             System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
-                            occupyingObject.bringBlank(state, state.map, agent,agent.position.NodeId);
-                            newAgentsInOrder.remove(occupyingObject);
-                            newAgentsInOrder.add(0,(Agent) occupyingObject);
+                            occupyingObject.bringBlank(state, state.map, agent,agent.position.NodeId, agent);
+                            //newAgentsInOrder.remove(occupyingObject);
+                            //newAgentsInOrder.add(0,(Agent) occupyingObject);
+                            ((Agent) occupyingObject).blank = true;
+
 
                             //((Agent) occupyingObject).conflicts = new ArrayList<>();
-                            ((Agent) occupyingObject).conflicts.add(agent);
+                            //if (agent.blank) {
+                             //   ((Agent) occupyingObject).conflicts = agent.conflicts;
+
+                           // }
+                            //else {((Agent) occupyingObject).conflicts = agent;}
+
+                           ((Agent) occupyingObject).conflicts = agent;
+
+                            agent.blank = false;
+
+
                             agent.problemnode = wantedMove;
                             //((Agent) occupyingObject).conflicts.addAll(agent.conflicts);
                             //agent.conflicts = new ArrayList<>();
-                            agent.mainPlan.plan.add(0,agent.position.getNodeId());
+                            //agent.mainPlan.plan.add(0,agent.position.NodeId);
+                            //agent.mainPlan.plan.add(0,agent.position.NodeId);
 
 
 
 
 
-                        }
+                        //}
 
                         // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
 
@@ -103,6 +136,7 @@ public class MaPPAlgorithm {
                     }
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
+
                         agent.ExecuteMove(state, state.stringToNode.get(wantedMove));
                     } else {
 
@@ -134,6 +168,7 @@ public class MaPPAlgorithm {
 ***/
 
                     }
+
                 }
 
 
@@ -141,27 +176,35 @@ public class MaPPAlgorithm {
             state.UpdateOccupiedNodes();
 
             goalIsReached = true;
+            Boolean noroutes = true;
             for(Agent agent : agentsInOrder) {
+
+
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
-                    if (agent.mainPlan.plan.size()==0) agent.setAgentsFree(state);
+                    //if (agent.mainPlan.plan.size()==0) agent.blank = false;//agent.setAgentsFree(state);
+
                 }
-                else agent.priority = 11;
+                if (agent.blank && agent.mainPlan.altplan.size()==0 && !agent.isInGoal()) {
+                    agent.setAgentsFree(state);
+                }
+                if (agent.mainPlan.plan.size()>0 && agent.blank) {
+                    noroutes = false;
+                }
+
+                //else agent.priority = 11;
 
 
             }
+            if (noroutes) {
+                for(Agent agent : agentsInOrder) {
 
+                    if (agent.blank) agent.planPi(state.map); agent.blank = false;
+                }
 
-
-
-
-
+                }
 
         }
-
-
-
-
 
     }
 

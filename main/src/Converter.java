@@ -11,7 +11,9 @@ public final class Converter {
     public static Action[][] getConversion(HashMap<Character, Agent> agents){
 
         int numAgents = agents.size();
+
         int numRounds = agents.get('0').getFinalPlan().size();
+
         Action[][] convPlan = new Action[numAgents][]; //A converted plan for each agent
         Action[][] ultimatePlan = new Action[numRounds][]; //The fully converted plan which will be returned
         //Increment to loop through agent Hashmap<Character, Agent>
@@ -26,8 +28,11 @@ public final class Converter {
         for (int round = 0; round < numRounds; round++) {
             Action[] jointAction = new Action[numAgents];
             for (int agent = 0; agent < numAgents; agent++) {
+
                 jointAction[agent] = convPlan[agent][round];
+
             }
+
             ultimatePlan[round] = jointAction;
         }
         return ultimatePlan;

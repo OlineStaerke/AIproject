@@ -13,6 +13,7 @@ public abstract class Object implements Comparable<Object> {
     Plan mainPlan = new Plan();
 
 
+
     public char getID(){
         return ID;
     }
@@ -36,7 +37,7 @@ public abstract class Object implements Comparable<Object> {
 
     abstract void planPi(Map map);
 
-    abstract void bringBlank(State state, Map map, Agent otherAgent, String problem_node);
+    abstract void bringBlank(State state, Map map, Agent otherAgent, String problem_node, Agent agent);
 
 
 

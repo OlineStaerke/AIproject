@@ -6,6 +6,7 @@ import java.util.Objects;
 public class Box extends Object {
 
     Agent owner;
+    String problemnode;
 
 
     public Box(Node node, char id){
@@ -32,5 +33,18 @@ public class Box extends Object {
         mainPlan.createPlan(map, position.NodeId, Goal.NodeId,new LinkedHashSet<>());
 
 
+    }
+
+    @Override
+    void bringBlank(State state, Map map, Agent otherAgent, String problem_node, Agent agent) {
+
+    }
+
+    @Override
+    boolean passedProblem() {
+        if(problemnode == null) {
+            return true;
+        }
+        else return false;
     }
 }

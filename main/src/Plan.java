@@ -4,18 +4,22 @@ import java.util.*;
 
 public class Plan {
     ArrayList<String> plan;
+    ArrayList<String> altplan;
     HashMap<String, ArrayList<String>> precomputedDistance;
 
     public void createPlan(Map map, String Source,String Destination,Set<String> visited) {
         if (Destination == null) return;
         plan = breathFirstTraversal(map, Source, Destination,visited);
+
         //plan.remove(0);
     }
 
 
-    public void createAltPaths(State state, Node start, Map map, Agent otherAgent, String Destination, String problem_node) {
+    public void createAltPaths(State state, Node start, Map map, Agent otherAgent, String Destination, String problem_node,Agent agent) {
         System.err.println("### NOW COMPUTING Alternative plan ###");
-        System.err.println("Problem node:"+problem_node);
+        //System.err.println("Problem node:"+problem_node);
+
+
 
         Set<String> visited = new LinkedHashSet<>();
 
@@ -30,23 +34,47 @@ public class Plan {
         //allPlans.addAll(otherAgent.finalPlanString);
         //allPlans.add(otherAgent.position.getNodeId());
         allPlans.addAll(state.occupiedNodesString());
-        System.err.println("!!OtherPlan:"+allPlans);
+        //System.err.println("!!OtherPlan:"+allPlans);
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
 
         if (altPlans.plan==null) {
-            altPlans.plan = altPlans.breathFirstTraversal_altpath(state, map, start.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
+            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state, map,start.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
+            /**
+            ArrayList<Tuple> twoPlans = altPlans.breathFirstTraversal_box(state, map, otherAgent.position.getNodeId(),start.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
+            ArrayList<String> agentPlan = new ArrayList<>();
+            ArrayList<String> boxPlan = new ArrayList<>();
+
+            for (Tuple t : twoPlans) {
+                agentPlan.add(t.string1);
+                boxPlan.add(t.string2);
+            }
+
+            otherAgent.mainPlan.plan = agentPlan;
+             **/
+            altPlans.plan = altplan;
         }
 
 
-        //createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
 
-        altPlans.plan.remove(0);
-        //altPlans.plan.addAll(plan); //Return new plan
-        plan = altPlans.plan; //Overwrite old plan
 
+        //altPlans.plan.remove(0);
+        /***
+        if (agent.priority>=otherAgent.priority)  {
+            createPlan(map,altPlans.plan.get(altPlans.plan.size()-1),Destination,new LinkedHashSet<>()); //Find new main plan back to goal
+            altPlans.plan.addAll(plan);
+            plan = altPlans.plan;
+
+        }
+        else {
+         ***/
+            //altPlans.plan.addAll(plan); //Return new plan
+        altplan = altPlans.plan; //Overwrite old plan
+        //}
         System.err.println("PLan to goal:"+plan);
         //plan.remove(0); //Remove first index
+        ArrayList<String> planblank = new ArrayList<>(altplan);
+        state.blankPlan = planblank;
 
     }
 
@@ -83,9 +111,9 @@ public class Plan {
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
 
                     if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)) {
-                        System.err.println("found alternative route:"+route);
+                        //System.err.println("found alternative route:"+route);
                         route.add(node.getNodeId());
-                        route.add(node.getNodeId());
+                        //route.add(node.getNodeId());
 
                         return route;
                     }
@@ -105,6 +133,73 @@ public class Plan {
         return null;
     }
 
+    public ArrayList<Tuple> breathFirstTraversal_box(State state, Map map, String rootagent, String rootbox, Set<String> visited,ArrayList<String> otherAgentPlan, Boolean second) {
+
+        ArrayList<Tuple> route_agent = new ArrayList<>();
+        Deque<ArrayList<Tuple>> routes_agent = new ArrayDeque<>();
+        Deque<Tuple> queue_agent = new ArrayDeque<>();
+
+        Tuple root = new Tuple();
+        root.Tuple(rootagent,rootbox);
+        queue_agent.push(root);
+
+
+        //Adding root to the list of routes to start with
+        ArrayList<Tuple> root_route = new ArrayList<>();
+        root_route.add(root);
+        routes_agent.add(root_route);
+
+
+
+
+        //Start runnning BFS
+        while (!queue_agent.isEmpty()) {
+            Tuple vertex = queue_agent.pollFirst();
+            String vertex_agent = vertex.string1;
+            String vertex_box = vertex.string2;
+
+            route_agent = routes_agent.pollFirst();
+            Node node_agent = state.stringToNode.get(vertex_agent);
+            Node node_box = state.stringToNode.get(vertex_box);
+
+
+            //TODO: CHange visited to be array of vertices, where the combination of agent and box can shift places.
+            if (!visited.contains(vertex_box)){
+
+                //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
+
+                if (!otherAgentPlan.contains(node_box.getNodeId()) && (!node_box.isTunnel || second)) {
+                    //System.err.println("found alternative route:"+route);
+
+                    root.Tuple(node_agent.NodeId,node_box.NodeId);
+                    route_agent.add(root);
+
+                    return route_agent;
+                }
+
+
+                visited.add(vertex_box);
+
+                for (String v : map.getAdjacent(vertex_agent)) {
+
+                    ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
+                    root.Tuple(v,vertex_agent);
+                    queue_agent.addLast(root);
+                    newroute.add(root);
+                    routes_agent.addLast(newroute);
+                }
+                for (String v : map.getAdjacent(vertex_box)) {
+
+                    ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
+                    root.Tuple(vertex_box,v);
+                    queue_agent.addLast(root);
+                    newroute.add(root);
+                    routes_agent.addLast(newroute);
+                }
+            }
+        }
+        return null;
+    }
 
     public ArrayList<String> breathFirstTraversal(Map map, String root, String goal, Set<String> visited) {
         if (goal == null) return new ArrayList<>();

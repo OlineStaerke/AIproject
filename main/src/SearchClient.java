@@ -154,7 +154,9 @@ public class SearchClient {
         MaPPAlgorithm.MaPPVanilla(initialState);
         Action[][] plan;
         try {
+
             plan = Converter.getConversion(initialState.agents);
+            System.err.println("Length of plan:"+plan.length);
             System.err.println(Arrays.deepToString(plan));
         }
         catch (OutOfMemoryError ex){
@@ -169,13 +171,17 @@ public class SearchClient {
         else
         {
             System.err.format("Found solution of length %,d.\n", plan.length);
-
+            Integer i =0;
             for (Action[] jointAction : plan)
+
             {
+                i+=1;
+                System.err.println(i);
                 System.out.print(jointAction[0].name);
                 for (int action = 1; action < jointAction.length; ++action)
                 {
                     System.out.print("|");
+
                     System.out.print(jointAction[action].name);
                 }
                 System.out.println();

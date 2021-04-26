@@ -1,15 +1,13 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 
 public class Agent extends Object {
     ArrayList<Node> finalPlan;
     ArrayList<String> finalPlanString;
     ArrayList<Box> boxes = new ArrayList<>();
-    ArrayList<Agent> conflicts = new ArrayList<>();
+    Agent conflicts;
     String problemnode = null;
+    int distance_to_goal = 100;
+    Boolean blank = false;
 
     public Agent(Node node, char ID) {
         // The finalPlan (output plan) of an agent must always contain the initial node)
@@ -21,11 +19,19 @@ public class Agent extends Object {
         this.ID = ID;
         //Goal = null;
         setPriority();
-        conflicts = new ArrayList<>();
+
+
 
 
 
     }
+    public static class CustomComparator implements Comparator<Agent> {
+        @Override
+        public int compare(Agent o1, Agent o2) {
+            return ((Integer) o2.mainPlan.plan.size()).compareTo(o1.mainPlan.plan.size());
+        }
+    }
+
 
     public ArrayList<Node> getFinalPlan(){
         return this.finalPlan;
@@ -33,18 +39,19 @@ public class Agent extends Object {
     public void setFree(State state) {
         //System.err.println("Ive been set free:" +getID());
         if (!isInGoal()) {
+            blank = false;
         mainPlan.createPlan(state.map, position.NodeId, Goal.NodeId, new LinkedHashSet<>());}
     }
     public void setAgentsFree(State state) {
         //System.err.println("I am agent:"+getID()+"I will check :"+conflicts);
 
         Boolean setfree = true;
-        for (Agent a: conflicts) {
-            if (!a.passedProblem()) {setfree = false;}
+
+        if (!conflicts.isInGoal()) {setfree = false;}
 
 
-        }
-        if (setfree) {setFree(state);conflicts = new ArrayList<>();}
+
+        if (setfree) {setFree(state);conflicts = null;}
 
     }
 
@@ -54,15 +61,33 @@ public class Agent extends Object {
 
 
     public void ExecuteMove(State state, Node wantedMove) {
-        position = wantedMove;
-        finalPlan.add(wantedMove);
-        finalPlanString.add(wantedMove.getNodeId());
-        state.occupiedNodes.put(position.NodeId, this);
-        mainPlan.plan.remove(0);
-        //if (!wantedMove.isTunnel) priority = originalPriority;
-        if (wantedMove.getNodeId().equals(problemnode)) {
-            problemnode = null;
+        if(blank) {
+            position = wantedMove;
+            finalPlan.add(wantedMove);
+            finalPlanString.add(wantedMove.getNodeId());
+            state.occupiedNodes.put(position.NodeId, this);
+            mainPlan.altplan.remove(0);
+
+            if (state.blankPlan.size()>0) {
+                state.blankPlan.remove(0);
+            }
+
         }
+        else {
+            position = wantedMove;
+            finalPlan.add(wantedMove);
+            finalPlanString.add(wantedMove.getNodeId());
+            state.occupiedNodes.put(position.NodeId, this);
+            mainPlan.plan.remove(0);
+            //if (!wantedMove.isTunnel) priority = originalPriority;
+            if (wantedMove.getNodeId().equals(problemnode)) {
+                problemnode = null;
+            }
+            if (state.blankPlan.size()>0) {
+                state.blankPlan.remove(0);
+            }
+        }
+
     }
 
     @Override
@@ -89,20 +114,22 @@ public class Agent extends Object {
     public void planPi(Map map) {
         if (Goal == null) return;
         mainPlan.createPlan(map, position.NodeId, Goal.NodeId,new LinkedHashSet<>());
+        distance_to_goal = mainPlan.plan.size();
     }
 
     // Must update the new position of blanked agent
     @Override
-    public void bringBlank(State state, Map map, Agent otherAgent, String problem_node) {
+    public void bringBlank(State state, Map map, Agent otherAgent, String problem_node, Agent agent) {
         if (isInGoal()) {
             setPriority();
         }
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
         if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
+            mainPlan.altplan = new ArrayList<>(mainPlan.plan);
             return;
         }
 
-        mainPlan.createAltPaths(state, position,map,otherAgent, Goal.NodeId, problem_node);
+        mainPlan.createAltPaths(state, position,map,otherAgent, Goal.NodeId, problem_node, agent);
     }
 
 
