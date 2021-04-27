@@ -18,16 +18,28 @@ public class Plan {
 
     }
 
-    public void createPlanWithBox(State state, String rootAgent, String rootBox, String goal) {
+    public void createPlanWithBox(State state, String rootAgent, String rootBox, String goal,Box box) {
         if (goal == null) return;
 
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
+        ArrayList plan_agent = new ArrayList<>();
+        ArrayList plan_box = new ArrayList<>();
+        for (Tuple T : tuple_plan) {
+            plan_agent.add(T.agentpos);
+            plan_box.add(T.boxpos);
+        }
+
+        plan = plan_agent;
+        box.mainPlan.plan = plan_box;
 
 
         System.err.println("PLAN:"+plan);
         if (!goal.equals(plan.get(plan.size()-1))) {
             plan = new ArrayList<>();
         }
+
+
+
 
     }
 
