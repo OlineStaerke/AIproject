@@ -8,9 +8,16 @@ public final class Converter {
     private Converter(){
     }
 
-    public static Action[][] getConversion(HashMap<Character, Agent> agents){
+    public static Action[][] getConversion(HashMap<Character, Agent> agents)  {
+
 
         int numAgents = agents.size();
+
+        // Remove the first move on the plan (This is always noOp)
+        for (Agent A : agents.values()){
+            var q = A.finalPlan.remove(0);
+            System.err.println("First index of final plan removed, action was: " + q);
+        }
 
         int numRounds = agents.get('0').getFinalPlan().size();
 
@@ -38,10 +45,9 @@ public final class Converter {
         return ultimatePlan;
     }
 
-    private static Action[] fromCoordsToDirections(ArrayList<Node> plan, ArrayList<Box> boxes){
+    private static Action[] fromCoordsToDirections(ArrayList<Node> plan, ArrayList<Box> boxes) {
 
         System.err.println(plan);
-
         Action[] convertedFinalPlan = new Action[plan.size()];
         String node1 = plan.get(0).getNodeId();
         convertedFinalPlan[0] = Action.NoOp;
@@ -59,6 +65,15 @@ public final class Converter {
             String boxMove2 = "";
 
             for(Box B: boxes){
+                if (B.finalPlan.size() != plan.size()){
+                    System.err.println("############### FINAL PLANS OF DIFFERENT LENGTH! ###############");
+                    System.err.println(B.finalPlan);
+                    System.err.println(plan);
+
+                    return null;
+
+                }
+
                 boxMove1 = B.finalPlan.get(action-1).NodeId;
                 boxMove2 = B.finalPlan.get(action).NodeId;
 
@@ -96,8 +111,8 @@ public final class Converter {
                     }
                     // Agent moved east
                     else if(colDiff == 1){
-                        if (AgentToBoxRowDiff < 0){ convertedFinalPlan[action] = Action.PullEN; }
-                        else{convertedFinalPlan[action] = Action.PushEN;}
+                        if (AgentToBoxRowDiff < 0){ convertedFinalPlan[action] = Action.PushEN; }
+                        else{convertedFinalPlan[action] = Action.PullEN;}
 
                     }
                 }
