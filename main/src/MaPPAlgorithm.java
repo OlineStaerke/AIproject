@@ -69,7 +69,7 @@ public class MaPPAlgorithm {
 
                             System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
-                            occupyingObject.bringBlank(state, state.map, agent);
+                            occupyingObject.bringBlank(state, agent);
                             //newAgentsInOrder.remove(occupyingObject);
                             //newAgentsInOrder.add(0,(Agent) occupyingObject);
                             ((Agent) occupyingObject).blank = true;

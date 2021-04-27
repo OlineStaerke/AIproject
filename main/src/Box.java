@@ -13,7 +13,7 @@ public class Box extends Object {
         this.ID = id;
     }
 
-    public void bringBlank(State state, Map map, Agent otheragent){
+    public void bringBlank(State state, Agent otheragent){
         // Things that Box.bringBlank should do:
         // Create a new path (like agent.bringBlank)
 

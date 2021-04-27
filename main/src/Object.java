@@ -36,7 +36,7 @@ public abstract class Object implements Comparable<Object> {
 
     public abstract void planPi(Map map, LinkedHashSet visited);
 
-    abstract void bringBlank(State state, Map map, Agent otherAgent);
+    abstract void bringBlank(State state, Agent otherAgent);
 
 
 

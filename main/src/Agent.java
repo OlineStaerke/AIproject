@@ -69,7 +69,7 @@ public class Agent extends Object {
             if (mainPlan.plan.size()==0 && blank && conflicts!=null) {
                 blank = false;
                 conflicts.blank = true;
-                conflicts.bringBlank(state,state.map,conflicts);
+                conflicts.bringBlank(state,conflicts);
                 if (conflicts.conflicts == agent) {
                     agent.conflicts = null;
                 }
@@ -102,14 +102,14 @@ public class Agent extends Object {
 
     // Must update the new position of blanked agent
     @Override
-    public void bringBlank(State state, Map map, Agent otherAgent) {
+    public void bringBlank(State state, Agent otherAgent) {
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
         if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
 
-        mainPlan.createAltPaths(state, position,map,otherAgent, Goal.NodeId);
+        mainPlan.createAltPaths(state, position,otherAgent, Goal.NodeId);
     }
 
 

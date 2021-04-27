@@ -1,9 +1,9 @@
 public class Tuple {
-    public String string1;
-    public String string2;
+    public String agentpos;
+    public String boxpos;
 
-    public void Tuple(String s1, String s2) {
-        this.string1 = s1;
-        this.string2 = s2;
+    public Tuple(String s1, String s2) {
+        this.agentpos = s1;
+        this.boxpos = s2;
     }
 }
