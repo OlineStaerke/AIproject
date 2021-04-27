@@ -145,10 +145,10 @@ public class MaPPAlgorithm {
 
                    if (!agent.isInGoal()) {
 
-                       System.err.println("AGENT!");
+                     
 
                        agent.blank = true;
-                       System.err.println("OCC"+state.occupiedNodes);
+
                        LinkedHashSet visited = new LinkedHashSet();
                        visited.remove(agent.position.NodeId);
 
