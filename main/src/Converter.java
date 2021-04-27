@@ -59,8 +59,8 @@ public final class Converter {
             String boxMove2 = "";
 
             for(Box B: boxes){
-                boxMove1 = B.finalplan.get(action-1);
-                boxMove2 = B.finalplan.get(action);
+                boxMove1 = B.finalPlan.get(action-1).NodeId;
+                boxMove2 = B.finalPlan.get(action).NodeId;
 
                 if (!boxMove1.equals(boxMove2)){
                     boxRowDiff = Integer.parseInt(boxMove2.split(" ")[0]) - Integer.parseInt(boxMove1.split(" ")[0]);
