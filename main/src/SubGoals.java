@@ -30,7 +30,9 @@ public class SubGoals{
     }
 
     public SubGoal ExtractNextGoal(){
+        System.err.println("Allgoals:"+goals);
         for(SubGoal sg: goals){
+
 
             if (!sg.Finished){
                 return sg;

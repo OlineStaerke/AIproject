@@ -104,10 +104,7 @@ public class Agent extends Object {
     }
 
     boolean isInSubGoal() {
-        if (currentGoal==null) {
-            return (position.NodeId.equals(Goal.NodeId));
-        }
-        return currentGoal.Obj.position.NodeId.equals(currentGoal.Obj.Goal.NodeId);
+        return (position.NodeId.equals(Goal.NodeId));
     }
 
     public void planGoals(State state, LinkedHashSet visited){
