@@ -1,15 +1,13 @@
 import java.util.*;
 
 public class Agent extends Object {
-    ArrayList<Node> finalPlan;
-    ArrayList<String> finalPlanString;
+
     ArrayList<Box> boxes = new ArrayList<>();
     int distance_to_goal = 100;
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
-
-
     public SubGoals subgoals;
+    Box attached_box;
 
 
     public Agent(Node node, char ID) {
@@ -47,6 +45,16 @@ public class Agent extends Object {
             state.occupiedNodes.put(position.NodeId, this);
             mainPlan.plan.remove(0);
 
+            if (attached_box!=null) {
+                Node wantedMoveBox = state.stringToNode.get(attached_box.mainPlan.plan.get(0));
+                attached_box.finalPlan.add(wantedMoveBox);
+                attached_box.finalPlanString.add(wantedMoveBox.NodeId);
+                attached_box.mainPlan.plan.remove(0);
+                state.occupiedNodes.put(wantedMoveBox.NodeId, this);
+                attached_box.position = wantedMoveBox;
+
+            }
+
 
             if (blank) {
                 if (state.blankPlan.size()>0) {
@@ -77,13 +85,13 @@ public class Agent extends Object {
         return currentGoal.Obj.position.NodeId.equals(currentGoal.Obj.Goal.NodeId);
     }
 
-    public void planGoals(Map map, LinkedHashSet visited){
+    public void planGoals(State state, LinkedHashSet visited){
         subgoals = new SubGoals(boxes, this);
-        planPi(map, visited);
+        planPi(state, visited);
     }
 
 
-    public void planPi(Map map, LinkedHashSet visited) {
+    public void planPi(State state,LinkedHashSet visited) {
         var SG = subgoals.ExtractNextGoal();
 
         System.err.println("SG: " + SG);
@@ -95,17 +103,24 @@ public class Agent extends Object {
 
             case BoxToGoal:
                 // code block
-                if (map.getAdjacent(position.getNodeId()).contains(SG.Obj.Goal.NodeId)) {
-                    mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
 
+                if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+
+                    mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId,SG.Obj.Goal.NodeId,(Box) SG.Obj);
+                    attached_box = (Box) SG.Obj;
 
                 }
                 else {
-                    mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
+
+                    attached_box = null;
+                    mainPlan.createPlan(state.map, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
 
                 }
+                break;
 
             case AgentToGoal:
+                attached_box = null;
+                break;
 
                 // code block
 

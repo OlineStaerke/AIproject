@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public abstract class Object{
 
+    ArrayList<Node> finalPlan;
+    ArrayList<String> finalPlanString;
     char ID;
     Node position;
     Node Goal;

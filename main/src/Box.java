@@ -11,6 +11,9 @@ public class Box extends Object {
     public Box(Node node, char id){
         this.position = node;
         this.ID = id;
+        this.finalPlan = new ArrayList<>();
+        this.finalPlanString = new ArrayList<>();
+        this.mainPlan = new Plan();
     }
 
     public void bringBlank(State state, Map map, Agent otheragent){
