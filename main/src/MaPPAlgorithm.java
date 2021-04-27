@@ -14,7 +14,6 @@ public class MaPPAlgorithm {
 
         boolean goalIsReached = false;
 
-
         // TODO: Check if node.equals works (it might be pointing towards reference in memory, not actual value@Mathias
         // Each iteration is a processing of 1 step
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
@@ -27,7 +26,7 @@ public class MaPPAlgorithm {
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
 
-            Thread.sleep(100);
+            Thread.sleep(1000);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -67,11 +66,14 @@ public class MaPPAlgorithm {
 
                             System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
-                            occupyingObject.bringBlank(state, agent);
+
                             //newAgentsInOrder.remove(occupyingObject);
                             //newAgentsInOrder.add(0,(Agent) occupyingObject);
+                            ((Agent) occupyingObject).blank = true;
+                            ((Agent) occupyingObject).conflicts = agent;
 
                             agent.blank = false;
+                            occupyingObject.bringBlank(state, agent);
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
 

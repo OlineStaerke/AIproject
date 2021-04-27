@@ -25,7 +25,10 @@ public class Box extends Object {
         return Goal.NodeId.equals(position.NodeId);
     }
 
+    @Override
+    void bringBlank(State state, Agent agent) {
 
+    }
 
 
 }

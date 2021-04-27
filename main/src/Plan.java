@@ -6,37 +6,56 @@ public class Plan {
     ArrayList<String> plan;
     HashMap<String, ArrayList<String>> precomputedDistance;
 
-    public void createPlan(Map map, String Source,String Destination,Set<String> visited) {
+    public void createPlan(Map map, String Source,List<String> Destination,Set<String> visited) {
         if (Destination == null) return;
         System.err.println("dest"+Destination);
 
         plan = breathFirstTraversal(map, Source, Destination,visited);
         System.err.println("PLAN:"+plan);
-        if (!plan.get(plan.size()-1).equals(Destination)) {
+        if (!Destination.contains(plan.get(plan.size()-1))) {
+            plan = new ArrayList<>();
+        }
+
+    }
+
+    public void createPlanWithBox(State state, String rootAgent, String rootBox, String goal) {
+        if (goal == null) return;
+
+        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
+
+
+        System.err.println("PLAN:"+plan);
+        if (!goal.equals(plan.get(plan.size()-1))) {
             plan = new ArrayList<>();
         }
 
     }
 
 
-    public void createAltPaths(State state, Node start, Agent otherAgent, String Destination) {
+    public void createAltPaths(State state, Agent agent) {
         System.err.println("### NOW COMPUTING Alternative plan ###");
         Map map = state.map;
 
 
         Set<String> visited = new LinkedHashSet<>(state.occupiedNodes.keySet());
-        visited.remove(start.getNodeId());
+        visited.remove(agent.position.getNodeId());
 
         Plan altPlans = new Plan(); // Initialize plan
 
         ArrayList<String> allPlans = new ArrayList<>();
 
-        allPlans.addAll(otherAgent.mainPlan.plan);
+        allPlans.addAll(agent.conflicts.mainPlan.plan);
         allPlans.addAll(state.occupiedNodesString());
-        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, start.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
+        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
 
         if (altPlans.plan==null) {
-            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,start.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
+            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
+
+            altPlans.plan = altplan;
+        }
+
+        if (altPlans.plan==null) {
+            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
@@ -167,7 +186,7 @@ public class Plan {
         return null;
     }
 
-    public ArrayList<String> breathFirstTraversal(Map map, String root, String goal, Set<String> visited) {
+    public ArrayList<String> breathFirstTraversal(Map map, String root, List<String> goal, Set<String> visited) {
         if (goal == null) return new ArrayList<>();
 
         ArrayList<String> route = new ArrayList<>();
@@ -187,7 +206,7 @@ public class Plan {
             route = routes.pollFirst();
 
             //If we are in goal, stop BFS
-            if (vertex.equals(goal)) {
+            if (goal.contains(vertex)) {
                 return route;
             }
 

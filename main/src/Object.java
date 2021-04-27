@@ -10,6 +10,7 @@ public abstract class Object{
     Node position;
     Node Goal;
     Plan mainPlan = new Plan();
+    Agent conflicts;
 
 
     public void setGoal(Node goal) {
@@ -19,7 +20,7 @@ public abstract class Object{
     abstract boolean isInGoal();
 
 
-    abstract void bringBlank(State state, Agent otherAgent);
+    abstract void bringBlank(State state, Agent agent);
 
 
     @Override

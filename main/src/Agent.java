@@ -4,7 +4,6 @@ public class Agent extends Object {
     ArrayList<Node> finalPlan;
     ArrayList<String> finalPlanString;
     ArrayList<Box> boxes = new ArrayList<>();
-    Agent conflicts;
     int distance_to_goal = 100;
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
@@ -24,7 +23,7 @@ public class Agent extends Object {
 
     }
 
-
+ //Compare to find the agent who is furthest away from goal, by looking at the plan size.
     public static class CustomComparator implements Comparator<Agent> {
         @Override
         public int compare(Agent o1, Agent o2) {
@@ -44,6 +43,7 @@ public class Agent extends Object {
             position = wantedMove;
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());
+
             state.occupiedNodes.put(position.NodeId, this);
             mainPlan.plan.remove(0);
 
@@ -52,21 +52,22 @@ public class Agent extends Object {
                 if (state.blankPlan.size()>0) {
                     state.blankPlan.remove(0);
                 }
-            }
-            if (isInGoal() && mainPlan.plan.size()==0) {
-                blank = false;
+                //The conflicts has been solved
+                if (mainPlan.plan.size()==0 && conflicts!=null ) {
+                    blank = false;
+                    conflicts.blank = true;
+                    if( !conflicts.isInGoal()) conflicts.bringBlank(state,agent);
 
-            }
+                    if (conflicts.conflicts == agent) {
+                        conflicts.conflicts = null;
+                        conflicts = null;
+                    }
 
-            if (mainPlan.plan.size()==0 && blank && conflicts!=null) {
-                blank = false;
-                conflicts.blank = true;
-                conflicts.bringBlank(state,conflicts);
-                if (conflicts.conflicts == agent) {
-                    agent.conflicts = null;
                 }
 
             }
+
+
         }
 
 
@@ -84,25 +85,44 @@ public class Agent extends Object {
 
     public void planPi(Map map, LinkedHashSet visited) {
         var SG = subgoals.ExtractNextGoal();
+
         System.err.println("SG: " + SG);
         currentGoal = SG;
 
+        switch(currentGoal.gType) {
+            case BoxBlanked:
+                // code block
 
-        mainPlan.createPlan(map, position.NodeId, SG.Obj.Goal.NodeId, visited);
+            case BoxToGoal:
+                // code block
+                if (map.getAdjacent(position.getNodeId()).contains(SG.Obj.Goal.NodeId)) {
+                    mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
+
+
+                }
+                else {
+                    mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
+
+                }
+
+            case AgentToGoal:
+                // code block
+
+
+        }
+
         distance_to_goal = mainPlan.plan.size();
     }
 
     // Must update the new position of blanked agent
-    public void bringBlank(State state, Agent otherAgent) {
+    public void bringBlank(State state, Agent agent) {
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
         if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
         blank = true;
-        conflicts = otherAgent;
-
-        mainPlan.createAltPaths(state, position,otherAgent, Goal.NodeId);
+        mainPlan.createAltPaths(state, agent);
     }
 
 
