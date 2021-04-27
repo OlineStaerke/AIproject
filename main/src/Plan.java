@@ -179,20 +179,26 @@ public class Plan {
                 //PULL box gets agents position
                 for (String v : map.getAdjacent(vertex_agent)) {
 
-                    ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
-                    Tuple new_position = new Tuple(v,vertex_agent);
-                    queue_agent.addLast(new_position);
-                    newroute.add(new_position);
-                    routes_agent.addLast(newroute);
+                    if (!v.equals(vertex_box)) {
+
+                        ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
+                        Tuple new_position = new Tuple(v, vertex_agent);
+                        queue_agent.addLast(new_position);
+                        newroute.add(new_position);
+                        routes_agent.addLast(newroute);
+                    }
                 }
                 //PUSH agent gets box position
                 for (String v : map.getAdjacent(vertex_box)) {
 
-                    ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
-                    Tuple new_position = new Tuple(vertex_box,v);
-                    queue_agent.addLast(new_position);
-                    newroute.add(new_position);
-                    routes_agent.addLast(newroute);
+                    if (!v.equals(vertex_agent)) {
+
+                        ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
+                        Tuple new_position = new Tuple(vertex_box, v);
+                        queue_agent.addLast(new_position);
+                        newroute.add(new_position);
+                        routes_agent.addLast(newroute);
+                    }
                 }
             }
         }

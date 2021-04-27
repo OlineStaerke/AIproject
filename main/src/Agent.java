@@ -36,24 +36,40 @@ public class Agent extends Object {
 
 
 
-    public void ExecuteMove(Agent agent,State state, Node wantedMove) {
+
+    public void ExecuteMove(Agent agent,State state, Node wantedMove, Boolean NoOp) {
 
             position = wantedMove;
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());
 
             state.occupiedNodes.put(position.NodeId, this);
-            mainPlan.plan.remove(0);
+
+            if (mainPlan.plan.size()>0 && !NoOp) {
+                mainPlan.plan.remove(0);
+            }
 
             if (attached_box!=null) {
                 Node wantedMoveBox = state.stringToNode.get(attached_box.mainPlan.plan.get(0));
                 attached_box.finalPlan.add(wantedMoveBox);
                 attached_box.finalPlanString.add(wantedMoveBox.NodeId);
-                attached_box.mainPlan.plan.remove(0);
+                if (attached_box.mainPlan.plan.size()>0 && !NoOp) {
+                    attached_box.mainPlan.plan.remove(0);
+                }
+
                 state.occupiedNodes.put(wantedMoveBox.NodeId, this);
                 attached_box.position = wantedMoveBox;
 
             }
+
+            for (Box b : boxes) {
+                if (b!=attached_box) {
+                    b.finalPlan.add(b.position);
+                    b.finalPlanString.add(b.position.NodeId);
+                }
+            }
+
+
 
 
             if (blank) {
@@ -82,6 +98,15 @@ public class Agent extends Object {
 
     @Override
     boolean isInGoal() {
+        return(subgoals.ExtractNextGoal()==null);
+
+
+    }
+
+    boolean isInSubGoal() {
+        if (currentGoal==null) {
+            return (position.NodeId.equals(Goal.NodeId));
+        }
         return currentGoal.Obj.position.NodeId.equals(currentGoal.Obj.Goal.NodeId);
     }
 
@@ -97,37 +122,55 @@ public class Agent extends Object {
         System.err.println("SG: " + SG);
         currentGoal = SG;
 
-        switch(currentGoal.gType) {
-            case BoxBlanked:
-                // code block
+        if (currentGoal!=null) {
+            switch (currentGoal.gType) {
+                case BoxBlanked:
+                    // code block
+                    if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
-            case BoxToGoal:
-                // code block
+                        mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, null, (Box) SG.Obj);
+                        attached_box = (Box) SG.Obj;
 
-                if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+                    } else {
 
-                    mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId,SG.Obj.Goal.NodeId,(Box) SG.Obj);
-                    attached_box = (Box) SG.Obj;
+                        attached_box = null;
+                        mainPlan.createPlan(state.map, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
 
-                }
-                else {
+                    }
+                    break;
+
+                case BoxToGoal:
+                    // code block
+
+                    if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+
+                        mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, SG.Obj.Goal.NodeId, (Box) SG.Obj);
+                        attached_box = (Box) SG.Obj;
+
+                    } else {
+
+                        attached_box = null;
+                        mainPlan.createPlan(state.map, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
+
+                    }
+                    break;
+
+                case AgentToGoal:
+                    List<String> goalListAgent = new ArrayList<>();
+                    goalListAgent.add(SG.Obj.Goal.NodeId);
+                    mainPlan.createPlan(state.map, position.NodeId, goalListAgent, visited);
 
                     attached_box = null;
-                    mainPlan.createPlan(state.map, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
-
-                }
-                break;
-
-            case AgentToGoal:
-                attached_box = null;
-                break;
+                    break;
 
                 // code block
+
+
+            }
+            distance_to_goal = mainPlan.plan.size();
 
 
         }
-
-        distance_to_goal = mainPlan.plan.size();
     }
 
     // Must update the new position of blanked agent

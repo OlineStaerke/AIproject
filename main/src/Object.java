@@ -20,6 +20,7 @@ public abstract class Object{
     }
 
     abstract boolean isInGoal();
+    abstract boolean isInSubGoal();
 
 
     abstract void bringBlank(State state, Agent agent);

@@ -23,10 +23,16 @@ public class Box extends Object {
     }
 
     @Override
-    boolean isInGoal() {
+    boolean isInSubGoal() {
         if (Objects.isNull(Goal)) return true;
         return Goal.NodeId.equals(position.NodeId);
     }
+
+    @Override
+    boolean isInGoal() {
+        return false;
+    }
+
 
     @Override
     void bringBlank(State state, Agent agent) {

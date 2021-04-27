@@ -21,8 +21,11 @@ public class SubGoals{
     }
 
     public void UpdateGoals(){
+        System.err.println("GOALS"+ goals);
         for(SubGoal sg: goals){
-            sg.Finished = sg.Obj.isInGoal();
+
+            sg.Finished = sg.Obj.isInSubGoal();
+            System.err.println("Finished:"+ sg.Finished);
         }
     }
 

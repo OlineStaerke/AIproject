@@ -26,7 +26,9 @@ public class MaPPAlgorithm {
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
 
-            Thread.sleep(1000);
+            //
+            //
+            Thread.sleep(100);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -38,9 +40,12 @@ public class MaPPAlgorithm {
 
             for(Agent agent : agentsInOrder) {
 
+                agent.subgoals.UpdateGoals();
+
                 System.err.println("//////////////////////");
                 System.err.println(agent);
                 System.err.println("MAINPLAN:"+agent.mainPlan.plan);
+                System.err.println("IN GOAL "+agent.isInGoal());
 
 
 
@@ -56,11 +61,10 @@ public class MaPPAlgorithm {
 
 
                     if (agent.attached_box!=null && wantedMove.equals(agent.attached_box.position.NodeId)) {
-                        System.err.println("HI");
-                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove));
+                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove), false);
                     }
                     else if (wantedMove.equals(agent.position.NodeId) ) {
-                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove));
+                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove),false);
 
                     }
 
@@ -82,29 +86,28 @@ public class MaPPAlgorithm {
                             ((Agent) occupyingObject).conflicts = agent;
 
                             agent.blank = false;
-                            occupyingObject.bringBlank(state, agent);
+                            occupyingObject.bringBlank(state, (Agent) occupyingObject);
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
 
-                            agent.finalPlan.add(agent.position);
-                            agent.finalPlanString.add(agent.position.getNodeId());
+                            agent.ExecuteMove(agent,state,agent.position, true);
+
 
 
                     }
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
 
-                        agent.ExecuteMove(agent,state, state.stringToNode.get(wantedMove));
+                        agent.ExecuteMove(agent,state, state.stringToNode.get(wantedMove), false);
                     } else {
 
-                        agent.finalPlan.add(agent.position);
-                        agent.finalPlanString.add(agent.position.getNodeId());
+                        agent.ExecuteMove(agent,state,agent.position, true);
                     }
                 }
                     else {
                         //agent.setAgentsFree(state);
-                        agent.finalPlan.add(agent.position);
-                        agent.finalPlanString.add(agent.position.getNodeId());
+
+                        agent.ExecuteMove(agent,state,agent.position, true);
 
 
                         // Agent is not in goal, proceed with next subgoal
@@ -126,11 +129,15 @@ public class MaPPAlgorithm {
 
                     }
 
+                     //Update the subgoals
+                    agent.subgoals.UpdateGoals();
                 }
 
 
             // Boxes are automatically checked in agent.isInGoal
             state.UpdateOccupiedNodes();
+
+
 
             goalIsReached = true;
             Boolean noroutes = true;
@@ -153,7 +160,7 @@ public class MaPPAlgorithm {
                 for(Agent agent : agentsInOrder) {
 
 
-                   if (!agent.isInGoal()) {
+                   if (!agent.isInSubGoal()) {
 
                      
 
