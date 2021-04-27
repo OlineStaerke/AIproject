@@ -24,6 +24,7 @@ public class Box extends Object {
 
     @Override
     boolean isInSubGoal() {
+        System.err.println("BOX GOAL");
         if (Objects.isNull(Goal)) return true;
         return Goal.NodeId.equals(position.NodeId);
     }

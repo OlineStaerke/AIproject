@@ -148,9 +148,9 @@ public class MaPPAlgorithm {
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
-                if (agent.mainPlan.plan.size()==0 && !agent.isInGoal() && agent.conflicts==null){
-                    agent.planPi(state, new LinkedHashSet<>());
-                }
+                //if (agent.mainPlan.plan.size()==0 && !agent.isInGoal() && agent.conflicts==null){
+                  //  agent.planPi(state, new LinkedHashSet<>());
+               // }
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }
