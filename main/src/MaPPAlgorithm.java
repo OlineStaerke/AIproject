@@ -132,8 +132,6 @@ public class MaPPAlgorithm {
 
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
-
-
                 }
 
                 if (agent.mainPlan.plan.size()>0) {
