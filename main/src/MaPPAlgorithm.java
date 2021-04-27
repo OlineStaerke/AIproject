@@ -154,6 +154,7 @@ public class MaPPAlgorithm {
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }
+                System.err.println("SUBGOALS : : : : :!?!?!?!?! " + agent.subgoals.goals) ;
 
             }
             if (noroutes) {

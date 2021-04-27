@@ -59,7 +59,7 @@ public class SubGoals{
 
         @Override
         public String toString(){
-            return "gType: " + gType.toString() + ", Object: " + Obj.toString();
+            return "gType: " + gType.toString() + ", Object: " + Obj.toString() + " finished: " + Finished;
 
         }
 

@@ -98,7 +98,7 @@ public class Agent extends Object {
 
     @Override
     boolean isInGoal() {
-        return(subgoals.ExtractNextGoal()==null);
+        return subgoals.ExtractNextGoal()==null;
 
 
     }
