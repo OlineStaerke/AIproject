@@ -26,7 +26,6 @@ public abstract class Object implements Comparable<Object> {
 
     abstract boolean isInGoal();
 
-    abstract boolean passedProblem();
 
 
     public void setPriority(){
@@ -35,12 +34,9 @@ public abstract class Object implements Comparable<Object> {
     }
 
 
-
-
     public abstract void planPi(Map map, LinkedHashSet visited);
 
     abstract void bringBlank(State state, Map map, Agent otherAgent);
-
 
 
 

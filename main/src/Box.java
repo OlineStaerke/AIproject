@@ -6,7 +6,6 @@ import java.util.Objects;
 public class Box extends Object {
 
     Agent owner;
-    String problemnode;
 
 
     public Box(Node node, char id){
@@ -37,11 +36,4 @@ public class Box extends Object {
 
 
 
-    @Override
-    boolean passedProblem() {
-        if(problemnode == null) {
-            return true;
-        }
-        else return false;
-    }
 }

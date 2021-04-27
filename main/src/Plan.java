@@ -67,8 +67,6 @@ public class Plan {
 
 
 
-
-
         //altPlans.plan.remove(0);
         /***
         if (agent.priority>=otherAgent.priority)  {
@@ -121,7 +119,7 @@ public class Plan {
 
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
 
-                    if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)) {//|| second
+                    if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)) {
                         //System.err.println("found alternative route:"+route);
                         route.add(node.getNodeId());
                         //route.add(node.getNodeId());
