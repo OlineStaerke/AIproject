@@ -19,7 +19,7 @@ public abstract class Object{
     abstract boolean isInGoal();
 
 
-    abstract void bringBlank(State state, Map map, Agent otherAgent);
+    abstract void bringBlank(State state, Agent otherAgent);
 
 
     @Override
