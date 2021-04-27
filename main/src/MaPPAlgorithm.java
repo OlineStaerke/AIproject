@@ -8,7 +8,7 @@ public class MaPPAlgorithm {
 
         for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
-            agent.planGoals(state.map, new LinkedHashSet());
+            agent.planGoals(state, new LinkedHashSet());
 
         }
 
@@ -40,6 +40,7 @@ public class MaPPAlgorithm {
 
                 System.err.println("//////////////////////");
                 System.err.println(agent);
+                System.err.println("MAINPLAN:"+agent.mainPlan.plan);
 
 
 
@@ -51,10 +52,18 @@ public class MaPPAlgorithm {
 
 
                     // wantedMove = position: Stay.
-                    if (wantedMove.equals(agent.position.NodeId)) {
+
+
+
+                    if (agent.attached_box!=null && wantedMove.equals(agent.attached_box.position.NodeId)) {
+                        System.err.println("HI");
+                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove));
+                    }
+                    else if (wantedMove.equals(agent.position.NodeId) ) {
                         agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove));
 
                     }
+
 
 
                     // Agent wants to move into an occupied cell
@@ -132,7 +141,8 @@ public class MaPPAlgorithm {
                     goalIsReached = false;
                 }
                 else{
-                    agent.planPi(state.map, new LinkedHashSet<>());
+                    System.err.println("PLAN Pi!");
+                    agent.planPi(state, new LinkedHashSet<>());
                 }
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
@@ -152,7 +162,8 @@ public class MaPPAlgorithm {
                        LinkedHashSet visited = new LinkedHashSet();
                        visited.remove(agent.position.NodeId);
 
-                       agent.planPi(state.map,visited);
+                       System.err.println("PLAN PI");
+                       agent.planPi(state,visited);
                        if (agent.mainPlan.plan.size()>0) {
                            state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
                            break;

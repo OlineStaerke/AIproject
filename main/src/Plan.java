@@ -33,10 +33,11 @@ public class Plan {
         box.mainPlan.plan = plan_box;
 
 
-        System.err.println("PLAN:"+plan);
-        if (!goal.equals(plan.get(plan.size()-1))) {
-            plan = new ArrayList<>();
-        }
+        System.err.println("PLAN AGENT:"+plan);
+        System.err.println("PLAN BOX:"+plan_box);
+        //if (!goal.equals(plan.get(plan.size()-1))) {
+         //   plan = new ArrayList<>();
+       // }
 
 
 
