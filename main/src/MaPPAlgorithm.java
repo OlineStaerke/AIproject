@@ -18,8 +18,8 @@ public class MaPPAlgorithm {
         // TODO: Check if node.equals works (it might be pointing towards reference in memory, not actual value@Mathias
         // Each iteration is a processing of 1 step
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
-        ArrayList<Agent> newAgentsInOrder =  state.AgentsInOrder();
-        ArrayList<Agent> agentsInOrder = new ArrayList<>(newAgentsInOrder);
+
+        ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
         Collections.sort(agentsInOrder,new Agent.CustomComparator());
         while(!goalIsReached){
             System.err.println();
@@ -32,7 +32,6 @@ public class MaPPAlgorithm {
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
 
-            ArrayList<Agent> checkInOrder = new ArrayList<>(newAgentsInOrder);
             System.err.println("Agents in order :"+agentsInOrder);
 
 
@@ -41,7 +40,6 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
 
                 System.err.println("//////////////////////");
-                checkInOrder.remove(agent);
                 System.err.println(agent);
 
 

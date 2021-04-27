@@ -102,18 +102,8 @@ public class State {
                 }
             }
         }
-        for (Box B: boxes.values()){
-            B.priority = B.owner.priority;
-        }
     }
 
-    public ArrayList<Agent> AgentsInOrder(){
-        for (Agent A: agents.values()) if (!A.position.isTunnel) A.priority = A.originalPriority;
-
-        ArrayList<Agent> sortedAgents = new ArrayList<>(agents.values());
-        Collections.sort(sortedAgents);
-        return sortedAgents;
-    }
 
     public void UpdateOccupiedNodes(){
         occupiedNodes = new HashMap<>();

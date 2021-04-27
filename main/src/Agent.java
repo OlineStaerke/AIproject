@@ -8,6 +8,9 @@ public class Agent extends Object {
     int distance_to_goal = 100;
     Boolean blank = false;
 
+    public ArrayList<SubGoals> goals = new ArrayList<>();
+
+
     public Agent(Node node, char ID) {
         // The finalPlan (output plan) of an agent must always contain the initial node)
         finalPlan = new ArrayList<>();
@@ -16,13 +19,8 @@ public class Agent extends Object {
         finalPlanString.add(node.getNodeId());
         position = node;
         this.ID = ID;
-        setPriority();
-
     }
 
-    public Agent() {
-
-    }
 
     public static class CustomComparator implements Comparator<Agent> {
         @Override
@@ -43,8 +41,6 @@ public class Agent extends Object {
     }
 
 
-
-    public void planAltPaths() {}
 
 
     public void ExecuteMove(Agent agent,State state, Node wantedMove) {
