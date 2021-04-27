@@ -6,14 +6,20 @@ public class Plan {
     ArrayList<String> plan;
     HashMap<String, ArrayList<String>> precomputedDistance;
 
-    public void createPlan(Map map, String Source,List<String> Destination,Set<String> visited) {
+    public void createPlan(State state, String Source,List<String> Destination,Set<String> visited) {
+        Map map = state.map;
         if (Destination == null) return;
         System.err.println("dest"+Destination);
 
+        visited.addAll(state.occupiedNodes.keySet());
+        visited.remove(Source);
+
         plan = breathFirstTraversal(map, Source, Destination,visited);
+
+
         System.err.println("PLAN:"+plan);
         if (!Destination.contains(plan.get(plan.size()-1))) {
-            plan = new ArrayList<>();
+            plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
         }
 
     }

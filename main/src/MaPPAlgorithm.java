@@ -141,6 +141,7 @@ public class MaPPAlgorithm {
 
             goalIsReached = true;
             Boolean noroutes = true;
+            Boolean anyAgentBlank = false;
             for(Agent agent : agentsInOrder) {
 
 
@@ -148,9 +149,9 @@ public class MaPPAlgorithm {
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
-                //if (agent.mainPlan.plan.size()==0 && !agent.isInGoal() && agent.conflicts==null){
-                  //  agent.planPi(state, new LinkedHashSet<>());
-               // }
+                if (agent.blank) {
+                    anyAgentBlank = true;
+                }
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }
@@ -174,6 +175,7 @@ public class MaPPAlgorithm {
                        agent.planPi(state,visited);
                        if (agent.mainPlan.plan.size()>0) {
                            state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
+                           //if (anyAgentBlank) break;
                            break;
                        }
                    }
