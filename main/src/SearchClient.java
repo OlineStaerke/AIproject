@@ -155,7 +155,7 @@ public class SearchClient {
         Action[][] plan;
         try {
 
-            plan = Converter.getConversion(initialState.agents);
+            plan = Converter.getConversion(initialState.agents, initialState.boxes);
             System.err.println("Length of plan:"+plan.length);
             System.err.println(Arrays.deepToString(plan));
         }

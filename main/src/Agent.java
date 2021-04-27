@@ -92,20 +92,7 @@ public class Agent extends Object {
 
         switch(currentGoal.gType) {
             case BoxBlanked:
-                break;
-                // code block
-
-            case BoxToGoal ||:
-                // code block
-                if (map.getAdjacent(position.getNodeId()).contains(SG.Obj.Goal.NodeId)) {
-                    mainPlan.createPlanWithBox(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
-
-
-                }
-                else {
-                    mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
-
-                }
+            case BoxToGoal:
                 break;
             case AgentToGoal:
                 ArrayList<String> x = new ArrayList<>();
@@ -128,7 +115,6 @@ public class Agent extends Object {
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
-        blank = true;
         mainPlan.createAltPaths(state, agent);
     }
 
