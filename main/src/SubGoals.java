@@ -21,17 +21,17 @@ public class SubGoals{
     }
 
     public void UpdateGoals(){
-        System.err.println("GOALS"+ goals);
+        //System.err.println("GOALS"+ goals);
         for(SubGoal sg: goals){
 
             sg.Finished = sg.Obj.isInSubGoal();
-            System.err.println("Finished:"+ sg.Finished);
+
         }
     }
 
     public SubGoal ExtractNextGoal(){
         for(SubGoal sg: goals){
-            System.err.println("sg: " + sg);
+
             if (!sg.Finished){
                 return sg;
             }

@@ -144,11 +144,11 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
 
 
+
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
-                else{
-                    System.err.println("PLAN Pi!");
+                if (agent.mainPlan.plan.size()==0 && !agent.isInGoal() && agent.conflicts==null){
                     agent.planPi(state, new LinkedHashSet<>());
                 }
                 if (agent.mainPlan.plan.size()>0) {
