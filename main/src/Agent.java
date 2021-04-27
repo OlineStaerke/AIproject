@@ -7,18 +7,21 @@ public class Agent extends Object {
     Agent conflicts;
     int distance_to_goal = 100;
     Boolean blank = false;
+    public SubGoals.SubGoal currentGoal;
 
-    public ArrayList<SubGoals> goals = new ArrayList<>();
+
+    public SubGoals subgoals;
 
 
     public Agent(Node node, char ID) {
-        // The finalPlan (output plan) of an agent must always contain the initial node)
         finalPlan = new ArrayList<>();
         finalPlan.add(node);
         finalPlanString = new ArrayList<>();
         finalPlanString.add(node.getNodeId());
         position = node;
         this.ID = ID;
+        currentGoal = null;
+
     }
 
 
@@ -33,13 +36,6 @@ public class Agent extends Object {
     public ArrayList<Node> getFinalPlan(){
         return this.finalPlan;
     }
-    public void setFree(State state) {
-        //System.err.println("Ive been set free:" +getID());
-        if (!isInGoal()) {
-            blank = false;
-            mainPlan.createPlan(state.map, position.NodeId, Goal.NodeId, new LinkedHashSet<>());}
-    }
-
 
 
 
@@ -77,22 +73,22 @@ public class Agent extends Object {
 
     @Override
     boolean isInGoal() {
-        // Any box not in Goal?
-        for (Box B: boxes){
-            if (!B.isInGoal()) return false;
-        }
-        // Goal not existing?
-        if (Objects.isNull(Goal)) return true;
+        return currentGoal.Obj.position.NodeId.equals(currentGoal.Obj.Goal.NodeId);
+    }
 
-        // Otherwise, check if agent is in goal
-        return Goal.NodeId.equals(position.NodeId);
+    public void planGoals(Map map, LinkedHashSet visited){
+        subgoals = new SubGoals(boxes, this);
+        planPi(map, visited);
     }
 
 
-    @Override
     public void planPi(Map map, LinkedHashSet visited) {
-        if (Goal == null) return;
-        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,visited);
+        var SG = subgoals.ExtractNextGoal();
+        System.err.println("SG: " + SG);
+        currentGoal = SG;
+
+
+        mainPlan.createPlan(map, position.NodeId, SG.Obj.Goal.NodeId, visited);
         distance_to_goal = mainPlan.plan.size();
     }
 
@@ -104,6 +100,8 @@ public class Agent extends Object {
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
+        blank = true;
+        conflicts = otherAgent;
 
         mainPlan.createAltPaths(state, position,map,otherAgent, Goal.NodeId);
     }

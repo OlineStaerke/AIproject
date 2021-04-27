@@ -14,10 +14,8 @@ public class Box extends Object {
     }
 
     public void bringBlank(State state, Map map, Agent otheragent){
-        // Things that Box.bringBlank should do:
-        // Create a new path (like agent.bringBlank)
+        owner.subgoals.AddBringBlankBoxAsGoal(this);
 
-        // Signal to the owner agent, that this box should be moved (extend their mainplan)
 
     }
 
@@ -27,12 +25,6 @@ public class Box extends Object {
         return Goal.NodeId.equals(position.NodeId);
     }
 
-    @Override
-    public void planPi(Map map, LinkedHashSet visited) {
-        mainPlan.createPlan(map, position.NodeId, Goal.NodeId,visited);
-
-
-    }
 
 
 

@@ -19,8 +19,6 @@ public abstract class Object{
     abstract boolean isInGoal();
 
 
-    public abstract void planPi(Map map, LinkedHashSet visited);
-
     abstract void bringBlank(State state, Map map, Agent otherAgent);
 
 

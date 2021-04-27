@@ -8,12 +8,12 @@ public class MaPPAlgorithm {
 
         for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
-            // TODO: Make as multi-processed (not multi-threaded!)
-            agent.planPi(state.map, new LinkedHashSet());
+            agent.planGoals(state.map, new LinkedHashSet());
 
         }
 
         boolean goalIsReached = false;
+
 
         // TODO: Check if node.equals works (it might be pointing towards reference in memory, not actual value@Mathias
         // Each iteration is a processing of 1 step
@@ -70,8 +70,6 @@ public class MaPPAlgorithm {
                             occupyingObject.bringBlank(state, state.map, agent);
                             //newAgentsInOrder.remove(occupyingObject);
                             //newAgentsInOrder.add(0,(Agent) occupyingObject);
-                            ((Agent) occupyingObject).blank = true;
-                            ((Agent) occupyingObject).conflicts = agent;
 
                             agent.blank = false;
 
@@ -131,7 +129,9 @@ public class MaPPAlgorithm {
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
-
+                else{
+                    agent.planPi(state.map, new LinkedHashSet<>());
+                }
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }

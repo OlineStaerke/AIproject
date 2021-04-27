@@ -44,7 +44,6 @@ public class State {
     private void createTunnels(){
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
-            System.err.println("Node:" +n.getNodeId());
             //if (map.map.get(n.NodeId).size() == 1) {
               //  n.isTunnel = true;
                // stringToNode.replace(node, n);
@@ -83,8 +82,6 @@ public class State {
             stringToNode.replace(node, n);
 
 
-            System.err.println(node);
-            System.err.println(n.isTunnel);
 
 
 
