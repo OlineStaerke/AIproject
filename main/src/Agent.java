@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Agent extends Object {
@@ -91,12 +92,13 @@ public class Agent extends Object {
 
         switch(currentGoal.gType) {
             case BoxBlanked:
+                break;
                 // code block
 
-            case BoxToGoal:
+            case BoxToGoal ||:
                 // code block
                 if (map.getAdjacent(position.getNodeId()).contains(SG.Obj.Goal.NodeId)) {
-                    mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
+                    mainPlan.createPlanWithBox(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
 
 
                 }
@@ -104,8 +106,13 @@ public class Agent extends Object {
                     mainPlan.createPlan(map, position.NodeId, map.getAdjacent(SG.Obj.position.NodeId), visited);
 
                 }
-
+                break;
             case AgentToGoal:
+                ArrayList<String> x = new ArrayList<>();
+                x.add(SG.Obj.Goal.NodeId);
+
+                mainPlan.createPlan(map, position.NodeId, x, visited);
+                break;
                 // code block
 
 
