@@ -47,7 +47,7 @@ public final class Converter {
 
     private static Action[] fromCoordsToDirections(ArrayList<Node> plan, ArrayList<Box> boxes) {
 
-        System.err.println(plan);
+
         Action[] convertedFinalPlan = new Action[plan.size()];
         String node1 = plan.get(0).getNodeId();
         convertedFinalPlan[0] = Action.NoOp;

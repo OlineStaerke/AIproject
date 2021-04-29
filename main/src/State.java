@@ -10,6 +10,7 @@ public class State {
     public final Action[] jointAction;
     private final int g;
     public java.util.Map<String, Node> stringToNode;
+    public LinkedHashSet<Agent> agentConflicts = new LinkedHashSet<>();
     //Hashset of string for positions overtaken, each agent would add these positions he finds
     // himself in. This hashset would be public
 
@@ -108,6 +109,7 @@ public class State {
         for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
 
     }
+
 
 
 }

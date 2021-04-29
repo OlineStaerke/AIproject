@@ -66,14 +66,22 @@ public class Plan {
         allPlans.addAll(agent.conflicts.mainPlan.plan);
         allPlans.addAll(state.occupiedNodesString());
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
-
+/**
+        if (agent.conflicts!=null && !(agent.conflicts.mainPlan.plan.get((agent.conflicts.mainPlan.plan.size()))).equals(agent.conflicts.Goal.NodeId)) {
+            System.err.println("2");
+            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),new ArrayList<>(), true); //Run BFS, to create new alternative plan
+            altPlans.plan = altplan;
+        }
+ **/
         if (altPlans.plan==null) {
+            System.err.println("2");
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
 
         if (altPlans.plan==null) {
+            System.err.println("3");
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;

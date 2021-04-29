@@ -50,12 +50,22 @@ public class Agent extends Object {
             }
 
             if (attached_box!=null) {
-                Node wantedMoveBox = state.stringToNode.get(attached_box.mainPlan.plan.get(0));
-                attached_box.finalPlan.add(wantedMoveBox);
-                attached_box.finalPlanString.add(wantedMoveBox.NodeId);
-                if (attached_box.mainPlan.plan.size()>0 && !NoOp) {
-                    attached_box.mainPlan.plan.remove(0);
+                Node wantedMoveBox;
+                if (attached_box.mainPlan.plan.size()==0) {
+                    wantedMoveBox = attached_box.position;
+
+
                 }
+                else {
+                    wantedMoveBox = state.stringToNode.get(attached_box.mainPlan.plan.get(0));
+                }
+                    attached_box.finalPlan.add(wantedMoveBox);
+                    attached_box.finalPlanString.add(wantedMoveBox.NodeId);
+
+                    if (attached_box.mainPlan.plan.size() > 0 && !NoOp) {
+                        attached_box.mainPlan.plan.remove(0);
+                    }
+
 
                 state.occupiedNodes.put(wantedMoveBox.NodeId, this);
                 attached_box.position = wantedMoveBox;

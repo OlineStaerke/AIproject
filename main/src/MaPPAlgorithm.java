@@ -28,7 +28,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            Thread.sleep(100);
+            Thread.sleep(500);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -49,7 +49,7 @@ public class MaPPAlgorithm {
 
 
 
-                if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()<=0||agent.blank)) {
+                if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()<=0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
 
 
                     String wantedMove= agent.mainPlan.plan.get(0);
@@ -79,14 +79,27 @@ public class MaPPAlgorithm {
 
                             System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
+                            if (state.stringToNode.get(wantedMove).isTunnel) {
+                                state.agentConflicts.add((Agent) occupyingObject);
+                            }
 
+
+                            if (occupyingObject.conflicts==agent) {
+                                LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                                visited.remove(agent.position.NodeId);
+                                ((Agent) occupyingObject).planPi(state,visited);
+                                ((Agent) occupyingObject).blank = true;
+                            }
                             //newAgentsInOrder.remove(occupyingObject);
                             //newAgentsInOrder.add(0,(Agent) occupyingObject);
-                            ((Agent) occupyingObject).blank = true;
-                            ((Agent) occupyingObject).conflicts = agent;
+                            else {
+                                ((Agent) occupyingObject).blank = true;
+                                ((Agent) occupyingObject).conflicts = agent;
 
-                            agent.blank = false;
-                            occupyingObject.bringBlank(state, (Agent) occupyingObject);
+                                agent.blank = false;
+
+                                occupyingObject.bringBlank(state, (Agent) occupyingObject);
+                            }
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
 
@@ -155,7 +168,6 @@ public class MaPPAlgorithm {
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }
-                System.err.println("SUBGOALS : : : : :!?!?!?!?! " + agent.subgoals.goals) ;
 
             }
             if (noroutes) {
@@ -165,18 +177,26 @@ public class MaPPAlgorithm {
                    if (!agent.isInSubGoal()) {
 
                      
+                       if (state.agentConflicts.size()>0) {
+                           agent.blank = true;
 
-                       agent.blank = true;
+                           LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                           visited.remove(agent.position.NodeId);
 
-                       LinkedHashSet visited = new LinkedHashSet();
-                       visited.remove(agent.position.NodeId);
-
-                       System.err.println("PLAN PI");
-                       agent.planPi(state,visited);
-                       if (agent.mainPlan.plan.size()>0) {
-                           state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
+                           System.err.println("PLAN PI");
+                           agent.planPi(state, visited);
+                           //state.agentConflicts.remove(agent);
+                           // if (agent.mainPlan.plan.size()>0) {
+                           //  state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
                            //if (anyAgentBlank) break;
                            break;
+                           //}
+                       }
+                       else {
+                           if (!agent.isInGoal()) {
+                           LinkedHashSet visited = new LinkedHashSet();
+                           visited.remove(agent.position.NodeId);
+                           agent.planPi(state, visited);}
                        }
                    }
                 }
