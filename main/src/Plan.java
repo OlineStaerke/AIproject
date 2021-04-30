@@ -3,7 +3,7 @@ import java.sql.SQLOutput;
 import java.util.*;
 
 public class Plan {
-    ArrayList<String> plan;
+    ArrayList<String> plan = new ArrayList<String>();
     HashMap<String, ArrayList<String>> precomputedDistance;
 
     public void createPlan(State state, String Source,List<String> Destination,Set<String> visited) {
@@ -24,8 +24,10 @@ public class Plan {
 
     }
 
-    public void createPlanWithBox(State state, String rootAgent, String rootBox, String goal,Box box) {
+    public void createPlanWithBox(State state, String rootAgent, String rootBox, String goal,Box box) throws InterruptedException {
         if (goal == null) return;
+
+        System.err.println("4");
 
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
         ArrayList plan_agent = new ArrayList<>();
@@ -74,14 +76,12 @@ public class Plan {
         }
  **/
         if (altPlans.plan==null) {
-            System.err.println("2");
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
 
         if (altPlans.plan==null) {
-            System.err.println("3");
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
@@ -144,9 +144,10 @@ public class Plan {
         return null;
     }
 
-    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,ArrayList<String> otherAgentPlan, String goal, Boolean second) {
+    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,ArrayList<String> otherAgentPlan, String goal, Boolean second) throws InterruptedException {
         Map map = state.map;
-        ArrayList<Tuple> route_agent = new ArrayList<>();
+        ArrayList<Tuple> route_agent = new ArrayList<Tuple>();
+
 
         Deque<ArrayList<Tuple>> routes_agent = new ArrayDeque<>();
         Deque<Tuple> queue_agent = new ArrayDeque<>();
@@ -163,6 +164,7 @@ public class Plan {
 
         //Start runnning BFS
         while (!queue_agent.isEmpty()) {
+
             Tuple vertex = queue_agent.pollFirst();
             String vertex_agent = vertex.agentpos;
             String vertex_box = vertex.boxpos;
@@ -209,6 +211,7 @@ public class Plan {
 
                         ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
                         Tuple new_position = new Tuple(vertex_box, v);
+
                         queue_agent.addLast(new_position);
                         newroute.add(new_position);
                         routes_agent.addLast(newroute);

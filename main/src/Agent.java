@@ -19,6 +19,7 @@ public class Agent extends Object {
         this.ID = ID;
         currentGoal = null;
 
+
     }
 
  //Compare to find the agent who is furthest away from goal, by looking at the plan size.
@@ -90,7 +91,9 @@ public class Agent extends Object {
                 if (mainPlan.plan.size()==0 && conflicts!=null ) {
                     blank = false;
                     conflicts.blank = true;
-                    if( !conflicts.isInGoal()) conflicts.bringBlank(state,agent);
+
+                    // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
+                    //if( !conflicts.isInGoal()) conflicts.bringBlank(state,agent);
 
                     if (conflicts.conflicts == agent) {
                         conflicts.conflicts = null;
@@ -117,13 +120,13 @@ public class Agent extends Object {
         return (position.NodeId.equals(Goal.NodeId));
     }
 
-    public void planGoals(State state, LinkedHashSet visited){
+    public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
         subgoals = new SubGoals(boxes, this);
         planPi(state, visited);
     }
 
 
-    public void planPi(State state,LinkedHashSet visited) {
+    public void planPi(State state,LinkedHashSet visited) throws InterruptedException {
         var SG = subgoals.ExtractNextGoal();
 
         System.err.println("SG: " + SG);
@@ -132,17 +135,21 @@ public class Agent extends Object {
         if (currentGoal!=null) {
             switch (currentGoal.gType) {
                 case BoxBlanked:
-                    // code block
+                    // If this is 1:1 with BoxToGoal case, remove the code (dupliacte code)
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
-                        mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, null, (Box) SG.Obj);
+                        System.err.println("CREATING PLAN AWAY WITH BOX!");
+                        var neighs = state.map.map.get(SG.Obj.position.NodeId);
+
+                        mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, neighs.get(0), (Box) SG.Obj);
                         attached_box = (Box) SG.Obj;
+                        subgoals.UpdatedBlanked((Box) SG.Obj, true);
+
 
                     } else {
 
                         attached_box = null;
                         mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
-
                     }
                     break;
 
@@ -150,9 +157,11 @@ public class Agent extends Object {
                     // code block
 
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+                        System.err.println(SG.Obj.Goal.NodeId);
 
                         mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, SG.Obj.Goal.NodeId, (Box) SG.Obj);
                         attached_box = (Box) SG.Obj;
+
 
                     } else {
 
@@ -170,10 +179,10 @@ public class Agent extends Object {
                     attached_box = null;
                     break;
 
-                // code block
-
 
             }
+            System.err.println("SG: " + SG);
+
             distance_to_goal = mainPlan.plan.size();
 
 

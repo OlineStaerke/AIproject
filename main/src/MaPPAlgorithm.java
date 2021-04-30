@@ -28,7 +28,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            Thread.sleep(500);
+            // Thread.sleep(1000);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -79,31 +79,58 @@ public class MaPPAlgorithm {
 
                             System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
-                            if (state.stringToNode.get(wantedMove).isTunnel) {
-                                state.agentConflicts.add((Agent) occupyingObject);
+
+                            // Agent is blocking
+                            if (occupyingObject instanceof Agent) {
+                                var occupyingAgent = (Agent) occupyingObject;
+
+                                if (state.stringToNode.get(wantedMove).isTunnel) {
+                                    state.agentConflicts.add(occupyingAgent);
+                                }
+
+                                if (occupyingAgent.conflicts == agent) {
+                                    LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                                    visited.remove(agent.position.NodeId);
+                                    occupyingAgent.planPi(state, visited);
+                                    occupyingAgent.blank = true;
+                                } else {
+                                    occupyingAgent.blank = true;
+                                    occupyingAgent.conflicts = agent;
+
+                                    agent.blank = false;
+
+                                    occupyingAgent.bringBlank(state,  occupyingAgent);
+                                }
+
                             }
+                            // Box is blocking
+                            else{
+                                var occupyingBox = (Box) occupyingObject;
+
+                                if (state.stringToNode.get(wantedMove).isTunnel) {
+                                    state.agentConflicts.add(occupyingBox.owner);
+                                }
+
+                                // Your own box is blocking :(
+                                // Maybe handle seperatly? idk
+                                if (state.NameToColor.get(occupyingBox.ID).equals(state.NameToColor.get(agent.ID))){
+                                } else{
+
+                                    occupyingBox.owner.blank = true;
+                                    occupyingBox.owner.conflicts = agent;
+                                    System.err.println("OWNER: " + occupyingBox.owner.ID);
 
 
-                            if (occupyingObject.conflicts==agent) {
-                                LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                                visited.remove(agent.position.NodeId);
-                                ((Agent) occupyingObject).planPi(state,visited);
-                                ((Agent) occupyingObject).blank = true;
-                            }
-                            //newAgentsInOrder.remove(occupyingObject);
-                            //newAgentsInOrder.add(0,(Agent) occupyingObject);
-                            else {
-                                ((Agent) occupyingObject).blank = true;
-                                ((Agent) occupyingObject).conflicts = agent;
+                                    occupyingBox.bringBlank(state,  occupyingBox.owner);
+                                    System.err.println("PLAN2: " + agent.mainPlan.plan);
 
-                                agent.blank = false;
+                                }
 
-                                occupyingObject.bringBlank(state, (Agent) occupyingObject);
                             }
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-
                             agent.ExecuteMove(agent,state,agent.position, true);
+
 
 
 
@@ -144,6 +171,11 @@ public class MaPPAlgorithm {
 
                      //Update the subgoals
                     agent.subgoals.UpdateGoals();
+
+                for(Agent AA : agentsInOrder) {
+                    System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+
+                }
                 }
 
 
@@ -170,6 +202,7 @@ public class MaPPAlgorithm {
                 }
 
             }
+
             if (noroutes) {
                 for(Agent agent : agentsInOrder) {
 
@@ -185,6 +218,8 @@ public class MaPPAlgorithm {
 
                            System.err.println("PLAN PI");
                            agent.planPi(state, visited);
+                           System.err.println("PLAN3: " + agent.mainPlan.plan);
+
                            //state.agentConflicts.remove(agent);
                            // if (agent.mainPlan.plan.size()>0) {
                            //  state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
@@ -196,12 +231,16 @@ public class MaPPAlgorithm {
                            if (!agent.isInGoal()) {
                            LinkedHashSet visited = new LinkedHashSet();
                            visited.remove(agent.position.NodeId);
-                           agent.planPi(state, visited);}
+                           agent.planPi(state, visited);
+                               System.err.println("PLAN10: " + agent.mainPlan.plan);
+
+
+                           }
                        }
                    }
                 }
 
-                }
+            }
 
         }
 
