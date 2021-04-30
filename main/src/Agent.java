@@ -93,7 +93,7 @@ public class Agent extends Object {
                     conflicts.blank = true;
 
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
-                    //if( !conflicts.isInGoal()) conflicts.bringBlank(state,agent);
+                    if( !conflicts.isInGoal()) conflicts.bringBlank(state,agent);
 
                     if (conflicts.conflicts == agent) {
                         conflicts.conflicts = null;

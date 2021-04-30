@@ -28,7 +28,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            // Thread.sleep(1000);
+            Thread.sleep(1000);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -37,6 +37,8 @@ public class MaPPAlgorithm {
 
 
             //agentsInOrder = new ArrayList<>(newAgentsInOrder);
+            agentsInOrder = new ArrayList<>(state.agents.values());
+            Collections.sort(agentsInOrder,new Agent.CustomComparator());
 
             for(Agent agent : agentsInOrder) {
 
@@ -77,7 +79,7 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                            System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
 
                             // Agent is blocking
