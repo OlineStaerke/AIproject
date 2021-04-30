@@ -88,6 +88,7 @@ public class Plan {
         }
 
         plan = altPlans.plan;
+        plan.remove(0);
         System.err.println("PLan to goal:"+plan);
         ArrayList<String> planblank = new ArrayList<>(plan);
         state.blankPlan = planblank;
