@@ -28,7 +28,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            //Thread.sleep(1000);
+            Thread.sleep(100);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -50,10 +50,15 @@ public class MaPPAlgorithm {
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()<=0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
+                    String wantedMove = agent.mainPlan.plan.get(0);
 
+                    // if the wanted move is a box position
+                    if (agent.attached_box!=null) {
+                        if (wantedMove == agent.attached_box.position.NodeId) {
+                            wantedMove = agent.attached_box.mainPlan.plan.get(0);
+                        }
 
-                    String wantedMove= agent.mainPlan.plan.get(0);
-
+                    }
 
 
                     // wantedMove = position: Stay.
@@ -61,10 +66,10 @@ public class MaPPAlgorithm {
 
 
                     if (agent.attached_box!=null && wantedMove.equals(agent.attached_box.position.NodeId)) {
-                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove), false);
+                        agent.ExecuteMove(agent,state, false);
                     }
                     else if (wantedMove.equals(agent.position.NodeId) ) {
-                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove),false);
+                        agent.ExecuteMove(agent,state,false);
 
                     }
 
@@ -77,23 +82,29 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                            System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
 
                             // Agent is blocking
                             if (occupyingObject instanceof Agent) {
                                 var occupyingAgent = (Agent) occupyingObject;
 
-                                if (state.stringToNode.get(wantedMove).isTunnel) {
+                               if (state.stringToNode.get(wantedMove).isTunnel) {
                                     state.agentConflicts.add(occupyingAgent);
                                 }
 
-                                if (occupyingAgent.conflicts == agent) {
+                                if (occupyingAgent.conflicts == agent && occupyingAgent.mainPlan.plan.size()>0) {
+                                    System.err.println("Same conflict agent");
                                     LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                                    visited.remove(agent.position.NodeId);
+                                    visited.remove(occupyingAgent.position.NodeId);
                                     occupyingAgent.planPi(state, visited);
+                                    //occupyingAgent.mainPlan.plan.remove(0);
                                     occupyingAgent.blank = true;
+                                    occupyingObject.conflicts = null;
+                                    agent.conflicts =null;
+                                    agent.blank = false;
                                 } else {
+
                                     occupyingAgent.blank = true;
                                     occupyingAgent.conflicts = agent;
 
@@ -129,7 +140,7 @@ public class MaPPAlgorithm {
                             }
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                            agent.ExecuteMove(agent,state,agent.position, true);
+                            agent.ExecuteMove(agent,state, true);
 
 
 
@@ -138,16 +149,16 @@ public class MaPPAlgorithm {
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
 
-                        agent.ExecuteMove(agent,state, state.stringToNode.get(wantedMove), false);
+                        agent.ExecuteMove(agent,state,  false);
                     } else {
 
-                        agent.ExecuteMove(agent,state,agent.position, true);
+                        agent.ExecuteMove(agent,state, true);
                     }
                 }
                     else {
                         //agent.setAgentsFree(state);
 
-                        agent.ExecuteMove(agent,state,agent.position, true);
+                        agent.ExecuteMove(agent,state, true);
 
 
                         // Agent is not in goal, proceed with next subgoal

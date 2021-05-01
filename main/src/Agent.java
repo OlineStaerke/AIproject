@@ -26,7 +26,17 @@ public class Agent extends Object {
     public static class CustomComparator implements Comparator<Agent> {
         @Override
         public int compare(Agent o1, Agent o2) {
-            return ((Integer) o2.mainPlan.plan.size()).compareTo(o1.mainPlan.plan.size());
+            Integer o2_value = 0;
+            Integer o1_value =1;
+            //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
+            if (o2.mainPlan.plan.contains(o1.Goal.NodeId)) {
+                o2_value = 1000;
+            }
+            if (o1.mainPlan.plan.contains(o2.Goal.NodeId)) {
+                o1_value = 1000;
+            }
+            Integer comparevalue = o2.mainPlan.plan.size() + o2_value;
+            return (comparevalue).compareTo(((Integer) o1.mainPlan.plan.size())+o1_value);
         }
     }
 
@@ -38,8 +48,15 @@ public class Agent extends Object {
 
 
 
-    public void ExecuteMove(Agent agent,State state, Node wantedMove, Boolean NoOp) {
+    public void ExecuteMove(Agent agent,State state, Boolean NoOp) throws InterruptedException {
 
+            Node wantedMove;
+            if (NoOp) {
+                wantedMove = agent.position;
+            }
+            else {
+                wantedMove = state.stringToNode.get(agent.mainPlan.plan.get(0));
+            }
             position = wantedMove;
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());
@@ -93,7 +110,14 @@ public class Agent extends Object {
                     conflicts.blank = true;
 
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
-                    if( !conflicts.isInGoal()) conflicts.bringBlank(state,agent);
+                    if(!conflicts.isInGoal()) {
+                        if (conflicts.conflicts!=null) {
+                            conflicts.bringBlank(state, agent);
+                        }
+                        else {
+                            conflicts.planPi(state,new LinkedHashSet());
+                        }
+                    }
 
                     if (conflicts.conflicts == agent) {
                         conflicts.conflicts = null;

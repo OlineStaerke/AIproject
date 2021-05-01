@@ -14,6 +14,7 @@ public class SubGoals{
             goals.add(new SubGoal(b, GoalType.BoxBlanked));
             goals.get(0).Finished = true;
         }
+
         for(Box b : boxes){
             goals.add(new SubGoal(b, GoalType.BoxToGoal));
 

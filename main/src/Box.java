@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Box extends Object {
 
-    Agent owner;
+    public Agent owner;
 
 
     public Box(Node node, char id){
@@ -17,6 +17,7 @@ public class Box extends Object {
     }
 
     public void bringBlank(State state, Map map, Agent otheragent){
+
 
     }
 
@@ -38,9 +39,12 @@ public class Box extends Object {
         //System.err.println("ASHDAHSDH: " + owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked));
 
         // Placeholder currentGoal is created if null (no current task)
-        if (owner.currentGoal == null) owner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.AgentToGoal);
+        if (owner.currentGoal == null) {
+            owner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.BoxBlanked);
+            System.err.println("HELLO");
+        }
 
-
+        owner.subgoals.UpdatedBlanked(this, false);
         if (!(owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked)) || !(owner.mainPlan.plan.size() > 0)) {
             owner.mainPlan.plan = new ArrayList<>();
             System.err.println("SG State: " + owner.subgoals.goals);
@@ -49,7 +53,7 @@ public class Box extends Object {
         }
 
 
-        owner.subgoals.UpdatedBlanked(this, false);
+
 
 
 
