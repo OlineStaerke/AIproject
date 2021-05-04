@@ -23,7 +23,6 @@ public class Box extends Object {
 
     @Override
     boolean isInSubGoal() {
-        System.err.println("BOX GOAL");
         if (Objects.isNull(Goal)) return true;
         return Goal.NodeId.equals(position.NodeId);
     }
@@ -35,7 +34,7 @@ public class Box extends Object {
 
 
     @Override
-    void bringBlank(State state, Agent agent) throws InterruptedException {
+    void bringBlank(State state, Agent agent, String wantedmove) throws InterruptedException {
         //System.err.println("ASHDAHSDH: " + owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked));
 
         // Placeholder currentGoal is created if null (no current task)

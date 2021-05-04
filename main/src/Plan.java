@@ -29,7 +29,17 @@ public class Plan {
 
         System.err.println("4");
 
-        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
+        //Try to solve the level by adding occupied nodes to visited
+        LinkedHashSet occupied = new LinkedHashSet(state.occupiedNodes.keySet());
+        occupied.remove(rootAgent);
+        occupied.remove(rootBox);
+
+        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false);
+
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
+
+        }
         ArrayList plan_agent = new ArrayList<>();
         ArrayList plan_box = new ArrayList<>();
         for (Tuple T : tuple_plan) {
@@ -145,7 +155,7 @@ public class Plan {
         return null;
     }
 
-    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,ArrayList<String> otherAgentPlan, String goal, Boolean second) throws InterruptedException {
+    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, String goal, Boolean second) throws InterruptedException {
         Map map = state.map;
         ArrayList<Tuple> route_agent = new ArrayList<Tuple>();
 
@@ -177,7 +187,7 @@ public class Plan {
             route_agent = routes_agent.pollFirst();
 
             //TODO: CHange visited to be array of vertices, where the combination of agent and box can shift places.
-            if (!visited.contains(vertex)){
+            if (!visited.contains(vertex) && !occupied.contains(vertex_agent) && !occupied.contains(vertex_box)){
 
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
                 if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && (!node_box.isTunnel || second)) {

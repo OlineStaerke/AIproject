@@ -29,11 +29,14 @@ public class Agent extends Object {
             Integer o2_value = 0;
             Integer o1_value =1;
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
-            if (o2.mainPlan.plan.contains(o1.Goal.NodeId)) {
-                o2_value = 1000;
-            }
-            if (o1.mainPlan.plan.contains(o2.Goal.NodeId)) {
-                o1_value = 1000;
+
+            if(o1.currentGoal!=null && o2.currentGoal!=null) {
+                if (o2.mainPlan.plan.contains(o1.currentGoal.Obj.Goal.NodeId)) {
+                    o2_value = 1000;
+                }
+                if (o1.mainPlan.plan.contains(o2.currentGoal.Obj.Goal.NodeId)) {
+                    o1_value = 1000;
+                }
             }
             Integer comparevalue = o2.mainPlan.plan.size() + o2_value;
             return (comparevalue).compareTo(((Integer) o1.mainPlan.plan.size())+o1_value);
@@ -83,12 +86,17 @@ public class Agent extends Object {
                     if (attached_box.mainPlan.plan.size() > 0 && !NoOp) {
                         attached_box.mainPlan.plan.remove(0);
                     }
+                if (attached_box.mainPlan.plan.size()==0 && agent.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked)) {
+                    System.err.println("Set to true");
+                    agent.subgoals.UpdatedBlanked((Box) agent.currentGoal.Obj, true);
+                }
 
 
                 state.occupiedNodes.put(wantedMoveBox.NodeId, this);
                 attached_box.position = wantedMoveBox;
 
             }
+
 
             for (Box b : boxes) {
                 if (b!=attached_box) {
@@ -112,7 +120,7 @@ public class Agent extends Object {
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
                     if(!conflicts.isInGoal()) {
                         if (conflicts.conflicts!=null) {
-                            conflicts.bringBlank(state, agent);
+                            conflicts.bringBlank(state, agent, wantedMove.NodeId);
                         }
                         else {
                             conflicts.planPi(state,new LinkedHashSet());
@@ -135,13 +143,18 @@ public class Agent extends Object {
 
     @Override
     boolean isInGoal() {
-        return subgoals.ExtractNextGoal()==null;
+        return subgoals.ExtractNextGoal(currentGoal)==null;
 
 
     }
 
     boolean isInSubGoal() {
-        return (position.NodeId.equals(Goal.NodeId));
+        if (Goal==null) {
+            return true;
+        }
+        else {
+            return (position.NodeId.equals(Goal.NodeId));
+        }
     }
 
     public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
@@ -151,7 +164,8 @@ public class Agent extends Object {
 
 
     public void planPi(State state,LinkedHashSet visited) throws InterruptedException {
-        var SG = subgoals.ExtractNextGoal();
+        var SG =subgoals.ExtractNextGoal(currentGoal);
+
 
         System.err.println("SG: " + SG);
         currentGoal = SG;
@@ -167,7 +181,7 @@ public class Agent extends Object {
 
                         mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, neighs.get(0), (Box) SG.Obj);
                         attached_box = (Box) SG.Obj;
-                        subgoals.UpdatedBlanked((Box) SG.Obj, true);
+
 
 
                     } else {
@@ -175,6 +189,7 @@ public class Agent extends Object {
                         attached_box = null;
                         mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
                     }
+                    subgoals.UpdatedBlanked((Box) SG.Obj,true);
                     break;
 
                 case BoxToGoal:
@@ -214,9 +229,9 @@ public class Agent extends Object {
     }
 
     // Must update the new position of blanked agent
-    public void bringBlank(State state, Agent agent) {
+    public void bringBlank(State state, Agent agent, String wantedmove) {
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
-        if (mainPlan.plan.size()!=0 && !state.occupiedNodes.containsKey(mainPlan.plan.get(0))){
+        if ((currentGoal.gType==SubGoals.GoalType.BoxBlanked) || mainPlan.plan.size()!=0 && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) )||!position.NodeId.equals(wantedmove))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
