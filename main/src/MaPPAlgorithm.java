@@ -20,6 +20,7 @@ public class MaPPAlgorithm {
 
         ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
         Collections.sort(agentsInOrder,new Agent.CustomComparator());
+        int round = 0;
         while(!goalIsReached){
             System.err.println();
 
@@ -28,7 +29,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            //Thread.sleep(1000);
+            Thread.sleep(100);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -37,34 +38,48 @@ public class MaPPAlgorithm {
 
 
             //agentsInOrder = new ArrayList<>(newAgentsInOrder);
+            round+=1;
 
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals();
 
                 System.err.println("//////////////////////");
+                System.err.println("ROUND"+round);
+                System.err.println();
                 System.err.println(agent);
                 System.err.println("MAINPLAN:"+agent.mainPlan.plan);
                 System.err.println("IN GOAL "+agent.isInGoal());
+                System.err.println("Current SubGoal:"+agent.currentGoal);
+                System.err.println("all goals: "+agent.subgoals.goals);
 
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()<=0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
+                    String wantedMove = agent.mainPlan.plan.get(0);
+
+                    // if the wanted move is a box position
+                    if (agent.attached_box!=null) {
+                        if (wantedMove == agent.attached_box.position.NodeId && agent.attached_box.mainPlan.plan.size()>0) {
+                            wantedMove = agent.attached_box.mainPlan.plan.get(0);
+                        }
+                        // wantedMove = position: Stay.
+                        else {
+                            wantedMove = agent.position.NodeId;
+                        }
+
+                    }
 
 
-                    String wantedMove= agent.mainPlan.plan.get(0);
 
-
-
-                    // wantedMove = position: Stay.
 
 
 
                     if (agent.attached_box!=null && wantedMove.equals(agent.attached_box.position.NodeId)) {
-                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove), false);
+                        agent.ExecuteMove(agent,state, false);
                     }
                     else if (wantedMove.equals(agent.position.NodeId) ) {
-                        agent.ExecuteMove(agent,state,state.stringToNode.get(wantedMove),false);
+                        agent.ExecuteMove(agent,state,false);
 
                     }
 
@@ -77,29 +92,36 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                            System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
 
-                            // Agent is blocking
+                            // Agent is blocking and is not currenly removing a box
                             if (occupyingObject instanceof Agent) {
                                 var occupyingAgent = (Agent) occupyingObject;
 
-                                if (state.stringToNode.get(wantedMove).isTunnel) {
+                               if (state.stringToNode.get(wantedMove).isTunnel) {
                                     state.agentConflicts.add(occupyingAgent);
                                 }
 
-                                if (occupyingAgent.conflicts == agent) {
+                                if (occupyingAgent.conflicts == agent && occupyingAgent.mainPlan.plan.size()>0) {
+                                    System.err.println("Same conflict agent");
                                     LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                                    visited.remove(agent.position.NodeId);
+                                    visited.remove(occupyingAgent.position.NodeId);
                                     occupyingAgent.planPi(state, visited);
+                                    //occupyingAgent.mainPlan.plan.remove(0);
                                     occupyingAgent.blank = true;
+                                    occupyingObject.conflicts = null;
+                                    agent.conflicts =null;
+                                    agent.blank = false;
                                 } else {
+                                    System.err.println("bring blank!!");
+
                                     occupyingAgent.blank = true;
                                     occupyingAgent.conflicts = agent;
 
                                     agent.blank = false;
 
-                                    occupyingAgent.bringBlank(state,  occupyingAgent);
+                                    occupyingAgent.bringBlank(state,  occupyingAgent,wantedMove);
                                 }
 
                             }
@@ -114,22 +136,32 @@ public class MaPPAlgorithm {
                                 // Your own box is blocking :(
                                 // Maybe handle seperatly? idk
                                 if (state.NameToColor.get(occupyingBox.ID).equals(state.NameToColor.get(agent.ID))){
+                                    System.err.println("OWN COLOUR");
+                                    System.err.println();
+                                    occupyingBox.owner.blank = true;
+                                    occupyingBox.owner.conflicts = agent;
+                                    //System.err.println("OWNER: " + occupyingBox.owner.ID);
+
+                                    occupyingBox.owner.mainPlan.plan = new ArrayList<>();
+                                    occupyingBox.bringBlank(state,  occupyingBox.owner, wantedMove);
+
+                                    //System.err.println("PLAN2: " + agent.mainPlan.plan);
                                 } else{
 
                                     occupyingBox.owner.blank = true;
                                     occupyingBox.owner.conflicts = agent;
-                                    System.err.println("OWNER: " + occupyingBox.owner.ID);
+                                    //System.err.println("OWNER: " + occupyingBox.owner.ID);
+
+                                    occupyingBox.bringBlank(state,occupyingBox.owner,wantedMove);
 
 
-                                    occupyingBox.bringBlank(state,  occupyingBox.owner);
-                                    System.err.println("PLAN2: " + agent.mainPlan.plan);
 
                                 }
 
                             }
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                            agent.ExecuteMove(agent,state,agent.position, true);
+                            agent.ExecuteMove(agent,state, true);
 
 
 
@@ -138,16 +170,16 @@ public class MaPPAlgorithm {
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
 
-                        agent.ExecuteMove(agent,state, state.stringToNode.get(wantedMove), false);
+                        agent.ExecuteMove(agent,state,  false);
                     } else {
 
-                        agent.ExecuteMove(agent,state,agent.position, true);
+                        agent.ExecuteMove(agent,state, true);
                     }
                 }
                     else {
                         //agent.setAgentsFree(state);
 
-                        agent.ExecuteMove(agent,state,agent.position, true);
+                        agent.ExecuteMove(agent,state, true);
 
 
                         // Agent is not in goal, proceed with next subgoal
@@ -204,44 +236,43 @@ public class MaPPAlgorithm {
             }
 
             if (noroutes) {
-                for(Agent agent : agentsInOrder) {
+
+                for (Agent agent : agentsInOrder) {
 
 
-                   if (!agent.isInSubGoal()) {
-
-                     
-                       if (state.agentConflicts.size()>0) {
-                           agent.blank = true;
-
-                           LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                           visited.remove(agent.position.NodeId);
-
-                           System.err.println("PLAN PI");
-                           agent.planPi(state, visited);
-                           System.err.println("PLAN3: " + agent.mainPlan.plan);
-
-                           //state.agentConflicts.remove(agent);
-                           // if (agent.mainPlan.plan.size()>0) {
-                           //  state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
-                           //if (anyAgentBlank) break;
-                           break;
-                           //}
-                       }
-                       else {
-                           if (!agent.isInGoal()) {
-                           LinkedHashSet visited = new LinkedHashSet();
-                           visited.remove(agent.position.NodeId);
-                           agent.planPi(state, visited);
-                               System.err.println("PLAN10: " + agent.mainPlan.plan);
+                    if (!agent.isInGoal()) {
 
 
-                           }
-                       }
-                   }
+                        if (state.agentConflicts.size() > 0) {
+                            agent.blank = true;
+
+                            LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                            visited.remove(agent.position.NodeId);
+
+
+                            agent.planPi(state, visited);
+
+                            //state.agentConflicts.remove(agent);
+                            // if (agent.mainPlan.plan.size()>0) {
+                            //  state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
+                            //if (anyAgentBlank) break;
+                            break;
+                            //}
+                        } else {
+                            if (agent.mainPlan.plan.size() == 0) {
+
+                                LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                                visited.remove(agent.position.NodeId);
+                                agent.planPi(state, visited);
+                            }
+
+
+                        }
+                    }
                 }
 
-            }
 
+                }
         }
 
     }

@@ -23,7 +23,7 @@ public abstract class Object{
     abstract boolean isInSubGoal();
 
 
-    abstract void bringBlank(State state, Agent agent) throws InterruptedException;
+    abstract void bringBlank(State state, Agent agent, String wantedmove) throws InterruptedException;
 
 
     @Override
