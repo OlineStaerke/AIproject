@@ -94,7 +94,7 @@ public class Agent extends Object {
                 }
 
                 System.err.println("ADDED to occupied nodes"+ wantedMoveBox.NodeId);
-                state.occupiedNodes.put(wantedMoveBox.NodeId, this);
+                state.occupiedNodes.put(wantedMoveBox.NodeId, attached_box);
                 attached_box.position = wantedMoveBox;
 
             }
@@ -148,6 +148,10 @@ public class Agent extends Object {
         return subgoals.ExtractNextGoal(currentGoal)==null;
 
 
+    }
+
+    boolean attachedBox(State state) {
+        return (state.map.getAdjacent(position.NodeId).contains(attached_box.position.NodeId));
     }
 
     boolean isInSubGoal() {
@@ -240,6 +244,7 @@ public class Agent extends Object {
         }
         blank = true;
         mainPlan.createAltPaths(state, agent);
+        attached_box = null;
     }
 
 

@@ -43,7 +43,7 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals();
-                 System.err.println("WHATUP1");
+
 
                 /**
 
@@ -58,6 +58,7 @@ public class MaPPAlgorithm {
                  **/
                 System.err.println();      
                 System.err.println(agent);
+                System.err.println("ATTACHEDBOX?"+agent.attached_box);
                 System.err.println("ROUND"+round);  
                 System.err.println("Current SubGoal:"+agent.currentGoal);
 
