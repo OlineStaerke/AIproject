@@ -5,11 +5,7 @@ import java.util.Iterator;
 
 public final class Converter {
 
-    private Converter(){
-    }
-
     public static Action[][] getConversion(HashMap<Character, Agent> agents)  {
-
 
         int numAgents = agents.size();
 
@@ -26,10 +22,9 @@ public final class Converter {
         //Increment to loop through agent Hashmap<Character, Agent>
         int inc = 0;
 
-        for (Character characterAgentEntry : agents.keySet()) {
-            Agent agent = agents.get(characterAgentEntry);
-            convPlan[inc] = fromCoordsToDirections(agent.getFinalPlan(), agent.boxes); //Conversion of each agent's plan
-            System.err.println("Final plan (Agent " + agent.ID + "): " + agent.getFinalPlan());
+        for (Agent A : agents.values()) {
+            convPlan[inc] = fromCoordsToDirections(A.getFinalPlan(), A.boxes); //Conversion of each agent's plan
+            System.err.println("Final plan (Agent " + A.ID + "): " + A.getFinalPlan());
             inc++;
         }
         // For each round build the JointAction plan and add it to the ultimate plan
@@ -88,10 +83,10 @@ public final class Converter {
 
             if (boxColDiff != 0 ||  boxRowDiff != 0){
 
-                // Negativ is agent is on top. Positive if agent is below
+                // Negativ: agent above box. Positive if agent is below
                 int AgentToBoxRowDiff = Integer.parseInt(node1.split(" ")[0]) - Integer.parseInt(boxMove1.split(" ")[0]);
 
-                // Positive if agent is to the east. Negative if agent is to the west
+                // Positive: if agent is to the east. Negative if agent is to the west
                 int AgentToBoxColDiff = Integer.parseInt(node1.split(" ")[1]) - Integer.parseInt(boxMove1.split(" ")[1]);
 
                 // Box Moved north
@@ -131,17 +126,13 @@ public final class Converter {
                         if (AgentToBoxRowDiff > 0) {convertedFinalPlan[action] = Action.PullWS;
                         }
                         else{convertedFinalPlan[action] = Action.PushWS;}
-
-
                     }
+
                     // Agent moved east
                     else if(colDiff == 1){
                         if (AgentToBoxRowDiff > 0) {convertedFinalPlan[action] = Action.PullES; }
-                        else{convertedFinalPlan[action] = Action.PushES;
-                            }
-
+                        else{convertedFinalPlan[action] = Action.PushES;}
                     }
-
                 }
 
                 // Box Moved East
@@ -150,8 +141,8 @@ public final class Converter {
                     if (rowDiff == -1){
                         if (AgentToBoxColDiff > 0){ convertedFinalPlan[action] = Action.PullNE; }
                         else{convertedFinalPlan[action] = Action.PushNE;}
-
                     }
+
                     // Agent moved south
                     else if(rowDiff == 1){
                         if (AgentToBoxRowDiff < 0){ convertedFinalPlan[action] = Action.PushSE; }
@@ -163,7 +154,6 @@ public final class Converter {
                         if (AgentToBoxColDiff > 0){ convertedFinalPlan[action] = Action.PullEE; }
                         else{convertedFinalPlan[action] = Action.PushEE;}
                     }
-
                 }
 
 
@@ -174,6 +164,7 @@ public final class Converter {
                         if (AgentToBoxRowDiff > 0){ convertedFinalPlan[action] = Action.PushNW; }
                         else{convertedFinalPlan[action] = Action.PullNW;}
                     }
+
                     // Agent moved south
                     else if(rowDiff == 1){
                         if (AgentToBoxColDiff < 0){ convertedFinalPlan[action] = Action.PullSW; }
@@ -185,11 +176,7 @@ public final class Converter {
                         if (AgentToBoxColDiff < 0){ convertedFinalPlan[action] = Action.PullWW; }
                         else{convertedFinalPlan[action] = Action.PushWW;}
                     }
-
-
                 }
-
-
             }
 
 
