@@ -5,43 +5,46 @@ public class State {
     public Map map;
     public HashMap<Character, Agent> agents;
     public HashMap<Character, Box> boxes;
-    public ArrayList<Node> goals;
-    public final State parent;
-    public final Action[] jointAction;
-    private final int g;
-    public java.util.Map<String, Node> stringToNode;
-    public LinkedHashSet<Agent> agentConflicts = new LinkedHashSet<>();
-    //Hashset of string for positions overtaken, each agent would add these positions he finds
-    // himself in. This hashset would be public
-
-    public HashMap<Character, String> NameToColor;
-
     public HashMap<String, Object> occupiedNodes;
-    public ArrayList<String> blankPlan = new ArrayList<>();
+    public HashMap<Character, String> NameToColor;
+    public HashMap<String, Node> stringToNode;
+
+    public LinkedHashSet<Agent> agentConflicts;
+    public ArrayList<String> blankPlan;
+
+
+    public State(HashMap<String, Node> stringToNode, HashMap<Character, Agent> agents, HashMap<Character,
+            String> NameToColor, HashMap<Character, Box> boxes, Map map)
+    {
+        this.stringToNode = stringToNode;
+        this.agents = agents;
+        this.boxes = boxes;
+        this.map = map;
+        this.NameToColor = NameToColor;
+
+        agentConflicts = new LinkedHashSet<>();
+        blankPlan = new ArrayList<>();
+        occupiedNodes = new HashMap<>();
+
+
+        UpdateOccupiedNodes();
+        createTunnels();
+        createObjectAssociations();
+
+
+    }
 
     public ArrayList<String> occupiedNodesString() {
         return new ArrayList<>(occupiedNodes.keySet());
     }
 
-    public State(java.util.Map<String, Node> stringToNode, HashMap<Character, Agent> agents, HashMap<Character,
-            String> NameToColor, HashMap<Character, Box> boxes, ArrayList<Node> goals, Map map)
-    {
-        this.stringToNode = stringToNode;
-        this.agents = agents;
-        this.boxes = boxes;
-        this.goals = goals;
-        this.parent = null;
-        this.jointAction = null;
-        this.g = 0;
+    public void UpdateOccupiedNodes(){
         occupiedNodes = new HashMap<>();
-        UpdateOccupiedNodes();
-
-        this.map = map;
-        this.NameToColor = NameToColor;
-        createTunnels();
-        createObjectAssociations();
+        for(Agent agent : agents.values()) occupiedNodes.put(agent.position.NodeId, agent);
+        for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
     }
 
+    // Definition of a tunnel: A node, X, is a tunnel, iff removing X disconnects the graph.
     private void createTunnels(){
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
@@ -81,15 +84,10 @@ public class State {
             if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
 
             stringToNode.replace(node, n);
-
-
-
-
-
-
         }
     }
 
+    // Links boxes to agents and vice-versa
     private void createObjectAssociations(){
         for (Agent A: agents.values()){
             for (Box B: boxes.values()){
@@ -102,13 +100,6 @@ public class State {
         }
     }
 
-
-    public void UpdateOccupiedNodes(){
-        occupiedNodes = new HashMap<>();
-        for(Agent agent : agents.values()) occupiedNodes.put(agent.position.NodeId, agent);
-        for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
-
-    }
 
 
 

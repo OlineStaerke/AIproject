@@ -7,7 +7,7 @@ import java.util.*;
 public class SearchClient {
     public static State parseLevel(BufferedReader serverMessages)
             throws IOException {
-        java.util.Map<String, Node> stringToNode = new HashMap<>();
+        HashMap<String, Node> stringToNode = new HashMap<>();
         // We can assume that the level file is conforming to specification, since the server verifies this.
         // Read domain
         serverMessages.readLine(); // #domain
@@ -103,7 +103,6 @@ public class SearchClient {
 
         // Read goal state
         // line is currently "#goal"
-        ArrayList<Node> goals = new ArrayList<>();
         line = serverMessages.readLine();
         int row = 0;
         while (!line.startsWith("#")) {
@@ -126,7 +125,7 @@ public class SearchClient {
         // End
         // line is currently "#end"
 
-        return new State(stringToNode,agents, NameToColor, boxes, goals, map);
+        return new State(stringToNode,agents, NameToColor, boxes, map);
     }
 
     public void search() {
