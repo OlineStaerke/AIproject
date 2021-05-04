@@ -18,22 +18,24 @@ public class SubGoals{
             goals.add(sg);
         }
 
+        // Boxes to their goal locations are added
         for(Box b : boxes){
             goals.add(new SubGoal(b, GoalType.BoxToGoal));
-
         }
 
+        // Agent to its goal is added.
         if (A.Goal != null){
             goals.add(new SubGoal(A, GoalType.AgentToGoal));
         }
+
 
         UpdateGoals();
 
 
     }
 
+    // Update what goals are now fulfilled
     public void UpdateGoals(){
-        //System.err.println("GOALS"+ goals);
         for(SubGoal sg: goals){
             if (sg.gType.equals(GoalType.BoxBlanked)) continue;
             sg.Finished = sg.Obj.isInSubGoal();
@@ -44,14 +46,12 @@ public class SubGoals{
     }
 
     public SubGoal ExtractNextGoal(SubGoal currentGoal){
-        //System.err.println("Allgoals:"+goals);
 
         if (currentGoal!=null) {
 
             for (SubGoal sg : goals) {
 
                 if (!sg.Finished && sg.gType == GoalType.BoxBlanked) {
-                    currentGoal = sg;
                     return sg;
                 }
             }
@@ -64,15 +64,14 @@ public class SubGoals{
             for (SubGoal sg : goals) {
 
                 if (!sg.Finished && !sg.Obj.position.NodeId.equals(currentGoal.Obj.position.NodeId)) {
-                    currentGoal = sg;
                     return sg;
                 }
             }
         }
+        // Otherwise, select the next goal
         for(SubGoal sg2: goals){
 
             if (!sg2.Finished){
-                currentGoal =sg2;
                 return sg2;
             }
         }
@@ -80,17 +79,11 @@ public class SubGoals{
     }
 
 
+    // Update BringBlanked subgoal manually.
     public void UpdatedBlanked(Box o, boolean newValue){
         for(SubGoal SG : goals){
-            System.err.println("here: " +SG);
             if(SG.gType.equals(GoalType.BoxBlanked) && SG.Obj.ID == (o.ID)){
                 SG.Finished = newValue;
-                System.err.println("Updated!; " + SG);
-                return;
-            }
-            else if(!SG.gType.equals(GoalType.BoxBlanked) && SG.Obj.ID == o.ID) {
-                 goals.remove(SG);
-                 goals.add(goals.size()-1, SG);
             }
         }
     }
@@ -120,25 +113,6 @@ public class SubGoals{
             public int compare(SubGoal s1, SubGoal s2) {
                 Integer s1_value = 0;
                 Integer s2_value =1;
-                /**
-                if (s1.gType.equals(GoalType.AgentToGoal)) {
-                    s1_value =1000;
-                }
-                if (s1.gType.equals(GoalType.AgentToGoal)) {
-                    s2_value =1000;
-                }
-                **/
-
-                //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
-
-                /**
-                if (s1.Obj.mainPlan.plan.contains(s2.Obj.Goal.NodeId)) {
-                    s2_value = 1000;
-                }
-                if (s1.Obj.mainPlan.plan.contains(s2.Obj.Goal.NodeId)) {
-                    s1_value = 1000;
-                }
-                 **/
 
                 Integer comparevalue = s2.Obj.mainPlan.plan.size() + s2_value;
                 return (comparevalue).compareTo(((Integer) s1.Obj.mainPlan.plan.size())+s1_value);
