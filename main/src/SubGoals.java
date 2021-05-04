@@ -3,8 +3,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class SubGoals{
-    enum GoalType{BoxBlanked, BoxToGoal, AgentToGoal, NULL}
     public ArrayList<SubGoal> goals;
+    enum GoalType{BoxBlanked, BoxToGoal, AgentToGoal} //Can put this enum above SubGoals class
 
 
     public SubGoals(ArrayList<Box> boxes, Agent A){
@@ -13,8 +13,9 @@ public class SubGoals{
         // Put possible blanks as first goals
         // These are true, and changed to false when blanked.
         for(Box b : boxes){
-            goals.add(new SubGoal(b, GoalType.BoxBlanked));
-            goals.get(0).Finished = true;
+            var sg = new SubGoal(b, GoalType.BoxBlanked);
+            sg.Finished = true;
+            goals.add(sg);
         }
 
         for(Box b : boxes){
