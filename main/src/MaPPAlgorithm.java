@@ -29,7 +29,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            Thread.sleep(100);
+            //Thread.sleep(100);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -166,6 +166,10 @@ public class MaPPAlgorithm {
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
                             agent.ExecuteMove(agent,state, true);
+                            agent.mainPlan.plan.add(0,agent.position.NodeId);
+                            if (agent.attached_box!=null) {
+                                agent.attached_box.mainPlan.plan.add(0,agent.attached_box.position.NodeId);
+                            }
 
 
 

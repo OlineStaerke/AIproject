@@ -151,6 +151,7 @@ public class Agent extends Object {
     }
 
     boolean attachedBox(State state) {
+        if (attached_box==null) {return false;}
         return (state.map.getAdjacent(position.NodeId).contains(attached_box.position.NodeId));
     }
 
@@ -184,9 +185,9 @@ public class Agent extends Object {
 
                         System.err.println("CREATING PLAN AWAY WITH BOX!");
                         var neighs = state.map.map.get(SG.Obj.position.NodeId);
-
-                        mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, neighs.get(0), (Box) SG.Obj);
                         attached_box = (Box) SG.Obj;
+                        mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
+
 
 
 
@@ -203,9 +204,9 @@ public class Agent extends Object {
 
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
                         System.err.println(SG.Obj.Goal.NodeId);
-
-                        mainPlan.createPlanWithBox(state, position.NodeId, SG.Obj.position.NodeId, SG.Obj.Goal.NodeId, (Box) SG.Obj);
                         attached_box = (Box) SG.Obj;
+                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal.NodeId, (Box) SG.Obj);
+
 
 
                     } else {

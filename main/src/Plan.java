@@ -10,31 +10,47 @@ public class Plan {
         Map map = state.map;
         if (Destination == null) return;
 
+        state.UpdateOccupiedNodes();
+        System.err.println("OCCUPIED NODE:"+state.occupiedNodes);
+
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
+
+        System.err.println("VISITED: "+visited);
 
         plan = breathFirstTraversal(map, Source, Destination,visited);
 
 
-        System.err.println("PLAN:"+plan);
+        System.err.println("PLAN1:"+plan);
         if (!Destination.contains(plan.get(plan.size()-1))) {
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
         }
 
     }
 
-    public void createPlanWithBox(State state, String rootAgent, String rootBox, String goal,Box box) throws InterruptedException {
-        if (goal == null) return;
+    public void createPlanWithBox(State state,Agent agent, String goal,Box box) throws InterruptedException {
+        String rootAgent = agent.position.NodeId;
+        String rootBox = agent.attached_box.position.NodeId;
+        ArrayList otheragentplan = new ArrayList();
 
-        System.err.println("4");
+        if (goal==null) {
+        otheragentplan = new ArrayList<String>(agent.conflicts.mainPlan.plan);}
+
+        System.err.println("GOAL? "+goal);
 
         //Try to solve the level by adding occupied nodes to visited
         LinkedHashSet occupied = new LinkedHashSet(state.occupiedNodes.keySet());
         occupied.remove(rootAgent);
         occupied.remove(rootBox);
 
-        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false);
+        System.err.println("OCCUPIED: "+occupied);
 
+        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false);
+        System.err.println("TUPLEPLAN: "+tuple_plan);
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true);
+
+        }
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
 
@@ -176,8 +192,10 @@ public class Plan {
         while (!queue_agent.isEmpty()) {
 
             Tuple vertex = queue_agent.pollFirst();
+
             String vertex_agent = vertex.agentpos;
             String vertex_box = vertex.boxpos;
+
 
             //Change String to Node
             Node node_agent = state.stringToNode.get(vertex_agent);
@@ -185,9 +203,8 @@ public class Plan {
 
             route_agent = routes_agent.pollFirst();
 
-            //TODO: CHange visited to be array of vertices, where the combination of agent and box can shift places.
-            if (!visited.contains(vertex) && !occupied.contains(vertex_agent) && !occupied.contains(vertex_box)){
-
+             if (!visited.contains(vertex) && !occupied.contains(vertex_agent) && !occupied.contains(vertex_box)){
+                 //System.err.println("VERTEX:"+vertex_agent+" "+vertex_box+ " "+ (goal==null) + " "+ !otherAgentPlan.contains(node_box.getNodeId()) +" "+ (!node_box.isTunnel || second));
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
                 if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && (!node_box.isTunnel || second)) {
                     //System.err.println("found alternative route:"+route);
@@ -252,7 +269,7 @@ public class Plan {
             route = routes.pollFirst();
 
             //If we are in goal, stop BFS
-            if (goal.contains(vertex)) {
+            if (goal.contains(vertex) && !visited.contains(vertex)) {
                 return route;
             }
 

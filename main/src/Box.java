@@ -35,20 +35,23 @@ public class Box extends Object {
 
     @Override
     void bringBlank(State state, Agent agent) throws InterruptedException {
+        System.err.println("BRING BLANK inside");
         //System.err.println("ASHDAHSDH: " + owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked));
 
         if ((mainPlan.plan.size()>0) && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) )) && (owner.attached_box!=null && owner.attached_box.ID==ID && owner.attachedBox(state))){
+            System.err.println("HI");
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
         // Placeholder currentGoal is created if null (no current task)
         if (owner.currentGoal == null) {
-            owner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.BoxBlanked);
+            owner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.AgentToGoal);
             System.err.println("HELLO");
         }
 
         owner.subgoals.UpdatedBlanked(this, false);
-        if (!(owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked)) || (owner.mainPlan.plan.size() > 0)) {
+        System.err.println("Owner current responsibility (NEW): " + owner.currentGoal);
+        if (owner.mainPlan.plan.size()==0 || (owner.currentGoal.Obj.ID == ID && owner.attachedBox(state))) {
             owner.mainPlan.plan = new ArrayList<>();
             System.err.println("SG State: " + owner.subgoals.goals);
             owner.planPi(state, new LinkedHashSet<>());
