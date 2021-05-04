@@ -77,13 +77,13 @@ public class SearchClient {
                     if (line.charAt(col + 1) != '+') {
                         // Temporary token to increment the id value for column
                         int tempCol = col + 1;
-                        map.addEdge(node_string, (row + " " + tempCol), 0, true);
+                        map.addEdge(node_string, (row + " " + tempCol));
                     }
                     String nextLine = levelLines.get(row + 1);
                     if (nextLine.charAt(col) != '+') {
                         // Temporary token to increment the id value for row
                         int tempRow = row + 1;
-                        map.addEdge(node_string, (tempRow + " " + col), 0, true);
+                        map.addEdge(node_string, (tempRow + " " + col));
                     }
 
                     //Check if it's an agent

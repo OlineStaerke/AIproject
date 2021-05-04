@@ -1,6 +1,5 @@
 public class Node{
     public String NodeId;
-    boolean isGoal = false;
     boolean isTunnel = false;
 
 
@@ -11,13 +10,7 @@ public class Node{
         return this.NodeId;
     }
 
-    public void setGoal(){
-        this.isGoal = true;
-    }
 
-    public boolean isGoal(){
-        return isGoal;
-    }
 
     @Override
     public String toString(){
