@@ -122,9 +122,11 @@ public class Agent extends Object {
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
                     if(!conflicts.isInGoal()) {
                         if (conflicts.conflicts!=null) {
-                            conflicts.bringBlank(state, agent);
+                            System.err.println("CONFLICT");
+                            conflicts.bringBlank(state, conflicts);
                         }
                         else {
+                            System.err.println("PLANPI");
                             conflicts.planPi(state,new LinkedHashSet());
                         }
                     }

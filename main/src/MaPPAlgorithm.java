@@ -29,7 +29,7 @@ public class MaPPAlgorithm {
 
             //
             //
-            //Thread.sleep(100);
+            //Thread.sleep(500);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
