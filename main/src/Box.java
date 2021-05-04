@@ -34,7 +34,7 @@ public class Box extends Object {
 
 
     @Override
-    void bringBlank(State state, Agent agent, String wantedmove) throws InterruptedException {
+    void bringBlank(State state, Agent agent) throws InterruptedException {
         //System.err.println("ASHDAHSDH: " + owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked));
 
         // Placeholder currentGoal is created if null (no current task)

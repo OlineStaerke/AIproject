@@ -43,15 +43,23 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals();
+                 System.err.println("WHATUP1");
+
+                /**
 
                 System.err.println("//////////////////////");
-                System.err.println("ROUND"+round);
+                System.err.println("bringb"+round);
                 System.err.println();
                 System.err.println(agent);
                 System.err.println("MAINPLAN:"+agent.mainPlan.plan);
                 System.err.println("IN GOAL "+agent.isInGoal());
-                System.err.println("Current SubGoal:"+agent.currentGoal);
+
                 System.err.println("all goals: "+agent.subgoals.goals);
+                 **/
+                System.err.println();      
+                System.err.println(agent);
+                System.err.println("ROUND"+round);  
+                System.err.println("Current SubGoal:"+agent.currentGoal);
 
 
 
@@ -60,34 +68,29 @@ public class MaPPAlgorithm {
 
                     // if the wanted move is a box position
                     if (agent.attached_box!=null) {
-                        if (wantedMove == agent.attached_box.position.NodeId && agent.attached_box.mainPlan.plan.size()>0) {
+                        if (wantedMove.equals(agent.attached_box.position.NodeId) && agent.attached_box.mainPlan.plan.size() > 0) {
+
                             wantedMove = agent.attached_box.mainPlan.plan.get(0);
+
                         }
                         // wantedMove = position: Stay.
                         else {
-                            wantedMove = agent.position.NodeId;
+                            wantedMove = agent.mainPlan.plan.get(0);
                         }
 
-                    }
 
 
-
-
-
-
-                    if (agent.attached_box!=null && wantedMove.equals(agent.attached_box.position.NodeId)) {
-                        agent.ExecuteMove(agent,state, false);
-                    }
-                    else if (wantedMove.equals(agent.position.NodeId) ) {
-                        agent.ExecuteMove(agent,state,false);
 
                     }
 
+                    if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null) && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
+                        agent.ExecuteMove(agent, state, false);
+                    }
 
 
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
-                        System.out.println("CONFLICT! I am agent:"+agent.ID);
+                        System.err.println("CONFLICT! I am agent:"+agent.ID);
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
@@ -121,7 +124,7 @@ public class MaPPAlgorithm {
 
                                     agent.blank = false;
 
-                                    occupyingAgent.bringBlank(state,  occupyingAgent,wantedMove);
+                                    occupyingAgent.bringBlank(state,occupyingAgent);
                                 }
 
                             }
@@ -143,7 +146,7 @@ public class MaPPAlgorithm {
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
                                     occupyingBox.owner.mainPlan.plan = new ArrayList<>();
-                                    occupyingBox.bringBlank(state,  occupyingBox.owner, wantedMove);
+                                    occupyingBox.bringBlank(state,  occupyingBox.owner);
 
                                     //System.err.println("PLAN2: " + agent.mainPlan.plan);
                                 } else{
@@ -152,7 +155,7 @@ public class MaPPAlgorithm {
                                     occupyingBox.owner.conflicts = agent;
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
-                                    occupyingBox.bringBlank(state,occupyingBox.owner,wantedMove);
+                                    occupyingBox.bringBlank(state,occupyingBox.owner);
 
 
 
@@ -169,6 +172,7 @@ public class MaPPAlgorithm {
                     }
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
+                        System.err.println("WHATUP");
 
                         agent.ExecuteMove(agent,state,  false);
                     } else {
@@ -206,6 +210,11 @@ public class MaPPAlgorithm {
 
                 for(Agent AA : agentsInOrder) {
                     System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+
+                    for (Box BB : AA.boxes) {
+                
+                      System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
+                    }
 
                 }
                 }

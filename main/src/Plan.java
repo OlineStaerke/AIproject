@@ -9,7 +9,6 @@ public class Plan {
     public void createPlan(State state, String Source,List<String> Destination,Set<String> visited) {
         Map map = state.map;
         if (Destination == null) return;
-        System.err.println("dest"+Destination);
 
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
