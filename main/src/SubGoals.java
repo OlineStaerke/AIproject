@@ -8,6 +8,8 @@ public class SubGoals{
 
 
     public SubGoals(ArrayList<Box> boxes, Agent A){
+        System.err.println("HELLO");
+        System.err.println(A.Goal);
         goals = new ArrayList<>();
 
         // Put possible blanks as first goals
@@ -24,7 +26,7 @@ public class SubGoals{
         }
 
         // Agent to its goal is added.
-        if (A.Goal != null){
+        if (A.Goal.size()>0){
             goals.add(new SubGoal(A, GoalType.AgentToGoal));
         }
 

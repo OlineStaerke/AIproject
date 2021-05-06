@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public final class Converter {
 
-    public static Action[][] getConversion(HashMap<Character, Agent> agents)  {
+    public static Action[][] getConversion(HashMap<String, Agent> agents)  {
 
         int numAgents = agents.size();
 
@@ -15,7 +15,7 @@ public final class Converter {
             System.err.println("First index of final plan removed, action was: " + q);
         }
 
-        int numRounds = agents.get('0').getFinalPlan().size();
+        int numRounds = agents.get("0").getFinalPlan().size();
 
         Action[][] convPlan = new Action[numAgents][]; //A converted plan for each agent
         Action[][] ultimatePlan = new Action[numRounds][]; //The fully converted plan which will be returned

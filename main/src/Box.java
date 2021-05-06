@@ -5,10 +5,11 @@ import java.util.Objects;
 
 public class Box extends Object {
 
-    public Agent owner;
+    public Agent currentowner;
+    public ArrayList<Agent> owners = new ArrayList<>();
 
 
-    public Box(Node node, char id){
+    public Box(Node node, String id){
         this.position = node;
         this.ID = id;
         this.finalPlan = new ArrayList<>();
@@ -24,7 +25,7 @@ public class Box extends Object {
     @Override
     boolean isInSubGoal() {
         if (Objects.isNull(Goal)) return true;
-        return Goal.NodeId.equals(position.NodeId);
+        return Goal.contains(position.NodeId);
     }
 
     @Override

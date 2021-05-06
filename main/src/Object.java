@@ -8,15 +8,16 @@ public abstract class Object{
 
     ArrayList<Node> finalPlan;
     ArrayList<String> finalPlanString;
-    char ID;
+    String ID;
     Node position;
-    Node Goal;
+    ArrayList<String> Goal = new ArrayList<>();
     Plan mainPlan = new Plan();
     Agent conflicts;
 
 
     public void setGoal(Node goal) {
-        this.Goal = goal;
+        Goal.add(goal.NodeId);
+
     }
 
     abstract boolean isInGoal();

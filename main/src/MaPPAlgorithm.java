@@ -142,11 +142,11 @@ public class MaPPAlgorithm {
                                 if (state.NameToColor.get(occupyingBox.ID).equals(state.NameToColor.get(agent.ID))){
                                     System.err.println("OWN COLOUR");
                                     System.err.println();
-                                    occupyingBox.owner.blank = true;
-                                    occupyingBox.owner.conflicts = agent;
+                                    //occupyingBox.owner.blank = true;
+                                    //occupyingBox.owner.conflicts = agent;
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
-                                    occupyingBox.owner.mainPlan.plan = new ArrayList<>();
+                                    occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
                                     occupyingBox.bringBlank(state,  occupyingBox.owner);
 
                                     //System.err.println("PLAN2: " + agent.mainPlan.plan);
@@ -219,6 +219,7 @@ public class MaPPAlgorithm {
                     for (Box BB : AA.boxes) {
                 
                       System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
+                        System.err.println(BB.owner);
                     }
 
                 }

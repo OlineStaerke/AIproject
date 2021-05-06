@@ -10,7 +10,7 @@ public class Agent extends Object {
     Box attached_box;
 
 
-    public Agent(Node node, char ID) {
+    public Agent(Node node, String ID) {
         finalPlan = new ArrayList<>();
         finalPlan.add(node);
         finalPlanString = new ArrayList<>();
@@ -31,10 +31,10 @@ public class Agent extends Object {
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
 
             if(o1.currentGoal!=null && o2.currentGoal!=null) {
-                if (o2.mainPlan.plan.contains(o1.currentGoal.Obj.Goal.NodeId)) {
+                if (o2.mainPlan.plan.contains(o1.currentGoal.Obj.Goal)) {
                     o2_value = 1000;
                 }
-                if (o1.mainPlan.plan.contains(o2.currentGoal.Obj.Goal.NodeId)) {
+                if (o1.mainPlan.plan.contains(o2.currentGoal.Obj.Goal)) {
                     o1_value = 1000;
                 }
             }
@@ -162,7 +162,7 @@ public class Agent extends Object {
             return true;
         }
         else {
-            return (position.NodeId.equals(Goal.NodeId));
+            return (Goal.contains(position.NodeId));
         }
     }
 
@@ -205,9 +205,9 @@ public class Agent extends Object {
                     // code block
 
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
-                        System.err.println(SG.Obj.Goal.NodeId);
+
                         attached_box = (Box) SG.Obj;
-                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal.NodeId, (Box) SG.Obj);
+                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
 
 
 
@@ -221,7 +221,7 @@ public class Agent extends Object {
 
                 case AgentToGoal:
                     List<String> goalListAgent = new ArrayList<>();
-                    goalListAgent.add(SG.Obj.Goal.NodeId);
+                    goalListAgent.addAll(SG.Obj.Goal);
                     mainPlan.createPlan(state, position.NodeId, goalListAgent, visited);
 
                     attached_box = null;

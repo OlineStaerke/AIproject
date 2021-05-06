@@ -13,8 +13,11 @@ public class SearchClient {
         HashMap<Character, String> NameToColor = new HashMap<>();
         ArrayList<String> levelLines = new ArrayList<>(64);
         Map map = new Map();
-        HashMap<Character, Agent> agents = new HashMap<>();
-        HashMap<Character, Box> boxes = new HashMap<>();
+        HashMap<String, Agent> agents = new HashMap<>();
+        HashMap<Character, ArrayList<Agent>> agents_lookup = new HashMap<>();
+
+        HashMap<String, Box> boxes = new HashMap<>();
+        HashMap<Character, ArrayList<Box>> boxes_lookup = new HashMap<>();
 
 
 
@@ -38,12 +41,15 @@ public class SearchClient {
             String colour = split[0].strip();
 
             String[] entities = split[1].split(",");
+
             for (String entity : entities) {
                 char c = entity.strip().charAt(0);
                 if ('0' <= c && c <= '9') {
                     NameToColor.put(c, colour);
+
                 } else if ('A' <= c && c <= 'Z') {
                     NameToColor.put(c, colour);
+
                 }
             }
             line = serverMessages.readLine();
@@ -62,11 +68,14 @@ public class SearchClient {
         }
 
         // Iteration value for priority will increase for each loop
+        Integer i_agent = 0;
+        Integer i_box = 0;
         for (int row = 1; row < numRows - 1; ++row) {
             line = levelLines.get(row);
             for (int col = 1; col < numCols - 1; ++col) {
                 char c = line.charAt(col);
                 if (c != '+') {
+
                     //First add node
                     Node node = new Node(row + " " + col);
                     String node_string = node.NodeId;
@@ -88,32 +97,76 @@ public class SearchClient {
 
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
-                        Agent agent = new Agent(node, c);
-                        agents.put(c, agent);
+                        System.err.println(agents_lookup);
+
+                        if (agents_lookup.containsKey(c)) {
+                            Integer newi = agents_lookup.get(c).size()+1;
+                            Agent agent = new Agent(node, c + newi.toString());
+                            agents.put(c + newi.toString(), agent);
+                            ArrayList<Agent> addAgent = new ArrayList<>(agents_lookup.get(c));
+                            agents_lookup.replace(c,addAgent);
+                        }
+                        else {
+                            Agent agent = new Agent(node, c+"");
+                            agents.put(c+"", agent);
+                            ArrayList<Agent> addAgent = new ArrayList<>();
+                            addAgent.add(agent);
+                            agents_lookup.put(c,addAgent);
+                        }
+
+
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
-                        boxes.put(c, new Box(node, c));
+                        System.err.println(boxes_lookup);
+
+                        if (boxes_lookup.containsKey(c)) {
+                            Integer newi = boxes_lookup.get(c).size()+1;
+                            Box box = new Box(node, c+newi.toString());
+
+                            boxes.put(c + newi.toString(), box);
+                            ArrayList<Box> addBox = new ArrayList<>(boxes_lookup.get(c));
+                            addBox.add(box);
+                            boxes_lookup.replace(c,addBox);
+                        }
+                        else {
+                            Box box = new Box(node, c+"0");
+                            boxes.put(c+"0", box);
+                            ArrayList<Box> addBox = new ArrayList<>();
+                            addBox.add(box);
+                            boxes_lookup.put(c,addBox);
+                        }
                     }
+
                 }
             }
         }
 
         // Read goal state
         // line is currently "#goal"
+
         line = serverMessages.readLine();
         int row = 0;
+
+        System.err.println(agents);
         while (!line.startsWith("#")) {
             for (int col = 0; col < line.length(); ++col) {
                 char c = line.charAt(col);
                 // If the goal is just getting the agent to its goal location
                 Node goal = new Node(row + " " + col);
                 if ('0' <= c && c <= '9') {
-                    agents.get(c).setGoal(goal);
+                    System.err.println(c+i_agent.toString());
+                    for (Agent agent : agents_lookup.get(c)) {
+                        agent.setGoal(goal);
+                    }
                 }
                 // Else, the box gets the goal of getting to its goal location
                 else if ('A' <= c && c <= 'Z'){
-                    boxes.get(c).setGoal(goal);
+                    System.err.println(c+i_box.toString());
+                    for (Box box: boxes_lookup.get(c)) {
+                        box.setGoal(goal);
+                    }
+
                 }
             }
             ++row;

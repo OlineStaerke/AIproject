@@ -28,7 +28,7 @@ public class Plan {
 
     }
 
-    public void createPlanWithBox(State state,Agent agent, String goal,Box box) throws InterruptedException {
+    public void createPlanWithBox(State state,Agent agent, ArrayList<String> goal,Box box) throws InterruptedException {
         String rootAgent = agent.position.NodeId;
         String rootBox = agent.attached_box.position.NodeId;
         ArrayList otheragentplan = new ArrayList();
@@ -170,7 +170,7 @@ public class Plan {
         return null;
     }
 
-    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, String goal, Boolean second) throws InterruptedException {
+    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second) throws InterruptedException {
         Map map = state.map;
         ArrayList<Tuple> route_agent = new ArrayList<Tuple>();
 
@@ -212,8 +212,8 @@ public class Plan {
                     route_agent.add(last_position);
                     return route_agent;
                 }
-
-                else if (vertex_box.equals(goal)) {
+                //TODO: Dont push other boxes out of their goal unless necessary
+                else if (goal.contains(vertex_box) && (!(occupied.contains(vertex_box) && (((state.occupiedNodes.get(rootbox)).ID.charAt(0))==(state.occupiedNodes.get(vertex_box)).ID.charAt(0)))||second )) {
                     return route_agent;
                 }
 

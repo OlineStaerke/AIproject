@@ -3,8 +3,8 @@ import java.util.*;
 public class State {
 
     public Map map;
-    public HashMap<Character, Agent> agents;
-    public HashMap<Character, Box> boxes;
+    public HashMap<String, Agent> agents;
+    public HashMap<String, Box> boxes;
     public HashMap<String, Object> occupiedNodes;
     public HashMap<Character, String> NameToColor;
     public HashMap<String, Node> stringToNode;
@@ -13,8 +13,8 @@ public class State {
     public ArrayList<String> blankPlan;
 
 
-    public State(HashMap<String, Node> stringToNode, HashMap<Character, Agent> agents, HashMap<Character,
-            String> NameToColor, HashMap<Character, Box> boxes, Map map)
+    public State(HashMap<String, Node> stringToNode, HashMap<String, Agent> agents, HashMap<Character,
+            String> NameToColor, HashMap<String, Box> boxes, Map map)
     {
         this.stringToNode = stringToNode;
         this.agents = agents;
@@ -91,9 +91,9 @@ public class State {
     private void createObjectAssociations(){
         for (Agent A: agents.values()){
             for (Box B: boxes.values()){
-                if(NameToColor.get(A.ID).equals(NameToColor.get(B.ID))){
-                    System.err.println(agents);
-                    B.owner = agents.get(A.ID);
+                System.err.println(NameToColor.get((A.ID).charAt(0))+NameToColor.get(B.ID.charAt(0)));
+                if(NameToColor.get(A.ID.charAt(0)).equals(NameToColor.get(B.ID.charAt(0)))){
+                    B.owners.add(agents.get(A.ID));
                     A.boxes.add(boxes.get(B.ID));
                 }
             }
