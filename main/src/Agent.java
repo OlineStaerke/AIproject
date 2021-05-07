@@ -18,6 +18,7 @@ public class Agent extends Object {
         position = node;
         this.ID = ID;
         currentGoal = null;
+        this.Taken = false;
 
 
     }
@@ -60,6 +61,16 @@ public class Agent extends Object {
             else {
                 wantedMove = state.stringToNode.get(agent.mainPlan.plan.get(0));
             }
+
+            for (Box b : boxes) {
+                System.err.println("SIZE: "+b.finalPlan.size());
+                if (b!=attached_box && b.currentowner.ID.equals(agent.ID)) {
+                    System.err.println("adding to "+b);
+                    b.finalPlan.add(b.position);
+                    b.finalPlanString.add(b.position.NodeId);
+                }
+                System.err.println("SIZE: "+b.finalPlan.size());
+            }
             position = wantedMove;
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());
@@ -100,12 +111,7 @@ public class Agent extends Object {
             }
 
 
-            for (Box b : boxes) {
-                if (b!=attached_box) {
-                    b.finalPlan.add(b.position);
-                    b.finalPlanString.add(b.position.NodeId);
-                }
-            }
+
 
 
 
@@ -147,7 +153,7 @@ public class Agent extends Object {
 
     @Override
     boolean isInGoal() {
-        return subgoals.ExtractNextGoal(currentGoal)==null;
+        return subgoals.InGoal();
 
 
     }
@@ -173,9 +179,8 @@ public class Agent extends Object {
 
 
     public void planPi(State state,LinkedHashSet visited) throws InterruptedException {
+        if (currentGoal!=null) (currentGoal.Obj).Taken = false;
         var SG =subgoals.ExtractNextGoal(currentGoal);
-
-
         System.err.println("SG: " + SG);
         currentGoal = SG;
 
@@ -188,6 +193,8 @@ public class Agent extends Object {
                         System.err.println("CREATING PLAN AWAY WITH BOX!");
                         var neighs = state.map.map.get(SG.Obj.position.NodeId);
                         attached_box = (Box) SG.Obj;
+                        ((Box) SG.Obj).currentowner = this;
+
                         mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
 
 
@@ -197,6 +204,7 @@ public class Agent extends Object {
 
                         attached_box = null;
                         mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
+                        ((Box) SG.Obj).currentowner = this;
                     }
                     subgoals.UpdatedBlanked((Box) SG.Obj,true);
                     break;
@@ -208,14 +216,14 @@ public class Agent extends Object {
 
                         attached_box = (Box) SG.Obj;
                         mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
-
+                        ((Box) SG.Obj).currentowner = this;
 
 
                     } else {
 
                         attached_box = null;
                         mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
-
+                        ((Box) SG.Obj).currentowner = this;
                     }
                     break;
 

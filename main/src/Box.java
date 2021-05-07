@@ -9,12 +9,14 @@ public class Box extends Object {
     public ArrayList<Agent> owners = new ArrayList<>();
 
 
+
     public Box(Node node, String id){
         this.position = node;
         this.ID = id;
         this.finalPlan = new ArrayList<>();
         this.finalPlanString = new ArrayList<>();
         this.mainPlan = new Plan();
+        this.Taken = false;
     }
 
     public void bringBlank(State state, Map map, Agent otheragent){
@@ -39,24 +41,24 @@ public class Box extends Object {
         System.err.println("BRING BLANK inside");
         //System.err.println("ASHDAHSDH: " + owner.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked));
 
-        if ((mainPlan.plan.size()>0) && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) )) && (owner.attached_box!=null && owner.attached_box.ID==ID && owner.attachedBox(state))){
+        if ((mainPlan.plan.size()>0) && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) )) && (currentowner.attached_box!=null && currentowner.attached_box.ID==ID && currentowner.attachedBox(state))){
             System.err.println("HI");
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
         // Placeholder currentGoal is created if null (no current task)
-        if (owner.currentGoal == null) {
-            owner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.AgentToGoal);
+        if (currentowner.currentGoal == null) {
+            currentowner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.AgentToGoal, agent);
             System.err.println("HELLO");
         }
 
-        owner.subgoals.UpdatedBlanked(this, false);
-        System.err.println("Owner current responsibility (NEW): " + owner.currentGoal);
-        if (owner.mainPlan.plan.size()==0 || (owner.currentGoal.Obj.ID == ID && owner.attachedBox(state))) {
-            owner.mainPlan.plan = new ArrayList<>();
-            System.err.println("SG State: " + owner.subgoals.goals);
-            owner.planPi(state, new LinkedHashSet<>());
-            System.err.println("Owner current responsibility (NEW): " + owner.currentGoal);
+        currentowner.subgoals.UpdatedBlanked(this, false);
+        System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
+        if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
+            currentowner.mainPlan.plan = new ArrayList<>();
+            System.err.println("SG State: " + currentowner.subgoals.goals);
+            currentowner.planPi(state, new LinkedHashSet<>());
+            System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
         }
 
 

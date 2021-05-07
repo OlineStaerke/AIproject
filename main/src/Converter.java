@@ -25,6 +25,10 @@ public final class Converter {
         for (Agent A : agents.values()) {
             convPlan[inc] = fromCoordsToDirections(A.getFinalPlan(), A.boxes); //Conversion of each agent's plan
             System.err.println("Final plan (Agent " + A.ID + "): " + A.getFinalPlan());
+            System.err.println(A.finalPlan.size());
+            for(Box b: A.boxes) {
+                System.err.println(b.finalPlan.size());
+            }
             inc++;
         }
         // For each round build the JointAction plan and add it to the ultimate plan
@@ -48,13 +52,16 @@ public final class Converter {
         String node1 = plan.get(0).getNodeId();
         convertedFinalPlan[0] = Action.NoOp;
 
+
+
         for (int action = 1; action < plan.size(); action++) {
             String node2 = plan.get(action).getNodeId();
 
 
+
             int rowDiff = Integer.parseInt(node2.split(" ")[0]) - Integer.parseInt(node1.split(" ")[0]);
             int colDiff = Integer.parseInt(node2.split(" ")[1]) - Integer.parseInt(node1.split(" ")[1]);
-
+            System.err.println(rowDiff+" "+colDiff);
             int boxRowDiff = 0;
             int boxColDiff = 0;
             String boxMove1 = "";
@@ -73,7 +80,7 @@ public final class Converter {
                 boxMove1 = B.finalPlan.get(action-1).NodeId;
                 boxMove2 = B.finalPlan.get(action).NodeId;
 
-                if (!boxMove1.equals(boxMove2)){
+                if (!boxMove1.equals(boxMove2) && (node2.equals(boxMove1) || node1.equals(boxMove2))){
                     boxRowDiff = Integer.parseInt(boxMove2.split(" ")[0]) - Integer.parseInt(boxMove1.split(" ")[0]);
                     boxColDiff  = Integer.parseInt(boxMove2.split(" ")[1]) - Integer.parseInt(boxMove1.split(" ")[1]);
                     break;
@@ -82,6 +89,7 @@ public final class Converter {
             }
 
             if (boxColDiff != 0 ||  boxRowDiff != 0){
+                System.err.println("hEllo");
 
                 // Negativ: agent above box. Positive if agent is below
                 int AgentToBoxRowDiff = Integer.parseInt(node1.split(" ")[0]) - Integer.parseInt(boxMove1.split(" ")[0]);
@@ -181,7 +189,9 @@ public final class Converter {
 
 
             else {
+                System.err.println("HI");
                 if (rowDiff == 0 && colDiff == 0) {
+                    System.err.println("HINOOP");
                     convertedFinalPlan[action] = Action.NoOp;
                 } else if (rowDiff == -1 && colDiff == 0) {
                     convertedFinalPlan[action] = Action.MoveN;

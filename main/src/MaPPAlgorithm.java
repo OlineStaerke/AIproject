@@ -11,6 +11,7 @@ public class MaPPAlgorithm {
             agent.planGoals(state, new LinkedHashSet());
 
         }
+        //state.UpdateOccupiedNodes();
 
         boolean goalIsReached = false;
 
@@ -26,9 +27,6 @@ public class MaPPAlgorithm {
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
-
-            //
-            //
             //Thread.sleep(500);
 
             System.err.println("-----------------------------------");
@@ -134,7 +132,7 @@ public class MaPPAlgorithm {
                                 var occupyingBox = (Box) occupyingObject;
 
                                 if (state.stringToNode.get(wantedMove).isTunnel) {
-                                    state.agentConflicts.add(occupyingBox.owner);
+                                    state.agentConflicts.add(occupyingBox.currentowner);
                                 }
 
                                 // Your own box is blocking :(
@@ -147,16 +145,16 @@ public class MaPPAlgorithm {
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
                                     occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
-                                    occupyingBox.bringBlank(state,  occupyingBox.owner);
+                                    occupyingBox.bringBlank(state,  occupyingBox.currentowner);
 
                                     //System.err.println("PLAN2: " + agent.mainPlan.plan);
                                 } else{
 
-                                    occupyingBox.owner.blank = true;
-                                    occupyingBox.owner.conflicts = agent;
+                                    occupyingBox.currentowner.blank = true;
+                                    occupyingBox.currentowner.conflicts = agent;
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
-                                    occupyingBox.bringBlank(state,occupyingBox.owner);
+                                    occupyingBox.bringBlank(state,occupyingBox.currentowner);
 
 
 
@@ -219,7 +217,7 @@ public class MaPPAlgorithm {
                     for (Box BB : AA.boxes) {
                 
                       System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
-                        System.err.println(BB.owner);
+                        System.err.println(BB.currentowner + "SIZE:"+ BB.finalPlan.size());
                     }
 
                 }
@@ -235,6 +233,7 @@ public class MaPPAlgorithm {
             Boolean noroutes = true;
             Boolean anyAgentBlank = false;
             for(Agent agent : agentsInOrder) {
+                System.err.println("AGENT in goal?"+agent.isInGoal());
 
 
 

@@ -38,11 +38,46 @@ public class State {
         return new ArrayList<>(occupiedNodes.keySet());
     }
 
-    public void UpdateOccupiedNodes(){
+    public void UpdateOccupiedNodes() {
         occupiedNodes = new HashMap<>();
-        for(Agent agent : agents.values()) occupiedNodes.put(agent.position.NodeId, agent);
-        for(Box box : boxes.values()) occupiedNodes.put(box.position.NodeId, box);
+        for (Agent agent : agents.values()) {
+            occupiedNodes.put(agent.position.NodeId, agent);
+
+        }
+        for (Box box : boxes.values()) {
+            occupiedNodes.put(box.position.NodeId, box);
+
+            /**if (box.currentowner != null && !(box.currentowner.currentGoal.Obj.ID == box.ID)) {
+                for (Agent agent : agents.values()) {
+                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0)) && agent.mainPlan.plan.size() == 0) {
+                        System.err.println();
+                        box.currentowner = agent;
+                    }
+                }
+
+            } else {
+                for (Agent agent : agents.values()) {
+                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0))) {
+                        box.currentowner = agent;
+                        break;
+                    }
+                }
+
+            }**/
+            if (box.currentowner == null) {
+                for (Agent agent : agents.values()) {
+                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0))) {
+                        box.currentowner = agent;
+                        break;
+                    }
+                }
+            }
+        }
     }
+
+
+
+
 
     // Definition of a tunnel: A node, X, is a tunnel, iff removing X disconnects the graph.
     private void createTunnels(){

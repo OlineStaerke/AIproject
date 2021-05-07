@@ -13,6 +13,7 @@ public abstract class Object{
     ArrayList<String> Goal = new ArrayList<>();
     Plan mainPlan = new Plan();
     Agent conflicts;
+    Boolean Taken;
 
 
     public void setGoal(Node goal) {

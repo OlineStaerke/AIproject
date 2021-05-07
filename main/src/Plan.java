@@ -43,10 +43,9 @@ public class Plan {
         occupied.remove(rootAgent);
         occupied.remove(rootBox);
 
-        System.err.println("OCCUPIED: "+occupied);
 
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false);
-        System.err.println("TUPLEPLAN: "+tuple_plan);
+
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true);
 
