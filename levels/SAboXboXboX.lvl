@@ -3,27 +3,27 @@ hospital
 #levelname
 SAboXboXboX
 #colors
-blue: 0, A, B, E, H, P, R, S, U
+blue: 0, A, B, C, D, E, F, G, I
 #initial
 +  +++++  +
-   +P+B+
+   +E+B+
    + + +
 ++++ + ++++
-+H 0     R+
++D 0     F+
 ++++ + ++++
-+A       S+
++A       G+
 ++++ + ++++
    + + +
-   +E+U+
+   +C++
 +  +++++  +
 #goal
 +  +++++  +
    + + +
    + + +
 ++++ + ++++
-+   UBE   +
-++++P+S++++
-+   RAH   +
++   IBC   +
+++++E+G++++
++   FAD   +
 ++++ + ++++
    + + +
    + + +

@@ -8,8 +8,8 @@ public class SubGoals{
 
 
     public SubGoals(ArrayList<Box> boxes, Agent A){
-        System.err.println("HELLO");
-        System.err.println(A.Goal);
+
+
         goals = new ArrayList<>();
 
         // Put possible blanks as first goals
@@ -22,7 +22,10 @@ public class SubGoals{
 
         // Boxes to their goal locations are added
         for(Box b : boxes){
-            goals.add(new SubGoal(b, GoalType.BoxToGoal, A));
+            if (b.Goal.size()!=0) {
+
+                goals.add(new SubGoal(b, GoalType.BoxToGoal, A));
+            }
         }
 
         // Agent to its goal is added.
@@ -50,7 +53,7 @@ public class SubGoals{
     public Boolean InGoal(){
         for(SubGoal sg: goals){
             if (!sg.Obj.isInSubGoal()) {
-                System.err.println("SG NOT INGOAL"+sg);
+
                 return false;}
 
         }
@@ -59,11 +62,20 @@ public class SubGoals{
 
     }
 
+    public Boolean ExistsBlankGoal() {
+        for (SubGoal sg : goals) {
+            if (sg.gType == GoalType.BoxBlanked && !sg.Finished) return true;
+        }
+        return false;
+    }
+
     public SubGoal ExtractNextGoal(SubGoal currentGoal){
 
         if (currentGoal!=null) {
+            System.err.println("WHAT?");
 
             for (SubGoal sg : goals) {
+                System.err.println(sg + " "+ sg.Obj.Taken);
 
                 if (!sg.Finished && sg.gType == GoalType.BoxBlanked && !((sg.Obj).Taken)) {
                     (sg.Obj).Taken = true;
@@ -72,7 +84,7 @@ public class SubGoals{
             }
 
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
-            if (currentGoal.gType == GoalType.BoxToGoal && !currentGoal.Obj.isInSubGoal()) {
+            if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
                 (currentGoal.Obj).Taken=true;
                 return currentGoal;
             }

@@ -65,6 +65,7 @@ public class SearchClient {
             numCols = Math.max(numCols, line.length());
             ++numRows;
             line = serverMessages.readLine();
+
         }
 
         // Iteration value for priority will increase for each loop
@@ -72,7 +73,7 @@ public class SearchClient {
         Integer i_box = 0;
         for (int row = 1; row < numRows - 1; ++row) {
             line = levelLines.get(row);
-            for (int col = 1; col < numCols - 1; ++col) {
+            for (int col = 1; col < line.length() - 1; ++col) {
                 char c = line.charAt(col);
                 if (c != '+') {
 

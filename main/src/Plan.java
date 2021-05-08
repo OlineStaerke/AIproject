@@ -11,17 +11,15 @@ public class Plan {
         if (Destination == null) return;
 
         state.UpdateOccupiedNodes();
-        System.err.println("OCCUPIED NODE:"+state.occupiedNodes);
 
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
 
-        System.err.println("VISITED: "+visited);
 
         plan = breathFirstTraversal(map, Source, Destination,visited);
 
 
-        System.err.println("PLAN1:"+plan);
+
         if (!Destination.contains(plan.get(plan.size()-1))) {
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
         }
@@ -34,9 +32,8 @@ public class Plan {
         ArrayList otheragentplan = new ArrayList();
 
         if (goal==null) {
-        otheragentplan = new ArrayList<String>(agent.conflicts.mainPlan.plan);}
+        otheragentplan = new ArrayList<String>(box.conflicts.mainPlan.plan);}
 
-        System.err.println("GOAL? "+goal);
 
         //Try to solve the level by adding occupied nodes to visited
         LinkedHashSet occupied = new LinkedHashSet(state.occupiedNodes.keySet());
@@ -51,22 +48,25 @@ public class Plan {
 
         }
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,false);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true);
 
         }
-        ArrayList plan_agent = new ArrayList<>();
-        ArrayList plan_box = new ArrayList<>();
-        for (Tuple T : tuple_plan) {
-            plan_agent.add(T.agentpos);
-            plan_box.add(T.boxpos);
+        if (tuple_plan!=null) {
+            ArrayList plan_agent = new ArrayList<>();
+            ArrayList plan_box = new ArrayList<>();
+            for (Tuple T : tuple_plan) {
+                plan_agent.add(T.agentpos);
+                plan_box.add(T.boxpos);
+            }
+
+            plan = plan_agent;
+            box.mainPlan.plan = plan_box;
+            System.err.println("PLAN AGENT:"+plan);
+            System.err.println("PLAN BOX:"+plan_box);
         }
 
-        plan = plan_agent;
-        box.mainPlan.plan = plan_box;
 
 
-        System.err.println("PLAN AGENT:"+plan);
-        System.err.println("PLAN BOX:"+plan_box);
         //if (!goal.equals(plan.get(plan.size()-1))) {
          //   plan = new ArrayList<>();
        // }
@@ -113,7 +113,7 @@ public class Plan {
 
         plan = altPlans.plan;
         plan.remove(0);
-        System.err.println("PLan to goal:"+plan);
+
         ArrayList<String> planblank = new ArrayList<>(plan);
         state.blankPlan = planblank;
 
@@ -187,6 +187,8 @@ public class Plan {
         routes_agent.add(root_route);
 
 
+
+
         //Start runnning BFS
         while (!queue_agent.isEmpty()) {
 
@@ -202,17 +204,20 @@ public class Plan {
 
             route_agent = routes_agent.pollFirst();
 
+
              if (!visited.contains(vertex) && !occupied.contains(vertex_agent) && !occupied.contains(vertex_box)){
                  //System.err.println("VERTEX:"+vertex_agent+" "+vertex_box+ " "+ (goal==null) + " "+ !otherAgentPlan.contains(node_box.getNodeId()) +" "+ (!node_box.isTunnel || second));
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
-                if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && (!node_box.isTunnel || second)) {
+
+                 if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && (!node_box.isTunnel || second)) {
                     //System.err.println("found alternative route:"+route);
                     Tuple last_position = new Tuple(node_agent.NodeId,node_box.NodeId);
                     route_agent.add(last_position);
                     return route_agent;
                 }
-                //TODO: Dont push other boxes out of their goal unless necessary
-                else if (goal.contains(vertex_box) && (!(occupied.contains(vertex_box) && (((state.occupiedNodes.get(rootbox)).ID.charAt(0))==(state.occupiedNodes.get(vertex_box)).ID.charAt(0)))||second )) {
+
+                //TODO: Dont push other boxes out of their goal unless necessar
+                else if (goal!=null && goal.contains(vertex_box) && (!(occupied.contains(vertex_box) && (((state.occupiedNodes.get(rootbox)).ID.charAt(0))==(state.occupiedNodes.get(vertex_box)).ID.charAt(0)))||second )) {
                     return route_agent;
                 }
 

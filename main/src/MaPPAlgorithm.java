@@ -27,7 +27,7 @@ public class MaPPAlgorithm {
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
-            //Thread.sleep(500);
+            Thread.sleep(100);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -56,8 +56,6 @@ public class MaPPAlgorithm {
                  **/
                 System.err.println();      
                 System.err.println(agent);
-                System.err.println("ATTACHEDBOX?"+agent.attached_box);
-                System.err.println("ROUND"+round);  
                 System.err.println("Current SubGoal:"+agent.currentGoal);
 
 
@@ -111,18 +109,16 @@ public class MaPPAlgorithm {
                                     visited.remove(occupyingAgent.position.NodeId);
                                     occupyingAgent.planPi(state, visited);
                                     //occupyingAgent.mainPlan.plan.remove(0);
+
                                     occupyingAgent.blank = true;
                                     occupyingObject.conflicts = null;
                                     agent.conflicts =null;
                                     agent.blank = false;
                                 } else {
-                                    System.err.println("bring blank!!");
-
+                                    System.err.println("Bring blank, not same conflict agent");
                                     occupyingAgent.blank = true;
                                     occupyingAgent.conflicts = agent;
-
                                     agent.blank = false;
-
                                     occupyingAgent.bringBlank(state,occupyingAgent);
                                 }
 
@@ -137,21 +133,24 @@ public class MaPPAlgorithm {
 
                                 // Your own box is blocking :(
                                 // Maybe handle seperatly? idk
-                                if (state.NameToColor.get(occupyingBox.ID).equals(state.NameToColor.get(agent.ID))){
+                                if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
                                     System.err.println("OWN COLOUR");
-                                    System.err.println();
-                                    //occupyingBox.owner.blank = true;
-                                    //occupyingBox.owner.conflicts = agent;
+                                    occupyingBox.currentowner.blank = true;
+                                    occupyingBox.currentowner.conflicts = agent;
+                                    occupyingBox.conflicts=agent;
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
                                     occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
                                     occupyingBox.bringBlank(state,  occupyingBox.currentowner);
 
+
                                     //System.err.println("PLAN2: " + agent.mainPlan.plan);
                                 } else{
+                                    System.err.println("Not same colour");
 
                                     occupyingBox.currentowner.blank = true;
                                     occupyingBox.currentowner.conflicts = agent;
+                                    occupyingBox.conflicts = agent;
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
                                     occupyingBox.bringBlank(state,occupyingBox.currentowner);
@@ -175,7 +174,7 @@ public class MaPPAlgorithm {
                     }
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
-                        System.err.println("WHATUP");
+
 
                         agent.ExecuteMove(agent,state,  false);
                     } else {
@@ -211,17 +210,17 @@ public class MaPPAlgorithm {
                      //Update the subgoals
                     agent.subgoals.UpdateGoals();
 
-                for(Agent AA : agentsInOrder) {
-                    System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
-
-                    for (Box BB : AA.boxes) {
-                
-                      System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
-                        System.err.println(BB.currentowner + "SIZE:"+ BB.finalPlan.size());
-                    }
 
                 }
+            for(Agent AA : agentsInOrder) {
+                System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+
+                for (Box BB : AA.boxes) {
+
+                    System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
+
+            }
 
 
             // Boxes are automatically checked in agent.isInGoal
@@ -233,8 +232,6 @@ public class MaPPAlgorithm {
             Boolean noroutes = true;
             Boolean anyAgentBlank = false;
             for(Agent agent : agentsInOrder) {
-                System.err.println("AGENT in goal?"+agent.isInGoal());
-
 
 
                 if (!agent.isInGoal()) {
@@ -259,11 +256,8 @@ public class MaPPAlgorithm {
 
                         if (state.agentConflicts.size() > 0) {
                             agent.blank = true;
-
                             LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                             visited.remove(agent.position.NodeId);
-
-
                             agent.planPi(state, visited);
 
                             //state.agentConflicts.remove(agent);

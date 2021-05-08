@@ -63,13 +63,13 @@ public class Agent extends Object {
             }
 
             for (Box b : boxes) {
-                System.err.println("SIZE: "+b.finalPlan.size());
+
                 if (b!=attached_box && b.currentowner.ID.equals(agent.ID)) {
-                    System.err.println("adding to "+b);
+
                     b.finalPlan.add(b.position);
                     b.finalPlanString.add(b.position.NodeId);
                 }
-                System.err.println("SIZE: "+b.finalPlan.size());
+
             }
             position = wantedMove;
             finalPlan.add(wantedMove);
@@ -100,11 +100,11 @@ public class Agent extends Object {
                 }
 
                 if (attached_box.mainPlan.plan.size()==0 && agent.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked)) {
-                    System.err.println("Set to true");
+
                     agent.subgoals.UpdatedBlanked((Box) agent.currentGoal.Obj, true);
                 }
 
-                System.err.println("ADDED to occupied nodes"+ wantedMoveBox.NodeId);
+
                 state.occupiedNodes.put(wantedMoveBox.NodeId, attached_box);
                 attached_box.position = wantedMoveBox;
 
@@ -127,12 +127,13 @@ public class Agent extends Object {
 
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
                     if(!conflicts.isInGoal()) {
-                        if (conflicts.conflicts!=null) {
-                            System.err.println("CONFLICT");
+                        if (conflicts.conflicts!=null && conflicts.mainPlan.plan.size()==0) {
+
                             conflicts.bringBlank(state, conflicts);
                         }
                         else {
-                            System.err.println("PLANPI");
+
+
                             conflicts.planPi(state,new LinkedHashSet());
                         }
                     }
@@ -179,77 +180,77 @@ public class Agent extends Object {
 
 
     public void planPi(State state,LinkedHashSet visited) throws InterruptedException {
-        if (currentGoal!=null) (currentGoal.Obj).Taken = false;
-        var SG =subgoals.ExtractNextGoal(currentGoal);
-        System.err.println("SG: " + SG);
-        currentGoal = SG;
 
-        if (currentGoal!=null) {
-            switch (currentGoal.gType) {
-                case BoxBlanked:
-                    // If this is 1:1 with BoxToGoal case, remove the code (dupliacte code)
-                    if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+        mainPlan.plan = new ArrayList<>();
+        while (mainPlan.plan.size()==0) {
+            if (currentGoal != null) (currentGoal.Obj).Taken = false;
+            var SG = subgoals.ExtractNextGoal(currentGoal);
+            System.err.println("SG: " + SG);
+            currentGoal = SG;
 
-                        System.err.println("CREATING PLAN AWAY WITH BOX!");
-                        var neighs = state.map.map.get(SG.Obj.position.NodeId);
-                        attached_box = (Box) SG.Obj;
-                        ((Box) SG.Obj).currentowner = this;
+            if (currentGoal != null) {
+                switch (currentGoal.gType) {
+                    case BoxBlanked:
+                        // If this is 1:1 with BoxToGoal case, remove the code (dupliacte code)
+                        if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
-                        mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
+                            System.err.println("CREATING PLAN AWAY WITH BOX!");
+                            var neighs = state.map.map.get(SG.Obj.position.NodeId);
+                            attached_box = (Box) SG.Obj;
+                            ((Box) SG.Obj).currentowner = this;
+
+                            mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
 
 
+                        } else {
+
+                            attached_box = null;
+                            mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
+                            ((Box) SG.Obj).currentowner = this;
+                        }
+                        break;
+
+                    case BoxToGoal:
+                        // code block
+
+                        if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+
+                            attached_box = (Box) SG.Obj;
+                            mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
+                            ((Box) SG.Obj).currentowner = this;
 
 
-                    } else {
+                        } else {
+
+                            attached_box = null;
+                            mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
+                            ((Box) SG.Obj).currentowner = this;
+                        }
+                        break;
+
+                    case AgentToGoal:
+                        List<String> goalListAgent = new ArrayList<>();
+                        goalListAgent.addAll(SG.Obj.Goal);
+                        mainPlan.createPlan(state, position.NodeId, goalListAgent, visited);
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
-                        ((Box) SG.Obj).currentowner = this;
-                    }
-                    subgoals.UpdatedBlanked((Box) SG.Obj,true);
-                    break;
-
-                case BoxToGoal:
-                    // code block
-
-                    if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
-
-                        attached_box = (Box) SG.Obj;
-                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
-                        ((Box) SG.Obj).currentowner = this;
+                        break;
 
 
-                    } else {
+                }
 
-                        attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
-                        ((Box) SG.Obj).currentowner = this;
-                    }
-                    break;
-
-                case AgentToGoal:
-                    List<String> goalListAgent = new ArrayList<>();
-                    goalListAgent.addAll(SG.Obj.Goal);
-                    mainPlan.createPlan(state, position.NodeId, goalListAgent, visited);
-
-                    attached_box = null;
-                    break;
+                distance_to_goal = mainPlan.plan.size();
 
 
             }
-            System.err.println("SG: " + SG);
-
-            distance_to_goal = mainPlan.plan.size();
-
-
         }
     }
 
     // Must update the new position of blanked agent
     public void bringBlank(State state, Agent agent) {
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
-
-        if ((currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked) && mainPlan.plan.size()>0) || mainPlan.plan.size()!=0 && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) ))){
+        // Rmemove this from the iif : (currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked) && mainPlan.plan.size()>0) || Not sure of it is a good idea
+        if ( mainPlan.plan.size()!=0 && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) ))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
