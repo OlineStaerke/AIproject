@@ -30,7 +30,7 @@ public class Agent extends Object {
         @Override
         public int compare(Agent o1, Agent o2) {
             Integer o2_value = 0;
-            Integer o1_value =0;
+            Integer o1_value = 0;
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
 
             if(o1.oldGoal!=null && o2.oldGoal!=null) {
@@ -182,18 +182,21 @@ public class Agent extends Object {
 
                             conflicts.bringBlank(state, conflicts);
                             //conflicts.planPi(state,new LinkedHashSet());
+
                         }
                         else {
                             if (conflicts.mainPlan.plan.size()==0){
-                            conflicts.planPi(state,new LinkedHashSet());}
+                            //conflicts.planPi(state,new LinkedHashSet());
+                            }
                         }
                     }
-
-
                     if (conflicts.conflicts == agent) {
                         conflicts.conflicts = null;
                         conflicts = null;
                     }
+
+
+
 
                 }
 

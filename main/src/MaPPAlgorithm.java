@@ -10,6 +10,15 @@ public class MaPPAlgorithm {
             // Finds initial plan with BFS
             agent.planGoals(state, new LinkedHashSet());
 
+
+        }
+        for(Box box : state.boxes.values()){
+            // Finds initial plan with BFS
+            Plan plan = new Plan();
+            plan.createPlan(state,box.position.NodeId,box.Goal,new LinkedHashSet<>());
+            box.planToGoal = plan.plan;
+
+
         }
         //state.UpdateOccupiedNodes();
 
@@ -135,6 +144,7 @@ public class MaPPAlgorithm {
 
                                     occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
                                     occupyingBox.bringBlank(state,  occupyingBox.currentowner);
+                                    occupyingBox.blankByOwn = true;
                                     //occupyingBox.conflictRoute = new ArrayList<>();
 
 
@@ -148,6 +158,7 @@ public class MaPPAlgorithm {
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
                                     occupyingBox.bringBlank(state,occupyingBox.currentowner);
+                                    occupyingBox.blankByOwn = false;
 
 
 

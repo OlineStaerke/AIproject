@@ -8,6 +8,7 @@ public class Box extends Object {
     public Agent currentowner;
     public ArrayList<Agent> owners = new ArrayList<>();
     public ArrayList<String> conflictRoute = new ArrayList<>();
+    Boolean blankByOwn;
 
 
 
@@ -20,6 +21,8 @@ public class Box extends Object {
         this.mainPlan = new Plan();
         this.Taken = false;
         this.planToGoal = new ArrayList<>();
+        this.blankByOwn = false;
+
     }
 
     public void bringBlank(State state, Map map, Agent otheragent){
