@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public class SubGoals{
     public ArrayList<SubGoal> goals;
-    enum GoalType{BoxBlanked, BoxToGoal, AgentToGoal} //Can put this enum above SubGoals class
+    enum GoalType{BoxBlanked, BoxToGoal, AgentToGoal, AgentBlanked} //Can put this enum above SubGoals class
 
 
     public SubGoals(ArrayList<Box> boxes, Agent A){
@@ -33,6 +33,13 @@ public class SubGoals{
             goals.add(new SubGoal(A, GoalType.AgentToGoal, A));
         }
 
+        /**
+        //If agent has been blanked
+        var sg = new SubGoal(A, GoalType.AgentBlanked,A);
+        sg.Finished = true;
+        goals.add(sg);
+         **/
+
 
         UpdateGoals();
 
@@ -48,11 +55,12 @@ public class SubGoals{
         }
         Collections.sort(goals,new SubGoal.CustomComparator());
 
+
     }
 
     public Boolean InGoal(){
         for(SubGoal sg: goals){
-            if (!sg.Obj.isInSubGoal()) {
+            if (!sg.Obj.isInSubGoal() || (sg.gType == GoalType.BoxBlanked && !sg.Finished)) {
 
                 return false;}
 
@@ -72,36 +80,30 @@ public class SubGoals{
     public SubGoal ExtractNextGoal(SubGoal currentGoal){
 
         if (currentGoal!=null) {
-            System.err.println("WHAT?");
+
+            currentGoal.Obj.Taken=false;
 
             for (SubGoal sg : goals) {
-                System.err.println(sg + " "+ sg.Obj.Taken);
-
                 if (!sg.Finished && sg.gType == GoalType.BoxBlanked && !((sg.Obj).Taken)) {
-                    (sg.Obj).Taken = true;
                     return sg;
                 }
             }
 
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
             if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
-                (currentGoal.Obj).Taken=true;
                 return currentGoal;
             }
-            //Try not to return the same box, if that box has just been blanked.
+            //Try not to return the same box, if that box has just been blanked has been removed: && !sg.Obj.position.NodeId.equals(currentGoal.Obj.position.NodeId)
             for (SubGoal sg : goals) {
 
-                if (!sg.Finished && !(sg.Obj).Taken && !sg.Obj.position.NodeId.equals(currentGoal.Obj.position.NodeId)) {
-                    (sg.Obj).Taken = true;
+                if (!sg.Finished && !(sg.Obj).Taken ) {
                     return sg;
                 }
             }
         }
         // Otherwise, select the next goal
         for(SubGoal sg2: goals){
-
             if (!sg2.Finished && !(sg2.Obj).Taken){
-                (sg2.Obj).Taken=true;
                 return sg2;
             }
         }
@@ -144,14 +146,38 @@ public class SubGoals{
         public static class CustomComparator implements Comparator<SubGoal> {
             @Override
             public int compare(SubGoal s1, SubGoal s2) {
+                Integer s1_value = 0;
+                Integer s2_value = 0;
+                /**
                 String[] s1_value = s1.Obj.position.NodeId.split(" ");
                 String[] s2_value = s2.Obj.position.NodeId.split(" ");
                 String[] agent_value = agent.position.NodeId.split(" ");
-                Integer s1_distanceToAgent = ((Integer.parseInt(s1_value[0]))-Integer.parseInt(agent_value[0]))^2+((Integer.parseInt(s1_value[1]))-Integer.parseInt(agent_value[1]))^2;
-                Integer s2_distanceToAgent = ((Integer.parseInt(s2_value[0]))-Integer.parseInt(agent_value[0]))^2+((Integer.parseInt(s2_value[1]))-Integer.parseInt(agent_value[1]))^2;
+                Integer s2_distanceToAgent = ((Integer.parseInt(s1_value[0]))-Integer.parseInt(agent_value[0]))^2+((Integer.parseInt(s1_value[1]))-Integer.parseInt(agent_value[1]))^2;
+                Integer s1_distanceToAgent = ((Integer.parseInt(s2_value[0]))-Integer.parseInt(agent_value[0]))^2+((Integer.parseInt(s2_value[1]))-Integer.parseInt(agent_value[1]))^2;
 
                 //Integer comparevalue = s2.Obj.mainPlan.plan.size() + s2_value;
                 return (s2_distanceToAgent).compareTo(s1_distanceToAgent);
+                 **/
+
+                if (s1.Obj instanceof Box) {
+
+                    for (String goal: s2.Obj.Goal) {
+                        if (((Box) s1.Obj).planToGoal.contains(goal) && s1.Obj != s2.Obj) {
+                            s2_value += 100;
+                        }
+                    }
+                }
+                if (s2.Obj instanceof Box) {
+
+                    for (String goal: s1.Obj.Goal) {
+                        if (((Box) s2.Obj).planToGoal.contains(goal) && s1.Obj != s2.Obj) {
+                            s1_value += 100;
+                        }
+                    }
+                }
+                System.err.println(s1_value+" "+s2_value);
+
+                return (s1_value).compareTo(s2_value);
             }
         }
 

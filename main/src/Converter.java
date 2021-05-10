@@ -61,7 +61,7 @@ public final class Converter {
 
             int rowDiff = Integer.parseInt(node2.split(" ")[0]) - Integer.parseInt(node1.split(" ")[0]);
             int colDiff = Integer.parseInt(node2.split(" ")[1]) - Integer.parseInt(node1.split(" ")[1]);
-            System.err.println(rowDiff+" "+colDiff);
+
             int boxRowDiff = 0;
             int boxColDiff = 0;
             String boxMove1 = "";
@@ -89,7 +89,7 @@ public final class Converter {
             }
 
             if (boxColDiff != 0 ||  boxRowDiff != 0){
-                System.err.println("hEllo");
+
 
                 // Negativ: agent above box. Positive if agent is below
                 int AgentToBoxRowDiff = Integer.parseInt(node1.split(" ")[0]) - Integer.parseInt(boxMove1.split(" ")[0]);
@@ -189,9 +189,9 @@ public final class Converter {
 
 
             else {
-                System.err.println("HI");
+
                 if (rowDiff == 0 && colDiff == 0) {
-                    System.err.println("HINOOP");
+
                     convertedFinalPlan[action] = Action.NoOp;
                 } else if (rowDiff == -1 && colDiff == 0) {
                     convertedFinalPlan[action] = Action.MoveN;

@@ -27,7 +27,7 @@ public class MaPPAlgorithm {
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
-            Thread.sleep(100);
+           //Thread.sleep(500);
 
             System.err.println("-----------------------------------");
             System.err.println(state.occupiedNodes);
@@ -37,27 +37,16 @@ public class MaPPAlgorithm {
 
             //agentsInOrder = new ArrayList<>(newAgentsInOrder);
             round+=1;
+            System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals();
 
 
-                /**
-
-                System.err.println("//////////////////////");
-                System.err.println("bringb"+round);
-                System.err.println();
-                System.err.println(agent);
-                System.err.println("MAINPLAN:"+agent.mainPlan.plan);
-                System.err.println("IN GOAL "+agent.isInGoal());
-
-                System.err.println("all goals: "+agent.subgoals.goals);
-                 **/
                 System.err.println();      
                 System.err.println(agent);
                 System.err.println("Current SubGoal:"+agent.currentGoal);
-
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()<=0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
@@ -102,6 +91,9 @@ public class MaPPAlgorithm {
                                if (state.stringToNode.get(wantedMove).isTunnel) {
                                     state.agentConflicts.add(occupyingAgent);
                                 }
+                               else {
+                                   state.agentConflicts.add(occupyingAgent);
+                               }
 
                                 if (occupyingAgent.conflicts == agent && occupyingAgent.mainPlan.plan.size()>0) {
                                     System.err.println("Same conflict agent");
@@ -138,10 +130,12 @@ public class MaPPAlgorithm {
                                     occupyingBox.currentowner.blank = true;
                                     occupyingBox.currentowner.conflicts = agent;
                                     occupyingBox.conflicts=agent;
+                                    occupyingBox.conflictRoute = agent.mainPlan.plan;
                                     //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
                                     occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
                                     occupyingBox.bringBlank(state,  occupyingBox.currentowner);
+                                    //occupyingBox.conflictRoute = new ArrayList<>();
 
 
                                     //System.err.println("PLAN2: " + agent.mainPlan.plan);
@@ -162,7 +156,8 @@ public class MaPPAlgorithm {
                             }
 
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                            agent.ExecuteMove(agent,state, true);
+                        System.err.println("Add own positiion");
+                        agent.ExecuteMove(agent,state, true);
                             agent.mainPlan.plan.add(0,agent.position.NodeId);
                             if (agent.attached_box!=null) {
                                 agent.attached_box.mainPlan.plan.add(0,agent.attached_box.position.NodeId);
@@ -211,6 +206,7 @@ public class MaPPAlgorithm {
                     agent.subgoals.UpdateGoals();
 
 
+
                 }
             for(Agent AA : agentsInOrder) {
                 System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
@@ -223,6 +219,7 @@ public class MaPPAlgorithm {
             }
 
 
+
             // Boxes are automatically checked in agent.isInGoal
             state.UpdateOccupiedNodes();
 
@@ -231,6 +228,7 @@ public class MaPPAlgorithm {
             goalIsReached = true;
             Boolean noroutes = true;
             Boolean anyAgentBlank = false;
+            //Collections.sort(agentsInOrder,new Agent.CustomComparator());
             for(Agent agent : agentsInOrder) {
 
 
@@ -246,32 +244,47 @@ public class MaPPAlgorithm {
 
             }
 
+            if (round==1000) {
+                goalIsReached = true;
+            }
+
+
+
             if (noroutes) {
 
                 for (Agent agent : agentsInOrder) {
+                    agent.oldGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal);
+                    if (agent.oldGoal == null) agent.oldGoal = agent.currentGoal;
+                }
+
+                Collections.sort(agentsInOrder,new Agent.CustomComparator());
+
+
+                for (Agent agent : agentsInOrder) {
+                    System.err.println(agent + " "+agent.isInGoal());
 
 
                     if (!agent.isInGoal()) {
 
 
                         if (state.agentConflicts.size() > 0) {
+
+                            state.blankPlan.addAll(agent.mainPlan.plan);
                             agent.blank = true;
                             LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                             visited.remove(agent.position.NodeId);
                             agent.planPi(state, visited);
 
-                            //state.agentConflicts.remove(agent);
-                            // if (agent.mainPlan.plan.size()>0) {
-                            //  state.blankPlan = new ArrayList<>(agent.mainPlan.plan);
-                            //if (anyAgentBlank) break;
+
                             break;
-                            //}
+
                         } else {
                             if (agent.mainPlan.plan.size() == 0) {
 
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(agent.position.NodeId);
                                 agent.planPi(state, visited);
+                                break;
                             }
 
 

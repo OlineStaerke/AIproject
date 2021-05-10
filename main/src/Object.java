@@ -14,6 +14,7 @@ public abstract class Object{
     Plan mainPlan = new Plan();
     Agent conflicts;
     Boolean Taken;
+    public ArrayList<String> planToGoal;
 
 
     public void setGoal(Node goal) {
