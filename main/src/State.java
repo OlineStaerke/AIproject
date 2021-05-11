@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class State {
@@ -102,7 +101,77 @@ public class State {
         }
         for (Box box : boxes.values()) {
             occupiedNodes.put(box.position.NodeId, box);
+
+            /**if (box.currentowner != null && !(box.currentowner.currentGoal.Obj.ID == box.ID)) {
+                for (Agent agent : agents.values()) {
+                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0)) && agent.mainPlan.plan.size() == 0) {
+                        System.err.println();
+                        box.currentowner = agent;
+                    }
+                }
+
+            } else {
+                for (Agent agent : agents.values()) {
+                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0))) {
+                        box.currentowner = agent;
+                        break;
+                    }
+                }
+
+            }**/
+            if (box.currentowner == null) {
+                for (Agent agent : agents.values()) {
+                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0))) {
+                        box.currentowner = agent;
+                        break;
+                    }
+                }
+            }
         }
+
+        for (String position : occupiedNodes.keySet()) {
+            List<String> adjacent = map.getAdjacent(position);
+            for (String adjPosition : adjacent) {
+
+                Integer i = Integer.parseInt(adjPosition.split(" ")[0]);
+                Integer j = Integer.parseInt(adjPosition.split(" ")[1]);
+
+                boolean E = map.map.containsKey((i+1) + " " + j) && (!occupiedNodes.containsKey((i+1) + " " + j) || (occupiedNodes.get((i+1) + " " + j) instanceof Agent));
+                boolean W = map.map.containsKey((i-1) + " " + j) && (!occupiedNodes.containsKey((i-1) + " " + j) || (occupiedNodes.get((i-1) + " " + j) instanceof Agent));
+                boolean N = map.map.containsKey(i + " " + (1+j)) && (!occupiedNodes.containsKey(i+ " " + (j+1)) || (occupiedNodes.get(i + " " + (j+1)) instanceof Agent));
+                boolean S = map.map.containsKey(i + " " + (j-1))&& (!occupiedNodes.containsKey(i + " " + (j-1)) || (occupiedNodes.get(i + " " + (j-1)) instanceof Agent));
+
+                boolean NE = map.map.containsKey((i+1) + " " + (j+1))&& (!occupiedNodes.containsKey((i+1) + " " + (j+1)) || (occupiedNodes.get((i+1) + " " + (j+1)) instanceof Agent));
+                boolean NW = map.map.containsKey((i-1) + " " + (j+1))&& (!occupiedNodes.containsKey((i-1) + " " + (j+1)) || (occupiedNodes.get((i-1) + " " + (j+1)) instanceof Agent));
+                boolean SE = map.map.containsKey((i+1) + " " + (j-1))&& (!occupiedNodes.containsKey((i+1) + " " + (j-1)) || (occupiedNodes.get((i+1) + " " + (j-1)) instanceof Agent));
+                boolean SW = map.map.containsKey((i-1) + " " + (j-1))&& (!occupiedNodes.containsKey((i-1) + " " + (j-1)) || (occupiedNodes.get((i-1) + " " + (j-1)) instanceof Agent));
+
+                Node n = stringToNode.get(adjPosition);
+                n.isTunnelDynamic =false;
+
+                if ((S & !SE & !SW)) n.isTunnelDynamic = true;
+                if ((N & !NE & !NW)) n.isTunnelDynamic = true;
+                if ((E & !SE & !NE)) n.isTunnelDynamic = true;
+                if ((W & !SW & !NW)) n.isTunnelDynamic = true;
+
+
+
+                //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+
+                if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
+                if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
+
+                if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
+                if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
+
+
+
+            }
+        }
+
+
+
     }
 
 
@@ -139,8 +208,8 @@ public class State {
 
 
 
-            if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-            if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+            //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+           // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
 
             if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
             if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;

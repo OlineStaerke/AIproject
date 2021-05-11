@@ -6,7 +6,7 @@ public class Agent extends Object {
     int distance_to_goal = 100;
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
-    public SubGoals.SubGoal oldGoal;
+    public SubGoals.SubGoal nextGoal;
     public SubGoals subgoals;
     Box attached_box;
 
@@ -33,44 +33,19 @@ public class Agent extends Object {
             Integer o1_value = 0;
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
 
-            if(o1.oldGoal!=null && o2.oldGoal!=null) {
+            if(o1.nextGoal!=null && o2.nextGoal!=null) {
 
-                for (String goal : o1.oldGoal.Obj.Goal) {
-                    if (o2.oldGoal.Obj.planToGoal.contains(goal)) {
-
+                for (String goal : o1.nextGoal.Obj.Goal) {
+                    if (o2.nextGoal.Obj.planToGoal.contains(goal)) {
                         o2_value+= 100;
                     }
-
                 }
-                if (o2.oldGoal.Obj instanceof Box) {
 
-                    for (String goal : o1.oldGoal.Obj.Goal) {
-                        if (((Box) o2.oldGoal.Obj).planToGoal.contains(goal)) {
-
-                            o2_value+= 100;
-                        }
-
-                    }
-
-                }
-                for (String goal : o2.oldGoal.Obj.Goal) {
-                    if (o1.oldGoal.Obj.planToGoal.contains(goal)) {
-
+                for (String goal : o2.nextGoal.Obj.Goal) {
+                    if (o1.nextGoal.Obj.planToGoal.contains(goal)) {
                         o1_value+= 100;
                     }
                 }
-                if (o1.oldGoal.Obj instanceof Box) {
-
-                    for (String goal : o2.oldGoal.Obj.Goal) {
-                        if (((Box) o1.oldGoal.Obj).planToGoal.contains(goal)) {
-
-                            o1_value += 100;
-                        }
-                    }
-                }
-
-
-
 
             }
 
@@ -178,8 +153,7 @@ public class Agent extends Object {
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
 
                     if(!conflicts.isInGoal()) {
-                        System.err.println("REEE: " + conflicts);
-                        if (( conflicts.conflicts!=null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0)) {
+                        if (conflicts.conflicts!=null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0) {
 
                             conflicts.bringBlank(state, conflicts);
                             //conflicts.planPi(state,new LinkedHashSet());
@@ -195,9 +169,6 @@ public class Agent extends Object {
                         conflicts.conflicts = null;
                         conflicts = null;
                     }
-
-
-
 
                 }
 
@@ -229,10 +200,7 @@ public class Agent extends Object {
     }
 
     public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
-        System.err.println(this.ID + " PLAN BOXES");
-        subgoals = new SubGoals(boxes, this);
-        System.err.println("SUBGOALS: " + subgoals.goals);
-
+        subgoals = new SubGoals(boxes, this, state);
         planPi(state, visited);
     }
 

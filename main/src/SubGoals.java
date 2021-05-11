@@ -7,7 +7,7 @@ public class SubGoals{
     enum GoalType{BoxBlanked, BoxToGoal, AgentToGoal, AgentBlanked} //Can put this enum above SubGoals class
 
 
-    public SubGoals(ArrayList<Box> boxes, Agent A){
+    public SubGoals(ArrayList<Box> boxes, Agent A, State state){
 
 
         goals = new ArrayList<>();
@@ -33,12 +33,6 @@ public class SubGoals{
             goals.add(new SubGoal(A, GoalType.AgentToGoal, A));
         }
 
-        /**
-        //If agent has been blanked
-        var sg = new SubGoal(A, GoalType.AgentBlanked,A);
-        sg.Finished = true;
-        goals.add(sg);
-         **/
 
 
         UpdateGoals();
@@ -47,11 +41,53 @@ public class SubGoals{
     }
 
     // Update what goals are now fulfilled
-    public void UpdateGoals(){
+    public void UpdateGoals(State state){
+        ArrayList<SubGoal> goalsToRemove = new ArrayList<>();
+
         for(SubGoal sg: goals){
             if (sg.gType.equals(GoalType.BoxBlanked)) continue;
-            sg.Finished = sg.Obj.isInSubGoal();
 
+            if (sg.Obj.isInSubGoal()) {
+                sg.Finished = sg.Obj.isInSubGoal();
+            }
+            else {
+                Boolean finished = true;
+                System.err.println("current SG:"+sg);
+
+                for (String goal : sg.Obj.Goal) {
+                    Object obj = state.occupiedNodes.get(goal);
+
+                    if (obj!=null) {
+                        System.err.println("FOUND OBJECT:"+obj);
+                        System.err.println("FINISHED:"+finished);
+                        System.err.println((obj == null) + " " + (!obj.isInSubGoal()) + " " + (!obj.position.NodeId.equals(goal)));
+                        System.err.println("NODEIID+" + obj.position.NodeId + " GOAL+" + goal);
+                    }
+
+
+                    if ((obj == null) || !obj.isInSubGoal() || (!obj.position.NodeId.equals(goal)) || (obj.Goal.size()==0)) {
+
+                        finished = false;
+                    }
+                }
+
+                sg.Finished = finished;
+                if (finished && sg.gType == GoalType.BoxToGoal) {
+                    System.err.println("DELETE: "+sg);
+                    goalsToRemove.add(sg);
+                    sg.Finished = true;
+                }
+            }
+
+
+        }
+        for (SubGoal sg : goalsToRemove) {
+            goals.remove(sg);
+        }
+
+        try {
+        Collections.sort(goals,new SubGoal.CustomComparator());} catch (Exception e) {
+            e.printStackTrace();
         }
         Collections.sort(goals,new SubGoal.CustomComparator());
 
@@ -85,6 +121,7 @@ public class SubGoals{
             SubGoal savesg = null;
 
             for (SubGoal sg : goals) {
+
                 if (!sg.Finished && sg.gType == GoalType.BoxBlanked && !((sg.Obj).Taken)) {
                     return sg;
                 }
@@ -96,6 +133,7 @@ public class SubGoals{
             }
             //see above comment
             if (savesg!=null) {
+                System.err.println("remove"+savesg);
                 goals.remove(savesg);
                 goals.add(savesg);
             }
@@ -166,7 +204,7 @@ public class SubGoals{
                 if (s1.Obj instanceof Box) {
 
                     for (String goal: s2.Obj.Goal) {
-                        if (((Box) s1.Obj).planToGoal.contains(goal) && !s1.Obj.ID.equals(s2.Obj.ID)) {
+                        if (((Box) s1.Obj).planToGoal.contains(goal) && s1.Obj.ID != s2.Obj.ID) {
                             s2_value += 100;
                         }
                     }
@@ -179,7 +217,16 @@ public class SubGoals{
                         }
                     }
                 }
-                return (s1_value) - (s2_value);
+                if (s1.gType == GoalType.BoxBlanked && !s1.Finished) {
+                    s1_value+= 2000;
+                }
+                if (s2.gType == GoalType.BoxBlanked && !s2.Finished) {
+                    s2_value+= 2000;
+                }
+                s2_value+=s2.Obj.planToGoal.size();
+                s1_value+=s1.Obj.planToGoal.size();
+
+                return (s1_value).compareTo((Integer) s2_value);
             }
         }
 
