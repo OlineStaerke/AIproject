@@ -1,6 +1,7 @@
 public class Node{
     public String NodeId;
     boolean isTunnel = false;
+    boolean isTunnelDynamic = false;
 
 
     public Node(String id){

@@ -61,8 +61,10 @@ public class Box extends Object {
         currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
 
         //Add this subgoal to the last one.
-        currentowner.subgoals.goals.remove(currentowner.currentGoal);
-        currentowner.subgoals.goals.add(currentowner.currentGoal);
+        if (currentowner.currentGoal.gType == SubGoals.GoalType.BoxBlanked) {
+            currentowner.subgoals.goals.remove(currentowner.currentGoal);
+            currentowner.subgoals.goals.add(currentowner.currentGoal);
+        }
 
         System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
 

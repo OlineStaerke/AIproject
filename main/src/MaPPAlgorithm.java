@@ -47,10 +47,12 @@ public class MaPPAlgorithm {
 
             for(Agent agent : agentsInOrder) {
 
-                agent.subgoals.UpdateGoals();
+                agent.subgoals.UpdateGoals(state);
+                //System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
                 System.err.println();      
                 System.err.println(agent);
                 System.err.println("Current SubGoal:"+agent.currentGoal);
+
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
@@ -186,14 +188,14 @@ public class MaPPAlgorithm {
                     }
 
                     //Update the subgoals
-                    agent.subgoals.UpdateGoals();
+                    agent.subgoals.UpdateGoals(state);
 
                 }
 
             for(Agent AA : agentsInOrder) {
                 System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
                 for (Box BB : AA.boxes) {
-                    System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
+                   // System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
 
             }
@@ -219,7 +221,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==100) {
+            if (round==2000) {
                 goalIsReached = true;
             }
 

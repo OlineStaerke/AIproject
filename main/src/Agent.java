@@ -199,7 +199,7 @@ public class Agent extends Object {
     }
 
     public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
-        subgoals = new SubGoals(boxes, this);
+        subgoals = new SubGoals(boxes, this, state);
         planPi(state, visited);
     }
 

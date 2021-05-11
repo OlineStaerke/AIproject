@@ -7,7 +7,7 @@ public class SubGoals{
     enum GoalType{BoxBlanked, BoxToGoal, AgentToGoal, AgentBlanked} //Can put this enum above SubGoals class
 
 
-    public SubGoals(ArrayList<Box> boxes, Agent A){
+    public SubGoals(ArrayList<Box> boxes, Agent A, State state){
 
 
         goals = new ArrayList<>();
@@ -34,18 +34,60 @@ public class SubGoals{
         }
 
 
-        UpdateGoals();
+        UpdateGoals(state);
 
 
     }
 
     // Update what goals are now fulfilled
-    public void UpdateGoals(){
+    public void UpdateGoals(State state){
+        ArrayList<SubGoal> goalsToRemove = new ArrayList<>();
+
         for(SubGoal sg: goals){
             if (sg.gType.equals(GoalType.BoxBlanked)) continue;
-            sg.Finished = sg.Obj.isInSubGoal();
+
+            if (sg.Obj.isInSubGoal()) {
+                sg.Finished = sg.Obj.isInSubGoal();
+            }
+            else {
+                Boolean finished = true;
+                System.err.println("current SG:"+sg);
+
+                for (String goal : sg.Obj.Goal) {
+                    Object obj = state.occupiedNodes.get(goal);
+
+                    if (obj!=null) {
+                        System.err.println("FOUND OBJECT:"+obj);
+                        System.err.println("FINISHED:"+finished);
+                        System.err.println((obj == null) + " " + (!obj.isInSubGoal()) + " " + (!obj.position.NodeId.equals(goal)));
+                        System.err.println("NODEIID+" + obj.position.NodeId + " GOAL+" + goal);
+                    }
+
+
+                    if ((obj == null) || !obj.isInSubGoal() || (!obj.position.NodeId.equals(goal)) || (obj.Goal.size()==0)) {
+
+                        finished = false;
+                    }
+                }
+
+                sg.Finished = finished;
+                if (finished && sg.gType == GoalType.BoxToGoal) {
+                    System.err.println("DELETE: "+sg);
+                    goalsToRemove.add(sg);
+                    sg.Finished = true;
+                }
+            }
+
+
         }
-        Collections.sort(goals,new SubGoal.CustomComparator());
+        for (SubGoal sg : goalsToRemove) {
+            goals.remove(sg);
+        }
+
+        try {
+        Collections.sort(goals,new SubGoal.CustomComparator());} catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -77,6 +119,7 @@ public class SubGoals{
             SubGoal savesg = null;
 
             for (SubGoal sg : goals) {
+
                 if (!sg.Finished && sg.gType == GoalType.BoxBlanked && !((sg.Obj).Taken)) {
                     return sg;
                 }
@@ -88,6 +131,7 @@ public class SubGoals{
             }
             //see above comment
             if (savesg!=null) {
+                System.err.println("remove"+savesg);
                 goals.remove(savesg);
                 goals.add(savesg);
             }
