@@ -6,7 +6,7 @@ public class Plan {
     ArrayList<String> plan = new ArrayList<String>();
     HashMap<String, ArrayList<String>> precomputedDistance;
 
-    public void createPlan(State state, String Source,List<String> Destination,Set<String> visited) {
+    public void createPlan(State state, String Source, List<String> Destination,Set<String> visited) {
         Map map = state.map;
         if (Destination == null) return;
         state.UpdateOccupiedNodes();
@@ -50,7 +50,14 @@ public class Plan {
         occupied.remove(rootBox);
         otheragentplan.add(occupied);
 
-        System.err.println("OCUUPIED"+occupied);
+        if (agent.ID.equals("1")) {
+            System.err.println("OCUUPIED" + occupied);
+            System.err.println("RootAgent: " + rootAgent);
+            System.err.println("rootBox: " + rootBox);
+            System.err.println("MAP: " + state.map);
+            System.err.println("goal: " + goal);
+            System.err.println("otherAgentPlan: " + otheragentplan);
+        }
 
 
 
@@ -84,16 +91,21 @@ public class Plan {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false);
 
         }
+        System.err.println("FOUR"+tuple_plan);
+
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true);
 
         }
 
+        System.err.println("FIFTH"+tuple_plan);
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true);
 
         }
+        System.err.println("SIXTH"+tuple_plan);
+
 
 
         if (tuple_plan!=null) {
@@ -342,6 +354,31 @@ public class Plan {
             }
         }
         return route;
+    }
+
+    // dont touch.
+    public HashSet<String> MathiasBFS(Map map, String root) {
+
+        Deque<String> queue = new ArrayDeque<>();
+        queue.push(root);
+        var visited = new HashSet<String>();
+
+
+        //Start runnning BFS
+        while (!queue.isEmpty()) {
+            String vertex = queue.pollFirst();
+
+            //If not in goal, check neighbours not in visited.
+            if (!visited.contains(vertex)) {
+                visited.add(vertex);
+
+
+                for (String v : map.getAdjacent(vertex)) {
+                    queue.addLast(v);
+                }
+            }
+        }
+        return visited;
     }
 
 

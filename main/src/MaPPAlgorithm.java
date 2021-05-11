@@ -6,6 +6,7 @@ public class MaPPAlgorithm {
 
     public static void MaPPVanilla(State state) throws InterruptedException {
 
+        System.err.println("BEGIN: " + state.agents.values());
         for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
             agent.planGoals(state, new LinkedHashSet());

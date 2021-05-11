@@ -192,13 +192,21 @@ public class SearchClient {
 
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
-        State initialState = SearchClient.parseLevel(serverMessages);
-        Action[][] plan;
 
+        State initialState = SearchClient.parseLevel(serverMessages);
+        ArrayList<State> componentStates = initialState.allStates();
+        for(State S: componentStates){
+            System.err.println(" QQ: " + S.agents.values());
+            System.err.println(" WOO: " + S.boxes.values());
+
+        }
+
+        Action[][] plan;
 
         try {
             // Run MaPPAlgorithm
-            MaPPAlgorithm.MaPPVanilla(initialState);
+            for(State S : componentStates)
+                MaPPAlgorithm.MaPPVanilla(S);
 
             plan = Converter.getConversion(initialState.agents);
             System.err.println("Length of plan:"+plan.length);

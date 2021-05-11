@@ -178,7 +178,8 @@ public class Agent extends Object {
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
 
                     if(!conflicts.isInGoal()) {
-                        if (conflicts.conflicts!=null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0) {
+                        System.err.println("REEE: " + conflicts);
+                        if (( conflicts.conflicts!=null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0)) {
 
                             conflicts.bringBlank(state, conflicts);
                             //conflicts.planPi(state,new LinkedHashSet());
@@ -228,7 +229,10 @@ public class Agent extends Object {
     }
 
     public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
+        System.err.println(this.ID + " PLAN BOXES");
         subgoals = new SubGoals(boxes, this);
+        System.err.println("SUBGOALS: " + subgoals.goals);
+
         planPi(state, visited);
     }
 
