@@ -35,7 +35,7 @@ public class SubGoals{
 
 
 
-        UpdateGoals();
+        UpdateGoals(state);
 
 
     }
