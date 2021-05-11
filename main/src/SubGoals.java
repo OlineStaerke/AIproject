@@ -131,6 +131,12 @@ public class SubGoals{
 
                 }
             }
+
+            for (SubGoal sg : goals) {
+                if (!sg.Finished && sg.gType == GoalType.BoxToGoal && !((sg.Obj).Taken)) {
+                    return sg;
+                }
+            }
             //see above comment
             if (savesg!=null) {
                 System.err.println("remove"+savesg);

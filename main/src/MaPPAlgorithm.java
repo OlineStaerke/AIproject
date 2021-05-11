@@ -69,7 +69,6 @@ public class MaPPAlgorithm {
                             wantedMove = agent.mainPlan.plan.get(0);
                         }
 
-
                     }
 
                     if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null) && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
@@ -79,6 +78,7 @@ public class MaPPAlgorithm {
 
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
+
                         System.err.println("CONFLICT! I am agent:"+agent.ID);
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
@@ -222,7 +222,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==2000) {
+            if (round==100) {
                 goalIsReached = true;
             }
 
