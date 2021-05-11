@@ -44,9 +44,8 @@ public class SubGoals{
         for(SubGoal sg: goals){
             if (sg.gType.equals(GoalType.BoxBlanked)) continue;
             sg.Finished = sg.Obj.isInSubGoal();
-
         }
-        //Collections.sort(goals,new SubGoal.CustomComparator());
+        Collections.sort(goals,new SubGoal.CustomComparator());
 
 
     }
@@ -172,6 +171,14 @@ public class SubGoals{
                         }
                     }
                 }
+                if (s1.gType == GoalType.BoxBlanked && !s1.Finished) {
+                    s1_value+= 2000;
+                }
+                if (s2.gType == GoalType.BoxBlanked && !s2.Finished) {
+                    s2_value+= 2000;
+                }
+                s2_value+=s2.Obj.planToGoal.size();
+                s1_value+=s1.Obj.planToGoal.size();
 
                 return (s1_value).compareTo((Integer) s2_value);
             }

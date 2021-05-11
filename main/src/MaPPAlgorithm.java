@@ -219,7 +219,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==1000) {
+            if (round==100) {
                 goalIsReached = true;
             }
 

@@ -169,9 +169,6 @@ public class Agent extends Object {
                         conflicts = null;
                     }
 
-
-
-
                 }
 
             }
