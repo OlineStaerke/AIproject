@@ -45,21 +45,29 @@ public class Box extends Object {
     @Override
     void bringBlank(State state, Agent agent) throws InterruptedException {
 
-        if ((mainPlan.plan.size()>0) && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0) )) && (currentowner.attached_box!=null && currentowner.attached_box.ID==ID && currentowner.attachedBox(state))){
-
+        //Dont compute a new path if we are already moving away
+        if ((mainPlan.plan.size()>0) && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0))) && (currentowner.attached_box!=null && currentowner.attached_box.ID==ID && currentowner.attachedBox(state))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
         // Placeholder currentGoal is created if null (no current task)
+        /**
         if (currentowner.currentGoal == null) {
             currentowner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.AgentToGoal, agent);
 
         }
+         **/
 
-        currentowner.subgoals.UpdatedBlanked(this, false);
+        currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
+
+        //Add this subgoal to the last one.
         currentowner.subgoals.goals.remove(currentowner.currentGoal);
-        System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
         currentowner.subgoals.goals.add(currentowner.currentGoal);
+
+        System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
+
+
+        //TODO: Overlook these if statements again
         if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
             currentowner.mainPlan.plan = new ArrayList<>();
             currentowner.planPi(state, new LinkedHashSet<>());

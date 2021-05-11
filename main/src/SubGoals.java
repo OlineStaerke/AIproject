@@ -33,13 +33,6 @@ public class SubGoals{
             goals.add(new SubGoal(A, GoalType.AgentToGoal, A));
         }
 
-        /**
-        //If agent has been blanked
-        var sg = new SubGoal(A, GoalType.AgentBlanked,A);
-        sg.Finished = true;
-        goals.add(sg);
-         **/
-
 
         UpdateGoals();
 
@@ -53,7 +46,7 @@ public class SubGoals{
             sg.Finished = sg.Obj.isInSubGoal();
 
         }
-        Collections.sort(goals,new SubGoal.CustomComparator());
+        //Collections.sort(goals,new SubGoal.CustomComparator());
 
 
     }

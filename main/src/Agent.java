@@ -6,7 +6,7 @@ public class Agent extends Object {
     int distance_to_goal = 100;
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
-    public SubGoals.SubGoal oldGoal;
+    public SubGoals.SubGoal nextGoal;
     public SubGoals subgoals;
     Box attached_box;
 
@@ -33,57 +33,31 @@ public class Agent extends Object {
             Integer o1_value = 0;
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
 
-            if(o1.oldGoal!=null && o2.oldGoal!=null) {
+            if(o1.nextGoal!=null && o2.nextGoal!=null) {
 
-                for (String goal : o1.oldGoal.Obj.Goal) {
-                    if (o2.oldGoal.Obj.planToGoal.contains(goal)) {
-
+                for (String goal : o1.nextGoal.Obj.Goal) {
+                    if (o2.nextGoal.Obj.planToGoal.contains(goal)) {
                         o2_value+= 100;
                     }
-
                 }
-                if (o2.oldGoal.Obj instanceof Box) {
 
-                    for (String goal : o1.oldGoal.Obj.Goal) {
-                        if (((Box) o2.oldGoal.Obj).planToGoal.contains(goal)) {
-
-                            o2_value+= 100;
-                        }
-
-                    }
-
-                }
-                for (String goal : o2.oldGoal.Obj.Goal) {
-                    if (o1.oldGoal.Obj.planToGoal.contains(goal)) {
-
+                for (String goal : o2.nextGoal.Obj.Goal) {
+                    if (o1.nextGoal.Obj.planToGoal.contains(goal)) {
                         o1_value+= 100;
                     }
                 }
-                if (o1.oldGoal.Obj instanceof Box) {
-
-                    for (String goal : o2.oldGoal.Obj.Goal) {
-                        if (((Box) o1.oldGoal.Obj).planToGoal.contains(goal)) {
-
-                            o1_value += 100;
-                        }
-                    }
-                }
-
-
-
 
             }
 
             if (o1.subgoals.ExistsBlankGoal()) {
-
                 o1_value+= 2000;
             }
             if (o2.subgoals.ExistsBlankGoal()) {
-
                 o2_value+= 2000;
             }
 
 
+            //The one with longest plan can move first, if other things are 0.
 
             Integer comparevalue = o2.mainPlan.plan.size() + o2_value;
             return (comparevalue).compareTo(((Integer) o1.mainPlan.plan.size())+o1_value);
