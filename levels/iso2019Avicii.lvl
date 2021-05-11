@@ -1,0 +1,18 @@
+#domain
+hospital
+#levelname
+Box1
+#colors
+red: 0, A
+blue: 1, B
+#initial
+++++++
++0A  +
++1B  +
+++++++
+#goal
+++++++
++   B+
++   A+
+++++++
+#end
