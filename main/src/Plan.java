@@ -41,22 +41,22 @@ public class Plan {
         }
         if(agent.conflicts!=null && agent.conflicts.ID == agent.ID) {
             otheragentplan.addAll(box.conflictRoute);}
-        System.err.println("other agent plan"+otheragentplan);
+        //System.err.println("other agent plan"+otheragentplan);
 
-        System.err.println("conflicts"+agent.conflicts);
+        //System.err.println("conflicts"+agent.conflicts);
         //Try to solve the level by adding occupied nodes to visited
         LinkedHashSet occupied = new LinkedHashSet(state.occupiedNodes.keySet());
         occupied.remove(rootAgent);
         occupied.remove(rootBox);
         otheragentplan.add(occupied);
 
-        System.err.println("OCUUPIED"+occupied);
+        //System.err.println("OCUUPIED"+occupied);
 
 
 
 
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false);
-        System.err.println("FIRST"+tuple_plan);
+        //System.err.println("FIRST"+tuple_plan);
 
         if (tuple_plan==null && goal!=null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false);
@@ -73,31 +73,31 @@ public class Plan {
 
         }
 
-        System.err.println("SECOND"+tuple_plan);
+        //System.err.println("SECOND"+tuple_plan);
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true);
 
         }
-        System.err.println("THIRD"+tuple_plan);
+        //System.err.println("THIRD"+tuple_plan);
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false);
 
         }
-        System.err.println("FOUR"+tuple_plan);
+        //System.err.println("FOUR"+tuple_plan);
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true);
 
         }
 
-        System.err.println("FIFTH"+tuple_plan);
+        //System.err.println("FIFTH"+tuple_plan);
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true);
 
         }
-        System.err.println("SIXTH"+tuple_plan);
+        //System.err.println("SIXTH"+tuple_plan);
 
 
 
@@ -116,8 +116,8 @@ public class Plan {
             if(goal!=null) {
                 box.planToGoal = new ArrayList<>(plan_box);
             }
-            System.err.println("PLAN AGENT:"+plan);
-            System.err.println("PLAN BOX:"+plan_box);
+            //System.err.println("PLAN AGENT:"+plan);
+            //System.err.println("PLAN BOX:"+plan_box);
         }
         box.conflictRoute = new ArrayList<>();
 
@@ -127,7 +127,7 @@ public class Plan {
 
 
     public void createAltPaths(State state, Agent agent) {
-        System.err.println("### NOW COMPUTING Alternative plan ###");
+        //System.err.println("### NOW COMPUTING Alternative plan ###");
         Map map = state.map;
 
 

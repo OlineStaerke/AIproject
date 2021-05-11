@@ -66,14 +66,14 @@ public class Box extends Object {
             currentowner.subgoals.goals.add(currentowner.currentGoal);
         }
 
-        System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
+        //System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
 
 
         //TODO: Overlook these if statements again
         if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
             currentowner.mainPlan.plan = new ArrayList<>();
             currentowner.planPi(state, new LinkedHashSet<>());
-            System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
+            //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
         }
 
 

@@ -48,7 +48,7 @@ public class State {
             states.add(newState);
 
         }
-        // System.exit(0);
+        //System.exit(0);
 
         return states;
 
@@ -273,6 +273,10 @@ public class State {
             if (B.Goal.size() == 0) continue;
             var goals = new ArrayList<String>(B.Goal);
             goals.removeAll(doneGoals);
+            if (goals.size() == 0){
+                B.Goal = new ArrayList<>();
+                continue;
+            }
 
             P.createPlan(this, B.position.NodeId, goals, new HashSet<>());
             var newGoal = new ArrayList<String>();

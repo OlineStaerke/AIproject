@@ -98,7 +98,7 @@ public class SearchClient {
 
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
-                        System.err.println(agents_lookup);
+                        //System.err.println(agents_lookup);
 
                         if (agents_lookup.containsKey(c)) {
                             Integer newi = agents_lookup.get(c).size()+1;
@@ -119,7 +119,7 @@ public class SearchClient {
                     }
                     //Else check if it's a box
                     else if ('A' <= c && c <= 'Z') {
-                        System.err.println(boxes_lookup);
+                        //System.err.println(boxes_lookup);
 
                         if (boxes_lookup.containsKey(c)) {
                             Integer newi = boxes_lookup.get(c).size()+1;
@@ -149,21 +149,21 @@ public class SearchClient {
         line = serverMessages.readLine();
         int row = 0;
 
-        System.err.println(agents);
+        //System.err.println(agents);
         while (!line.startsWith("#")) {
             for (int col = 0; col < line.length(); ++col) {
                 char c = line.charAt(col);
                 // If the goal is just getting the agent to its goal location
                 Node goal = new Node(row + " " + col);
                 if ('0' <= c && c <= '9') {
-                    System.err.println(c+i_agent.toString());
+                    //System.err.println(c+i_agent.toString());
                     for (Agent agent : agents_lookup.get(c)) {
                         agent.setGoal(goal);
                     }
                 }
                 // Else, the box gets the goal of getting to its goal location
                 else if ('A' <= c && c <= 'Z'){
-                    System.err.println(c+i_box.toString());
+                    //System.err.println(c+i_box.toString());
                     for (Box box: boxes_lookup.get(c)) {
                         box.setGoal(goal);
                     }
@@ -182,10 +182,10 @@ public class SearchClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         // Use stderr to print to the console.
-        System.err.println("SearchClient initializing. I am sending this using the error output stream.");
+        //System.err.println("SearchClient initializing. I am sending this using the error output stream.");
 
         // Send client name to server.
-        System.out.println("SearchClient");
+        //System.out.println("SearchClient");
 
         // We can also print comments to stdout by prefixing with a #.
         System.out.println("#This is a comment.");
@@ -196,8 +196,8 @@ public class SearchClient {
         State initialState = SearchClient.parseLevel(serverMessages);
         ArrayList<State> componentStates = initialState.allStates();
         for(State S: componentStates){
-            System.err.println(" QQ: " + S.agents.values());
-            System.err.println(" WOO: " + S.boxes.values());
+            //System.err.println(" QQ: " + S.agents.values());
+            //System.err.println(" WOO: " + S.boxes.values());
 
         }
 
@@ -209,8 +209,8 @@ public class SearchClient {
                 MaPPAlgorithm.MaPPVanilla(S);
 
             plan = Converter.getConversion(initialState.agents);
-            System.err.println("Length of plan:"+plan.length);
-            System.err.println(Arrays.deepToString(plan));
+            //System.err.println("Length of plan:"+plan.length);
+            //System.err.println(Arrays.deepToString(plan));
         }
         catch (OutOfMemoryError ex){
             System.err.println("Maximum memory usage exceeded.");
@@ -228,7 +228,7 @@ public class SearchClient {
             for (Action[] jointAction : plan)
             {
                 i+=1;
-                System.err.println(i);
+                //System.err.println(i);
                 System.out.print(jointAction[0].name);
                 for (int action = 1; action < jointAction.length; ++action)
                 {

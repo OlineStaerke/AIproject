@@ -52,16 +52,16 @@ public class SubGoals{
             }
             else {
                 Boolean finished = true;
-                System.err.println("current SG:"+sg);
+                //System.err.println("current SG:"+sg);
 
                 for (String goal : sg.Obj.Goal) {
                     Object obj = state.occupiedNodes.get(goal);
 
                     if (obj!=null) {
-                        System.err.println("FOUND OBJECT:"+obj);
-                        System.err.println("FINISHED:"+finished);
-                        System.err.println((obj == null) + " " + (!obj.isInSubGoal()) + " " + (!obj.position.NodeId.equals(goal)));
-                        System.err.println("NODEIID+" + obj.position.NodeId + " GOAL+" + goal);
+                        //System.err.println("FOUND OBJECT:"+obj);
+                        //System.err.println("FINISHED:"+finished);
+                        //System.err.println((obj == null) + " " + (!obj.isInSubGoal()) + " " + (!obj.position.NodeId.equals(goal)));
+                        //System.err.println("NODEIID+" + obj.position.NodeId + " GOAL+" + goal);
                     }
 
 
@@ -73,7 +73,7 @@ public class SubGoals{
 
                 sg.Finished = finished;
                 if (finished && sg.gType == GoalType.BoxToGoal) {
-                    System.err.println("DELETE: "+sg);
+                    //System.err.println("DELETE: "+sg);
                     goalsToRemove.add(sg);
                     sg.Finished = true;
                 }
@@ -133,7 +133,7 @@ public class SubGoals{
             }
             //see above comment
             if (savesg!=null) {
-                System.err.println("remove"+savesg);
+                //System.err.println("remove"+savesg);
                 goals.remove(savesg);
                 goals.add(savesg);
             }
