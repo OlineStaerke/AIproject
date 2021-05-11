@@ -71,6 +71,7 @@ public class MaPPAlgorithm {
 
 
                     }
+
                     if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null) && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
                         agent.ExecuteMove(agent, state, false);
                     }
