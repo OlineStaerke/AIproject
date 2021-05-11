@@ -31,3 +31,7 @@ java -jar server.jar -l C:\Users\Simon\IdeaProjects\AIproject\levels\SAD1.lvl -c
 Oline:
 
 java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/test8.lvl -c "java SearchClient"
+
+RUN ALL:
+Mathias:
+java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\AIproject\levels\2019 -c "java SearchClient" -t 180 -o "C:\Users\Mathi\Desktop\8_semester\AI\AIproject\OUT.zip"

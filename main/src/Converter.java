@@ -13,7 +13,7 @@ public final class Converter {
         // Remove the first move on the plan (This is always noOp)
         for (Agent A : agents.values()){
             var q = A.finalPlan.remove(0);
-            System.err.println("First index of final plan removed, action was: " + q);
+            //System.err.println("First index of final plan removed, action was: " + q);
             maxSize = Math.max(maxSize, A.finalPlan.size());
         }
         for (Agent A: agents.values()){
@@ -40,7 +40,7 @@ public final class Converter {
             convPlan[inc] = fromCoordsToDirections(A.getFinalPlan(), A.boxes); //Conversion of each agent's plan
 
 
-            System.err.println("Agent size: " + A.finalPlan.size());
+            //System.err.println("Agent size: " + A.finalPlan.size());
             inc++;
         }
         // For each round build the JointAction plan and add it to the ultimate plan
@@ -81,9 +81,9 @@ public final class Converter {
 
             for(Box B: boxes){
                 if (B.finalPlan.size() != plan.size()){
-                    System.err.println("############### FINAL PLANS OF DIFFERENT LENGTH! ###############");
-                    System.err.println("Agent plan: " + plan.size());
-                    System.err.println("Box plan: " + B.finalPlan.size());
+                    //System.err.println("############### FINAL PLANS OF DIFFERENT LENGTH! ###############");
+                    //System.err.println("Agent plan: " + plan.size());
+                    //System.err.println("Box plan: " + B.finalPlan.size());
                     return null;
                 }
 
