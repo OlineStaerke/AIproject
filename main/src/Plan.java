@@ -108,8 +108,8 @@ public class Plan {
                 plan_agent.add(T.agentpos);
                 plan_box.add(T.boxpos);
             }
-            plan_agent.remove(0);
-            plan_box.remove(0);
+            //plan_agent.remove(0);
+            //plan_box.remove(0);
 
             plan = plan_agent;
             box.mainPlan.plan = plan_box;

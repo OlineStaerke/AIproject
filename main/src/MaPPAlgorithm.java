@@ -49,7 +49,7 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals(state);
-                //System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
+                System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
                 System.err.println();      
                 System.err.println(agent);
                 System.err.println("Current SubGoal:"+agent.currentGoal);
@@ -224,6 +224,16 @@ public class MaPPAlgorithm {
 
             if (round==100) {
                 goalIsReached = true;
+            }
+            System.err.println("GOAL IS REACHED"+goalIsReached);
+            for (Agent agent : agentsInOrder) {
+                System.err.println("ALL GOALS "+agent.subgoals.goals);
+                System.err.println(agent.finalPlan);
+                for (Box BB : agent.boxes) {
+                    System.err.println("PLANANAN:  " + BB.finalPlan);
+                }
+
+
             }
 
 
