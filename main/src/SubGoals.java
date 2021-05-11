@@ -166,7 +166,7 @@ public class SubGoals{
                 if (s1.Obj instanceof Box) {
 
                     for (String goal: s2.Obj.Goal) {
-                        if (((Box) s1.Obj).planToGoal.contains(goal) && s1.Obj.ID != s2.Obj.ID) {
+                        if (((Box) s1.Obj).planToGoal.contains(goal) && !s1.Obj.ID.equals(s2.Obj.ID)) {
                             s2_value += 100;
                         }
                     }
@@ -179,8 +179,7 @@ public class SubGoals{
                         }
                     }
                 }
-
-                return (s1_value).compareTo((Integer) s2_value);
+                return (s1_value) - (s2_value);
             }
         }
 
