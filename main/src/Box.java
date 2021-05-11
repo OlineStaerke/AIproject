@@ -19,9 +19,9 @@ public class Box extends Object {
         this.finalPlan = new ArrayList<>();
         this.finalPlanString = new ArrayList<>();
         this.mainPlan = new Plan();
-        this.Taken = false;
+        this.Taken = false; //True if it is has been taken by an agent
         this.planToGoal = new ArrayList<>();
-        this.blankByOwn = false;
+        this.blankByOwn = false; //True if it has been brough blank by its owner.
 
     }
 

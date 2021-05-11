@@ -84,19 +84,17 @@ public class SubGoals{
             currentGoal.Obj.Taken=false;
             SubGoal savesg = null;
 
-
             for (SubGoal sg : goals) {
                 if (!sg.Finished && sg.gType == GoalType.BoxBlanked && !((sg.Obj).Taken)) {
                     return sg;
                 }
-                //add current Obj as the last element in goals, to make sure other goals are treated first.
-                //TODO: this still doesnt work
+                //add current Obj as the last element in goals, to make sure other goals are treated first, if it has been brought blank by it self.
                 if (sg.Obj.ID == currentGoal.Obj.ID && sg.gType == GoalType.BoxToGoal && currentGoal.Obj instanceof Box && ((Box) currentGoal.Obj).blankByOwn) {
                     savesg = sg;
 
                 }
             }
-
+            //see above comment
             if (savesg!=null) {
                 goals.remove(savesg);
                 goals.add(savesg);
@@ -105,14 +103,6 @@ public class SubGoals{
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
             if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
                 return currentGoal;
-            }
-            //Try not to return the same box, if that box has just been blanked has been removed by the same agent: && !sg.Obj.position.NodeId.equals(currentGoal.Obj.position.NodeId)
-            for (SubGoal sg : goals) {
-
-                if (!sg.Finished && !(sg.Obj).Taken ) {
-                        return sg;
-
-                }
             }
         }
         // Otherwise, select the next goal
