@@ -51,12 +51,12 @@ public class Box extends Object {
             return;
         }
         // Placeholder currentGoal is created if null (no current task)
-        /**
+
         if (currentowner.currentGoal == null) {
             currentowner.currentGoal = new SubGoals.SubGoal(this, SubGoals.GoalType.AgentToGoal, agent);
 
         }
-         **/
+
 
         currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
 
