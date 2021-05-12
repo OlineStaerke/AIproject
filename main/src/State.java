@@ -30,7 +30,7 @@ public class State {
             }
 
             for(Box B: newState.boxes.values()){
-                System.err.println("BOX: " + B + " ,goals: " + B.Goal);
+                //System.err.println("BOX: " + B + " ,goals: " + B.Goal);
 
             }
             newState.UpdateOccupiedNodes();
@@ -38,10 +38,10 @@ public class State {
             newState.UpdateOccupiedNodes();
             newState.createTunnels();
 
-            System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
-            System.err.println(M);
+            //System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
+            //System.err.println(M);
             for(Box B: newState.boxes.values()){
-                System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
+                //System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
 
             }
 
@@ -156,8 +156,8 @@ public class State {
 
 
 
-                //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnelDynamic = true;
-                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnelDynamic = true;
+                if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnelDynamic = true;
+                if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnelDynamic = true;
 
                 if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnelDynamic = true;
                 if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnelDynamic = true;
@@ -204,8 +204,8 @@ public class State {
                 if ((W & !SW & !NW)) n.isTunnel = true;
 
 
-                //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+                if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+                if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
 
                 if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
                 if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
@@ -223,6 +223,7 @@ public class State {
 
             if (P.DFSForTunnels(map, node, map.map.get(node))){
                 n.isTunnelOneWay = true;
+                n.isTunnel = true;
                 stringToNode.replace(node, n);
             }
 
@@ -278,6 +279,7 @@ public class State {
 
         boxes = BoxesCopy;
         // Each box has a specific goal for now.
+            /**
         ArrayList<String> doneGoals = new ArrayList<>();
 
         for (Box B: boxes.values()){
@@ -300,9 +302,10 @@ public class State {
 
 
         for (Box B: boxes.values()){
-            System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
+            //System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
 
         }
+             **/
 
     }
 

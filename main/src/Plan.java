@@ -41,6 +41,7 @@ public class Plan {
         String rootAgent = agent.position.NodeId;
         String rootBox = agent.attached_box.position.NodeId;
         ArrayList otheragentplan = new ArrayList();
+        System.err.println(box+" "+box.conflict_box);
 
         if (goal==null) {
 
@@ -49,55 +50,76 @@ public class Plan {
             }
             if (agent.conflicts!=null) {
                 otheragentplan.addAll(agent.conflicts.mainPlan.plan);
-                if (agent.conflicts.attached_box!=null && agent.conflicts.attached_box.planToGoal!=null) {
-                    otheragentplan.addAll(agent.conflicts.attached_box.planToGoal);
-                   // agent.conflicts.attached_box.planToGoal = new ArrayList<>();
+                if (box.conflict_box!=null) {
+                    System.err.println("HEY");
+                    otheragentplan.addAll(box.conflict_box.planToGoal);
+                    System.err.println(box.conflict_box.planToGoal);
+                    //agent.conflicts.attached_box.planToGoal = new ArrayList<>();
                 }
 
-
             }
-
             //otheragentplan.addAll(box.conflictRoute);
 
-
-
-
-
-
         }
+        System.err.println("OTHERAGENTPLAN"+otheragentplan);
         if(agent.conflicts!=null && agent.conflicts.ID.equals(agent.ID)) {
-            otheragentplan.addAll(box.conflictRoute);}
+            otheragentplan.addAll(box.conflictRoute);
+            }
         //System.err.println("other agent plan"+otheragentplan);
 
-        //System.err.println("conflicts"+agent.conflicts);
+
         //Try to solve the level by adding occupied nodes to visited
         LinkedHashSet occupied = new LinkedHashSet(state.occupiedNodes.keySet());
         occupied.remove(rootAgent);
         occupied.remove(rootBox);
-        otheragentplan.add(occupied);
+        otheragentplan.addAll(occupied);
 
-        //System.err.println("OCUUPIED"+occupied);
+        System.err.println("OTHERAGENTPLAN"+otheragentplan);
+
+
 
 
 
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
-        //System.err.println("FIRST"+tuple_plan);
+        System.err.println("FIRST"+tuple_plan);
 
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
 
         }
+        System.err.println("SECOND"+tuple_plan);
+
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, false);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
 
         }
-        //System.err.println("SECOND"+tuple_plan);
+        System.err.println("THIRD"+tuple_plan);
+        /**
+        if (box.conflict_box!=null) {
+            occupied = new LinkedHashSet();
+            occupied.add(box.conflict_box.position.NodeId);
+        }
+
+        System.err.println(occupied);
+
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
+
+        }
+         **/
+
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false, false);
 
         }
+        System.err.println("FOURTH"+tuple_plan);
 
+        //System.err.println("SECOND"+tuple_plan);
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, false);
+
+        }
 
 
         if (tuple_plan==null) {
@@ -271,6 +293,7 @@ public class Plan {
         root_route.add(root);
         routes_agent.add(root_route);
         actionList.add(ActionType.NoOp);
+        ArrayList<Tuple> routesFinal = null;
 
 
 
@@ -297,9 +320,15 @@ public class Plan {
 
                  if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
                     if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent && (!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
+
                         Tuple last_position = new Tuple(node_agent.NodeId, node_box.NodeId);
                         route_agent.add(last_position);
-                        return route_agent;
+
+                        if (node_box.isTunnel) {
+                            routesFinal = route_agent;
+                        }
+                        else {
+                        return route_agent;}
                     }
                 }
 
@@ -308,7 +337,7 @@ public class Plan {
                 else if (goal!=null && goal.contains(vertex_box) && ((!(state.occupiedNodes.keySet().contains(node_box.getNodeId())))||second)) {
                      if ((!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic)|| third)) {
 
-                         return route_agent;
+                        return route_agent;
                      }
                 }
 
@@ -345,7 +374,7 @@ public class Plan {
                 }
             }
         }
-        return null;
+        return routesFinal;
     }
 
     public ArrayList<String> breathFirstTraversal(Map map, String root, List<String> goal, Set<String> visited) {

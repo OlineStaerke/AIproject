@@ -43,12 +43,25 @@ public class SubGoals{
     // Update what goals are now fulfilled
     public void UpdateGoals(State state){
         ArrayList<SubGoal> goalsToRemove = new ArrayList<>();
+        ArrayList<String> Keepers = new ArrayList<>();
+
 
         for(SubGoal sg: goals){
             if (sg.gType.equals(GoalType.BoxBlanked)) continue;
 
             if (sg.Obj.isInSubGoal()) {
                 sg.Finished = sg.Obj.isInSubGoal();
+                if (sg.Finished && sg.gType.equals(GoalType.BoxToGoal)) {
+                    String keep = sg.Obj.position.NodeId;
+                    sg.Obj.Goal = new ArrayList<>();
+                    sg.Obj.Goal.add(keep);
+
+                    for(Box box : state.boxes.values()) {
+                        if (box!=sg.Obj) {
+                            box.Goal.remove(keep);
+                        }
+                    }
+                }
             }
             else {
                 Boolean finished = true;
@@ -84,6 +97,17 @@ public class SubGoals{
         for (SubGoal sg : goalsToRemove) {
             goals.remove(sg);
         }
+
+        //SortGoal(state);
+
+
+
+
+
+
+    }
+
+    public void SortGoal(State state) {
         for (SubGoal sg: goals) {
             if (sg.Obj instanceof Box) ((Box) sg.Obj).findPriority(state);
         }
@@ -99,12 +123,6 @@ public class SubGoals{
 
         Collections.sort(onlyBoxToGoal, new SubGoal.CustomComparator());
         goals.addAll(onlyBoxToGoal);
-
-
-
-
-
-
 
     }
 
@@ -140,15 +158,9 @@ public class SubGoals{
                     return sg;
                 }
                 //add current Obj as the last element in goals, to make sure other goals are treated first, if it has been brought blank by it self.
-                if (sg.Obj.ID == currentGoal.Obj.ID && sg.gType == GoalType.BoxToGoal && currentGoal.Obj instanceof Box && ((Box) currentGoal.Obj).blankByOwn) {
+                if (currentGoal.gType == GoalType.BoxBlanked && sg.Obj.ID == currentGoal.Obj.ID && sg.gType == GoalType.BoxToGoal && currentGoal.Obj instanceof Box && ((Box) currentGoal.Obj).blankByOwn) {
                     savesg = sg;
 
-                }
-            }
-
-            for (SubGoal sg : goals) {
-                if (!sg.Finished && sg.gType == GoalType.BoxToGoal && !((sg.Obj).Taken)) {
-                    return sg;
                 }
             }
             //see above comment
@@ -157,6 +169,13 @@ public class SubGoals{
                 goals.remove(savesg);
                 goals.add(savesg);
             }
+
+            for (SubGoal sg : goals) {
+                if (!sg.Finished && sg.gType == GoalType.BoxToGoal && !((sg.Obj).Taken)) {
+                    return sg;
+                }
+            }
+
 
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
             if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
