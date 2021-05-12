@@ -10,6 +10,7 @@ public class Box extends Object {
     public ArrayList<Agent> owners = new ArrayList<>();
     public ArrayList<String> conflictRoute = new ArrayList<>();
     Boolean blankByOwn;
+    Box conflict_box;
 
 
 
@@ -74,7 +75,7 @@ public class Box extends Object {
         //TODO: Overlook these if statements again
         if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
             currentowner.mainPlan.plan = new ArrayList<>();
-            currentowner.planPi(state, new LinkedHashSet<>());
+            currentowner.planPi(state, new LinkedHashSet<>(), false);
             //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
         }
 

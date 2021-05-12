@@ -11,6 +11,7 @@ public class Agent extends Object {
     Box attached_box;
 
 
+
     public Agent(Node node, String ID) {
         finalPlan = new ArrayList<>();
         finalPlan.add(node);
@@ -201,15 +202,18 @@ public class Agent extends Object {
 
     public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
         subgoals = new SubGoals(boxes, this, state);
-        planPi(state, visited);
+        planPi(state, visited, false);
     }
 
 
-    public void planPi(State state,LinkedHashSet visited) throws InterruptedException {
+    public void planPi(State state,LinkedHashSet visited, Boolean secondTry) throws InterruptedException {
 
         mainPlan.plan = new ArrayList<>();
         if (currentGoal != null) (currentGoal.Obj).Taken = false;
-        var SG = subgoals.ExtractNextGoal(currentGoal);
+        var SG = currentGoal;
+        if (!secondTry) {
+         SG = subgoals.ExtractNextGoal(currentGoal);}
+
 
         currentGoal = SG;
 
@@ -306,7 +310,7 @@ public class Agent extends Object {
         if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
             //System.err.println("PLANPI");
             subgoals.UpdatedBlanked(attached_box,false);
-            planPi(state,new LinkedHashSet());
+            planPi(state,new LinkedHashSet(), false);
             //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {

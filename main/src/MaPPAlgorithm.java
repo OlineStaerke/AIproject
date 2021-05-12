@@ -3,6 +3,26 @@ import java.util.*;
 
 public class MaPPAlgorithm {
 
+    public static String GetWantedMove(Agent agent) {
+        String wantedMove = agent.mainPlan.plan.get(0);
+
+
+        // if the wanted move is a box position
+        if (agent.attached_box!=null) {
+            if (wantedMove.equals(agent.attached_box.position.NodeId) && agent.attached_box.mainPlan.plan.size() > 0) {
+                wantedMove = agent.attached_box.mainPlan.plan.get(0);
+            }
+            // wantedMove = position: Stay.
+            else {
+                wantedMove = agent.mainPlan.plan.get(0);
+            }
+
+        }
+
+
+        return wantedMove;
+    }
+
 
     public static void MaPPVanilla(State state) throws InterruptedException {
 
@@ -20,6 +40,9 @@ public class MaPPAlgorithm {
             box.planToGoal = plan.plan;
 
 
+        }
+        for (Agent agent : state.agents.values()) {
+            agent.subgoals.SortGoal(state);
         }
         //state.UpdateOccupiedNodes();
 
@@ -44,7 +67,7 @@ public class MaPPAlgorithm {
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            //System.err.println("ROUND: "+round);
+            System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
@@ -52,40 +75,32 @@ public class MaPPAlgorithm {
                 //System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
                 //System.err.println();
                 //System.err.println(agent);
-                //System.err.println("Current SubGoal:"+agent.currentGoal);
+                System.err.println("Current SubGoal:"+agent.currentGoal);
+                String wantedMove = GetWantedMove(agent);
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
-                    String wantedMove = agent.mainPlan.plan.get(0);
 
 
-                    // if the wanted move is a box position
-                    if (agent.attached_box!=null) {
-                        if (wantedMove.equals(agent.attached_box.position.NodeId) && agent.attached_box.mainPlan.plan.size() > 0) {
-                            wantedMove = agent.attached_box.mainPlan.plan.get(0);
-                        }
-                        // wantedMove = position: Stay.
-                        else {
-                            wantedMove = agent.mainPlan.plan.get(0);
-                        }
 
 
-                    }
 
                     if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null) && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
                         agent.ExecuteMove(agent, state, false);
                     }
 
 
+
+
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
 
-                        //System.err.println("CONFLICT! I am agent:"+agent.ID);
+                        System.err.println("CONFLICT! I am agent:"+agent.ID);
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
 
                         // Agent is blocking and is not currenly removing a box
@@ -107,7 +122,7 @@ public class MaPPAlgorithm {
                                 //System.err.println("Same conflict agent");
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(occupyingAgent.position.NodeId);
-                                occupyingAgent.planPi(state, visited);
+                                occupyingAgent.planPi(state, visited, false);
                                 //occupyingAgent.mainPlan.plan.remove(0);
 
                                 occupyingAgent.blank = true;
@@ -136,11 +151,20 @@ public class MaPPAlgorithm {
                             // Maybe handle seperatly? idk
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
                                 //System.err.println("OWN COLOUR");
+                                if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                    ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
+                                    occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
+                                }else {
+                                    occupyingBox.conflict_box = null;
+                                }
+
+
                                 occupyingBox.currentowner.blank = true;
                                 occupyingBox.currentowner.conflicts = agent;
                                 occupyingBox.conflicts=agent;
                                 occupyingBox.conflictRoute = agent.mainPlan.plan;
                                 //System.err.println("OWNER: " + occupyingBox.owner.ID);
+
 
                                 occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
                                 occupyingBox.bringBlank(state,  occupyingBox.currentowner);
@@ -151,7 +175,14 @@ public class MaPPAlgorithm {
                                 //System.err.println("PLAN2: " + agent.mainPlan.plan);
                             } else{
                                 //System.err.println("Not same colour");
-
+                                if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                    ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
+                                    occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
+                                }
+                                else {
+                                    occupyingBox.conflict_box = null;
+                                }
+                                occupyingBox.conflictRoute = new ArrayList<>();
                                 occupyingBox.currentowner.blank = true;
                                 occupyingBox.currentowner.conflicts = agent;
                                 occupyingBox.conflicts = agent;
@@ -196,9 +227,9 @@ public class MaPPAlgorithm {
                 }
 
             for(Agent AA : agentsInOrder) {
-                //System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+                System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
                 for (Box BB : AA.boxes) {
-                   // System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
+                    //System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
 
             }
@@ -224,7 +255,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==20000) {
+            if (round==15000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
@@ -261,13 +292,13 @@ public class MaPPAlgorithm {
                             agent.blank = true;
                             LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                             visited.remove(agent.position.NodeId);
-                            agent.planPi(state, visited);
+                            agent.planPi(state, visited, false);
                             break;
 
                         } else {
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(agent.position.NodeId);
-                                agent.planPi(state, visited);
+                                agent.planPi(state, visited,false);
                                 //break;
 
 
@@ -280,6 +311,8 @@ public class MaPPAlgorithm {
         }
 
     }
+
+
 
 
 }
