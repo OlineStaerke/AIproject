@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Agent extends Object {
@@ -269,7 +270,7 @@ public class Agent extends Object {
                     bringBlank(state,conflicts);
 
             }
-
+            if (mainPlan.plan == null) mainPlan.plan = new ArrayList<>();
             distance_to_goal = mainPlan.plan.size();
 
 

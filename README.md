@@ -34,7 +34,7 @@ java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/test8.lvl -
 
 RUN ALL:
 Mathias:
-java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\AIproject\levels\2019 -c "java SearchClient" -t 180 -o "C:\Users\Mathi\Desktop\8_semester\AI\AIproject\OUT.zip"
+java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\AIproject\levels\2019SA -c "java SearchClient" -t 180 -o "C:\Users\Mathi\Desktop\8_semester\AI\AIproject\OUTSA2019.zip"
 
 RUN ALL:
 Oline:

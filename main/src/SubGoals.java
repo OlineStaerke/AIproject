@@ -123,6 +123,9 @@ public class SubGoals{
 
         Collections.sort(onlyBoxToGoal, new SubGoal.CustomComparator());
         goals.addAll(onlyBoxToGoal);
+        System.err.println("GOALS: ");
+        for(SubGoal SG: onlyBoxToGoal) System.err.println(SG);
+
 
     }
 

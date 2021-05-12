@@ -4,6 +4,7 @@ import java.util.*;
 public class MaPPAlgorithm {
 
     public static String GetWantedMove(Agent agent) {
+        if (agent.mainPlan.plan == null || agent.mainPlan.plan.size() == 0) return agent.position.NodeId;
         String wantedMove = agent.mainPlan.plan.get(0);
 
 
@@ -26,7 +27,7 @@ public class MaPPAlgorithm {
 
     public static void MaPPVanilla(State state) throws InterruptedException {
 
-        //System.err.println("BEGIN: " + state.agents.values());
+        System.err.println("BEGIN: " + state.agents.values());
         for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
             agent.planGoals(state, new LinkedHashSet());
@@ -255,12 +256,12 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==15000) {
+            if (round==20000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
-                //System.err.println("ALL GOALS "+agent.subgoals.goals);
+                //System.err.println("Current Goal "+agent.currentGoal);
                 //System.err.println(agent.finalPlan);
                 for (Box BB : agent.boxes) {
                     //System.err.println("PLANANAN:  " + BB.finalPlan);

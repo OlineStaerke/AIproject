@@ -83,11 +83,25 @@ public class Plan {
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
         //System.err.println("FIRST"+tuple_plan);
 
-
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
-
         }
+
+        if (tuple_plan == null){
+            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
+            for (String v: state.occupiedNodes.keySet()) {
+                Node n = state.stringToNode.get(v);
+                if (!n.isTunnel&& !n.isTunnelDynamic) {
+                    visitedNoTunnel.add(n.NodeId);
+                }
+            }
+            //System.err.println(visitedNoTunnel);
+            visitedNoTunnel.remove(rootBox);
+            visitedNoTunnel.remove(rootAgent);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),visitedNoTunnel,otheragentplan,goal,false, false);
+        }
+
+
         //System.err.println("SECOND"+tuple_plan);
 
         if (tuple_plan==null) {
@@ -113,6 +127,8 @@ public class Plan {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false, false);
 
         }
+
+
         //System.err.println("FOURTH"+tuple_plan);
 
         //System.err.println("SECOND"+tuple_plan);
@@ -476,6 +492,48 @@ public class Plan {
             }
         }
         return visited;
+    }
+
+
+    public int PriobreathFirstTraversal(State state, String root) {
+        var map = state.map;
+        var visited = new HashSet<String>();
+        ArrayList<String> route = new ArrayList<>();
+        Deque<ArrayList<String>> routes = new ArrayDeque<>();
+        Deque<String> queue = new ArrayDeque<>();
+        queue.push(root);
+
+        //Adding root to the list of routes to start with
+        ArrayList<String> root_route = new ArrayList<>();
+        root_route.add(root);
+        routes.add(root_route);
+
+
+        //Start runnning BFS
+        while (!queue.isEmpty()) {
+            String vertex = queue.pollFirst();
+            route = routes.pollFirst();
+
+            //If we are in goal, stop BFS
+            if (!state.stringToNode.get(vertex).isTunnelOneWay) {
+                return route.size();
+            }
+
+            //If not in goal, check neighbours not in visited.
+            if (!visited.contains(vertex)) {
+                visited.add(vertex);
+
+
+                for (String v : map.getAdjacent(vertex)) {
+                    ArrayList<String> newroute = new ArrayList<>(route) ;
+                    queue.addLast(v);
+                    newroute.add(v);
+                    routes.addLast(newroute);
+
+                }
+            }
+        }
+        return 100;
     }
 
 

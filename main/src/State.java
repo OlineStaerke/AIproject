@@ -20,17 +20,27 @@ public class State {
             var newState = new State(M, NameToColor, stringToNode);
             for(String AS : agents.keySet()){
                 if (M.map.containsKey(agents.get(AS).position.NodeId)){
+                    ArrayList<String> newGoals = new ArrayList<>();
+                    for (String g : agents.get(AS).Goal){
+                        if (M.map.containsKey(g)) newGoals.add(g);
+                    }
+                    agents.get(AS).Goal = newGoals;
                     newState.agents.put(AS, agents.get(AS));
                 }
             }
             for(String BS : boxes.keySet()){
                 if (M.map.containsKey(boxes.get(BS).position.NodeId)){
+                    ArrayList<String> newGoals = new ArrayList<>();
+                    for (String g : boxes.get(BS).Goal){
+                        if (M.map.containsKey(g)) newGoals.add(g);
+                    }
+                    boxes.get(BS).Goal = newGoals;
                     newState.boxes.put(BS, boxes.get(BS));
                 }
             }
 
             for(Box B: newState.boxes.values()){
-                //System.err.println("BOX: " + B + " ,goals: " + B.Goal);
+                System.err.println("BOX: " + B + " ,goals: " + B.Goal);
 
             }
             newState.UpdateOccupiedNodes();
@@ -38,23 +48,23 @@ public class State {
             newState.UpdateOccupiedNodes();
             newState.createTunnels();
 
-            //System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
-            //System.err.println(M);
+            System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
+            System.err.println(M);
             for(Box B: newState.boxes.values()){
-                //System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
+                System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
 
             }
 
             states.add(newState);
 
         }
-        //System.exit(0);
 
         return states;
 
     }
 
     public State(Map M, HashMap<Character, String> NTC, HashMap<String, Node> STN){
+
         agentConflicts = new LinkedHashSet<>();
         blankPlan = new ArrayList<>();
         occupiedNodes = new HashMap<>();
@@ -66,6 +76,7 @@ public class State {
         map = M;
 
     }
+
 
     public State(HashMap<String, Node> stringToNode, HashMap<String, Agent> agents, HashMap<Character,
             String> NameToColor, HashMap<String, Box> boxes, Map map)
