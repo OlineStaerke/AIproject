@@ -10,22 +10,27 @@ public class Plan {
         Map map = state.map;
         if (Destination == null) return;
         state.UpdateOccupiedNodes();
+        //System.err.println("OCC"+state.occupiedNodes.keySet());
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
         plan = breathFirstTraversal(map, Source, Destination,visited);
-
+        //System.err.println("1"+plan);
         if (plan == null) {
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
-            for (String v: visited) {
+            for (String v: state.occupiedNodes.keySet()) {
                 Node n = state.stringToNode.get(v);
-                if (!n.isTunnel) {
-                visitedNoTunnel.add(n.NodeId);
+                if (!n.isTunnel&& !n.isTunnelDynamic) {
+                    visitedNoTunnel.add(n.NodeId);
                 }
             }
+            //System.err.println(visitedNoTunnel);
+            visitedNoTunnel.remove(Source);
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
+            //System.err.println("2"+plan);
         }
         if (plan==null){
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
+            //System.err.println("3"+plan);
         }
 
 
@@ -75,13 +80,16 @@ public class Plan {
 
 
 
-
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
         //System.err.println("FIRST"+tuple_plan);
 
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
+
+        }
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, false);
 
         }
         //System.err.println("SECOND"+tuple_plan);

@@ -10,7 +10,6 @@ public class Box extends Object {
     public ArrayList<Agent> owners = new ArrayList<>();
     public ArrayList<String> conflictRoute = new ArrayList<>();
     Boolean blankByOwn;
-    int PriorityValue;
 
 
 
@@ -92,19 +91,22 @@ public class Box extends Object {
     }
 
 
-    public void findPriority(ArrayList<Box> otherBoxes){
+    public void findPriority(State state){
+        var otherBoxes = state.boxes.values();
         int newPrio = 0;
 
         for(Box B: otherBoxes){
             if (B.equals(this)) continue;
 
             for (String goal: B.Goal) {
-                if (this.planToGoal.contains(goal)) {
+
+
+                if (this.planToGoal!=null && this.planToGoal.contains(goal)) {
                     newPrio += 1;
                 }
             }
         }
-        PriorityValue = newPrio;
+        this.PriorityValue = newPrio;
 
     }
 

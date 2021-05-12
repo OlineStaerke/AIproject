@@ -84,6 +84,9 @@ public class SubGoals{
         for (SubGoal sg : goalsToRemove) {
             goals.remove(sg);
         }
+        for (SubGoal sg: goals) {
+            if (sg.Obj instanceof Box) ((Box) sg.Obj).findPriority(state);
+        }
 
         ArrayList<SubGoal> onlyBoxToGoal = new ArrayList<>();
         for (SubGoal SG: goals)
@@ -94,11 +97,10 @@ public class SubGoals{
 
         goals.removeAll(onlyBoxToGoal);
 
-
-        for (Box B: state.boxes.values()) B.findPriority(new ArrayList<>(state.boxes.values()));
-
         Collections.sort(onlyBoxToGoal, new SubGoal.CustomComparator());
         goals.addAll(onlyBoxToGoal);
+
+
 
 
 
@@ -208,7 +210,7 @@ public class SubGoals{
             public int compare(SubGoal s1, SubGoal s2) {
 
                 if (s1.gType.equals(GoalType.BoxToGoal) && s2.gType.equals(GoalType.BoxToGoal)){
-                    return s1.Obj.PriorityValue - s2.Obj.PriorityValue;
+                    return s2.Obj.PriorityValue-s1.Obj.PriorityValue;
                 }
 
 

@@ -156,8 +156,8 @@ public class State {
 
 
 
-                //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+                //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnelDynamic = true;
+                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnelDynamic = true;
 
                 if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnelDynamic = true;
                 if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnelDynamic = true;
@@ -183,37 +183,38 @@ public class State {
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
 
-            var o = node.split(" ");
-            int i = Integer.parseInt(o[0]);
-            int j = Integer.parseInt(o[1]);
 
-            boolean E = map.map.containsKey((i+1) + " " + j);
-            boolean W = map.map.containsKey((i-1) + " " + j);
-            boolean N = map.map.containsKey(i + " " + (1+j));
-            boolean S = map.map.containsKey(i + " " + (j-1));
+                var o = node.split(" ");
+                int i = Integer.parseInt(o[0]);
+                int j = Integer.parseInt(o[1]);
 
-            boolean NE = map.map.containsKey((i+1) + " " + (j+1));
-            boolean NW = map.map.containsKey((i-1) + " " + (j+1));
-            boolean SE = map.map.containsKey((i+1) + " " + (j-1));
-            boolean SW = map.map.containsKey((i-1) + " " + (j-1));
+                boolean E = map.map.containsKey((i + 1) + " " + j);
+                boolean W = map.map.containsKey((i - 1) + " " + j);
+                boolean N = map.map.containsKey(i + " " + (1 + j));
+                boolean S = map.map.containsKey(i + " " + (j - 1));
 
-            if ((S & !SE & !SW)) n.isTunnel = true;
-            if ((N & !NE & !NW)) n.isTunnel = true;
-            if ((E & !SE & !NE)) n.isTunnel = true;
-            if ((W & !SW & !NW)) n.isTunnel = true;
+                boolean NE = map.map.containsKey((i + 1) + " " + (j + 1));
+                boolean NW = map.map.containsKey((i - 1) + " " + (j + 1));
+                boolean SE = map.map.containsKey((i + 1) + " " + (j - 1));
+                boolean SW = map.map.containsKey((i - 1) + " " + (j - 1));
+
+                if ((S & !SE & !SW)) n.isTunnel = true;
+                if ((N & !NE & !NW)) n.isTunnel = true;
+                if ((E & !SE & !NE)) n.isTunnel = true;
+                if ((W & !SW & !NW)) n.isTunnel = true;
 
 
+                //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
 
-            //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-           // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+                if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
+                if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
 
-            if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
-            if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
+                if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
+                if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
 
-            if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
-            if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
+                stringToNode.replace(node, n);
 
-            stringToNode.replace(node, n);
         }
 
         for (String node: map.map.keySet()){
@@ -225,7 +226,9 @@ public class State {
                 stringToNode.replace(node, n);
             }
 
+
         }
+
 
     }
 
