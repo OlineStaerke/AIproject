@@ -14,7 +14,17 @@ public class Plan {
         visited.remove(Source);
         plan = breathFirstTraversal(map, Source, Destination,visited);
 
-        if (!Destination.contains(plan.get(plan.size()-1))) {
+        if (plan == null) {
+            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
+            for (String v: visited) {
+                Node n = state.stringToNode.get(v);
+                if (!n.isTunnel) {
+                visitedNoTunnel.add(n.NodeId);
+                }
+            }
+            plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
+        }
+        if (plan==null){
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
         }
 
@@ -28,18 +38,29 @@ public class Plan {
         ArrayList otheragentplan = new ArrayList();
 
         if (goal==null) {
+
             if (box.conflicts!=null) {
                 otheragentplan.addAll(box.conflicts.mainPlan.plan);
             }
             if (agent.conflicts!=null) {
                 otheragentplan.addAll(agent.conflicts.mainPlan.plan);
+                if (agent.conflicts.attached_box!=null && agent.conflicts.attached_box.planToGoal!=null) {
+                    otheragentplan.addAll(agent.conflicts.attached_box.planToGoal);
+                   // agent.conflicts.attached_box.planToGoal = new ArrayList<>();
+                }
+
+
             }
+
+            //otheragentplan.addAll(box.conflictRoute);
+
+
 
 
 
 
         }
-        if(agent.conflicts!=null && agent.conflicts.ID == agent.ID) {
+        if(agent.conflicts!=null && agent.conflicts.ID.equals(agent.ID)) {
             otheragentplan.addAll(box.conflictRoute);}
         //System.err.println("other agent plan"+otheragentplan);
 
@@ -55,46 +76,49 @@ public class Plan {
 
 
 
-        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false);
+        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
         //System.err.println("FIRST"+tuple_plan);
 
-        if (tuple_plan==null && goal!=null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,false);
-
-        }
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true);
-
-        }
-
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
+
+        }
+        //System.err.println("SECOND"+tuple_plan);
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false, false);
+
+        }
+
+
+
+        if (tuple_plan==null) {
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, true);
 
         }
 
         //System.err.println("SECOND"+tuple_plan);
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true,true);
 
         }
         //System.err.println("THIRD"+tuple_plan);
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false,true);
 
         }
         //System.err.println("FOUR"+tuple_plan);
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true,true);
 
         }
 
         //System.err.println("FIFTH"+tuple_plan);
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true);
+            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true, true);
 
         }
         //System.err.println("SIXTH"+tuple_plan);
@@ -181,6 +205,7 @@ public class Plan {
         Deque<String> queue = new ArrayDeque<>();
         queue.push(root);
 
+
         //Adding root to the list of routes to start with
         ArrayList<String> root_route = new ArrayList<>();
         root_route.add(root);
@@ -192,6 +217,7 @@ public class Plan {
             String vertex = queue.pollFirst();
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
+
             
             
 
@@ -219,9 +245,10 @@ public class Plan {
         return null;
     }
 
-    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second) throws InterruptedException {
+    public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second, Boolean third) throws InterruptedException {
         Map map = state.map;
         ArrayList<Tuple> route_agent = new ArrayList<Tuple>();
+        Deque<ActionType> actionList = new ArrayDeque<>();
 
 
         Deque<ArrayList<Tuple>> routes_agent = new ArrayDeque<>();
@@ -235,6 +262,7 @@ public class Plan {
         ArrayList<Tuple> root_route = new ArrayList<>();
         root_route.add(root);
         routes_agent.add(root_route);
+        actionList.add(ActionType.NoOp);
 
 
 
@@ -243,6 +271,7 @@ public class Plan {
         while (!queue_agent.isEmpty()) {
 
             Tuple vertex = queue_agent.pollFirst();
+            ActionType action = actionList.pollFirst();
 
             String vertex_agent = vertex.agentpos;
             String vertex_box = vertex.boxpos;
@@ -259,7 +288,7 @@ public class Plan {
                    //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
 
                  if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
-                    if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent) {
+                    if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent && (!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
                         Tuple last_position = new Tuple(node_agent.NodeId, node_box.NodeId);
                         route_agent.add(last_position);
                         return route_agent;
@@ -269,23 +298,29 @@ public class Plan {
                 //TODO: Dont push other boxes out of their goal unless necessary
 
                 else if (goal!=null && goal.contains(vertex_box) && ((!(state.occupiedNodes.keySet().contains(node_box.getNodeId())))||second)) {
-                    return route_agent;
+                     if ((!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic)|| third)) {
+
+                         return route_agent;
+                     }
                 }
 
 
                 visited.add(vertex);
-                //PULL box gets agents position
-                for (String v : map.getAdjacent(vertex_agent)) {
 
-                    if (!v.equals(vertex_box)) {
+                    //PULL box gets agents position
+                    for (String v : map.getAdjacent(vertex_agent)) {
 
-                        ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
-                        Tuple new_position = new Tuple(v, vertex_agent);
-                        queue_agent.addLast(new_position);
-                        newroute.add(new_position);
-                        routes_agent.addLast(newroute);
+                        if (!v.equals(vertex_box)) {
+
+                            ArrayList<Tuple> newroute = new ArrayList<>(route_agent);
+                            Tuple new_position = new Tuple(v, vertex_agent);
+                            queue_agent.addLast(new_position);
+                            newroute.add(new_position);
+                            routes_agent.addLast(newroute);
+                            actionList.addLast(ActionType.Pull);
+                        }
                     }
-                }
+
                 //PUSH agent gets box position
                 for (String v : map.getAdjacent(vertex_box)) {
 
@@ -297,6 +332,7 @@ public class Plan {
                         queue_agent.addLast(new_position);
                         newroute.add(new_position);
                         routes_agent.addLast(newroute);
+                        actionList.addLast(ActionType.Push);
                     }
                 }
             }
@@ -342,7 +378,7 @@ public class Plan {
                 }
             }
         }
-        return route;
+        return null;
     }
 
     // dont touch.

@@ -30,7 +30,7 @@ public class State {
             }
 
             for(Box B: newState.boxes.values()){
-                System.err.println("BOX: " + B + " ,goals: " + B.Goal);
+               // System.err.println("BOX: " + B + " ,goals: " + B.Goal);
 
             }
             newState.UpdateOccupiedNodes();
@@ -38,10 +38,10 @@ public class State {
             newState.UpdateOccupiedNodes();
             newState.createTunnels();
 
-            System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
-            System.err.println(M);
+            //System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
+            //System.err.println(M);
             for(Box B: newState.boxes.values()){
-                System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
+               // System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
 
             }
 
@@ -131,6 +131,19 @@ public class State {
 
         for (String position : occupiedNodes.keySet()) {
             List<String> adjacent = map.getAdjacent(position);
+
+            for (String adjPosition : adjacent) {
+                Node n = stringToNode.get(adjPosition);
+                n.isTunnelDynamic =false;
+                List<String> adjacentAdjacent = map.getAdjacent(position);
+
+                for (String adjadj : adjacentAdjacent) {
+                    Node n1 = stringToNode.get(adjadj);
+                    n1.isTunnelDynamic = false;
+
+                }
+
+            }
             for (String adjPosition : adjacent) {
 
                 Integer i = Integer.parseInt(adjPosition.split(" ")[0]);
@@ -147,7 +160,7 @@ public class State {
                 boolean SW = map.map.containsKey((i-1) + " " + (j-1))&& (!occupiedNodes.containsKey((i-1) + " " + (j-1)) || (occupiedNodes.get((i-1) + " " + (j-1)) instanceof Agent));
 
                 Node n = stringToNode.get(adjPosition);
-                n.isTunnelDynamic =false;
+
 
                 if ((S & !SE & !SW)) n.isTunnelDynamic = true;
                 if ((N & !NE & !NW)) n.isTunnelDynamic = true;
@@ -157,13 +170,13 @@ public class State {
 
 
                 //if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-                // if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+                //if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
 
-                if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
-                if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
+                if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnelDynamic = true;
+                if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnelDynamic = true;
 
-                if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
-                if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
+                if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnelDynamic = true;
+                if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnelDynamic = true;
 
 
 
@@ -267,6 +280,8 @@ public class State {
 
         boxes = BoxesCopy;
         // Each box has a specific goal for now.
+
+
         ArrayList<String> doneGoals = new ArrayList<>();
 
         for (Box B: boxes.values()){
@@ -289,9 +304,11 @@ public class State {
 
 
         for (Box B: boxes.values()){
-            System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
+            //System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
 
         }
+
+
 
     }
 

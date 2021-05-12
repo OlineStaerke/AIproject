@@ -87,9 +87,9 @@ public class SubGoals{
 
         try {
         Collections.sort(goals,new SubGoal.CustomComparator());} catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
-        Collections.sort(goals,new SubGoal.CustomComparator());
+        //Collections.sort(goals,new SubGoal.CustomComparator());
 
 
     }
@@ -131,12 +131,6 @@ public class SubGoals{
 
                 }
             }
-
-            for (SubGoal sg : goals) {
-                if (!sg.Finished && sg.gType == GoalType.BoxToGoal && !((sg.Obj).Taken)) {
-                    return sg;
-                }
-            }
             //see above comment
             if (savesg!=null) {
                 //System.err.println("remove"+savesg);
@@ -144,9 +138,17 @@ public class SubGoals{
                 goals.add(savesg);
             }
 
+
+
+
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
             if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
                 return currentGoal;
+            }
+        }
+        for (SubGoal sg : goals) {
+            if (!sg.Finished && sg.gType == GoalType.BoxToGoal && !((sg.Obj).Taken)) {
+                return sg;
             }
         }
         // Otherwise, select the next goal
@@ -223,14 +225,16 @@ public class SubGoals{
                         }
                     }
                 }
+                /**
                 if (s1.gType == GoalType.BoxBlanked && !s1.Finished) {
                     s1_value+= 2000;
                 }
                 if (s2.gType == GoalType.BoxBlanked && !s2.Finished) {
                     s2_value+= 2000;
                 }
-                s2_value+=s2.Obj.planToGoal.size();
-                s1_value+=s1.Obj.planToGoal.size();
+                 **/
+                //s2_value+=s2.Obj.planToGoal.size();
+                //s1_value+=s1.Obj.planToGoal.size();
 
                 return (s1_value).compareTo((Integer) s2_value);
             }
