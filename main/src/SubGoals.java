@@ -84,12 +84,10 @@ public class SubGoals{
         for (SubGoal sg : goalsToRemove) {
             goals.remove(sg);
         }
+        for (Box B: state.boxes.values()) B.findPriority(new ArrayList<>(state.boxes.values()));
 
-        try {
-        Collections.sort(goals,new SubGoal.CustomComparator());} catch (Exception e) {
-            e.printStackTrace();
-        }
-        Collections.sort(goals,new SubGoal.CustomComparator());
+        Collections.sort(goals, new SubGoal.CustomComparator());
+
 
 
     }
@@ -194,45 +192,13 @@ public class SubGoals{
         public static class CustomComparator implements Comparator<SubGoal> {
             @Override
             public int compare(SubGoal s1, SubGoal s2) {
-                Integer s1_value = 0;
-                Integer s2_value = 0;
-                /**
-                String[] s1_value = s1.Obj.position.NodeId.split(" ");
-                String[] s2_value = s2.Obj.position.NodeId.split(" ");
-                String[] agent_value = agent.position.NodeId.split(" ");
-                Integer s2_distanceToAgent = ((Integer.parseInt(s1_value[0]))-Integer.parseInt(agent_value[0]))^2+((Integer.parseInt(s1_value[1]))-Integer.parseInt(agent_value[1]))^2;
-                Integer s1_distanceToAgent = ((Integer.parseInt(s2_value[0]))-Integer.parseInt(agent_value[0]))^2+((Integer.parseInt(s2_value[1]))-Integer.parseInt(agent_value[1]))^2;
 
-                //Integer comparevalue = s2.Obj.mainPlan.plan.size() + s2_value;
-                return (s2_distanceToAgent).compareTo(s1_distanceToAgent);
-                 **/
-
-                if (s1.Obj instanceof Box) {
-
-                    for (String goal: s2.Obj.Goal) {
-                        if (((Box) s1.Obj).planToGoal.contains(goal) && s1.Obj.ID != s2.Obj.ID) {
-                            s2_value += 100;
-                        }
-                    }
+                if (s1.gType.equals(GoalType.BoxToGoal) && s2.gType.equals(GoalType.BoxToGoal)){
+                    return s1.Obj.PriorityValue - s2.Obj.PriorityValue;
                 }
-                if (s2.Obj instanceof Box) {
 
-                    for (String goal: s1.Obj.Goal) {
-                        if (((Box) s2.Obj).planToGoal.contains(goal) && s1.Obj != s2.Obj) {
-                            s1_value += 100;
-                        }
-                    }
-                }
-                if (s1.gType == GoalType.BoxBlanked && !s1.Finished) {
-                    s1_value+= 2000;
-                }
-                if (s2.gType == GoalType.BoxBlanked && !s2.Finished) {
-                    s2_value+= 2000;
-                }
-                s2_value+=s2.Obj.planToGoal.size();
-                s1_value+=s1.Obj.planToGoal.size();
 
-                return (s1_value).compareTo((Integer) s2_value);
+                return 0;
             }
         }
 

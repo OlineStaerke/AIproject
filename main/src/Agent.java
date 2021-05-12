@@ -301,16 +301,16 @@ public class Agent extends Object {
                 return;
             }
         }
-        System.err.println(conflicts.mainPlan.plan);
-        System.err.println(attached_box.position.NodeId);
+        //System.err.println(conflicts.mainPlan.plan);
+        //System.err.println(attached_box.position.NodeId);
         if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
-            System.err.println("PLANPI");
+            //System.err.println("PLANPI");
             subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet());
             //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {
-            System.err.println("PLANPI2");
+            //System.err.println("PLANPI2");
             mainPlan.createAltPaths(state, agent);
             attached_box = null;
         }

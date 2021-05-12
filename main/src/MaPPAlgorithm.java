@@ -34,13 +34,13 @@ public class MaPPAlgorithm {
         
         int round = 0;
         while(!goalIsReached){
-            System.err.println();
+            //System.err.println();
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
            //Thread.sleep(500);
 
-            System.err.println("-----------------------------------");
+            //System.err.println("-----------------------------------");
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
@@ -49,8 +49,8 @@ public class MaPPAlgorithm {
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals(state);
-                System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
-                System.err.println();      
+                //System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
+                //System.err.println();
                 //System.err.println(agent);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
 
@@ -224,15 +224,15 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==20000) {
+            if (round==5000) {
                 goalIsReached = true;
             }
-            System.err.println("GOAL IS REACHED"+goalIsReached);
+            //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
-                System.err.println("ALL GOALS "+agent.subgoals.goals);
-                System.err.println(agent.finalPlan);
+                //System.err.println("ALL GOALS "+agent.subgoals.goals);
+                //System.err.println(agent.finalPlan);
                 for (Box BB : agent.boxes) {
-                    System.err.println("PLANANAN:  " + BB.finalPlan);
+                    //System.err.println("PLANANAN:  " + BB.finalPlan);
                 }
 
 

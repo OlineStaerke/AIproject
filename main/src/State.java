@@ -30,7 +30,7 @@ public class State {
             }
 
             for(Box B: newState.boxes.values()){
-                System.err.println("BOX: " + B + " ,goals: " + B.Goal);
+                //System.err.println("BOX: " + B + " ,goals: " + B.Goal);
 
             }
             newState.UpdateOccupiedNodes();
@@ -41,6 +41,10 @@ public class State {
             System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
             for (String N: map.map.keySet()){
                 System.err.println("NODE: " + N + " isTunnel1way: " + stringToNode.get(N).isTunnelOneWay);
+                System.err.println("NODE: " + N + " Dynamic: " + stringToNode.get(N).isTunnelDynamic);
+                System.err.println("NODE: " + N + " Tunnel: " + stringToNode.get(N).isTunnel);
+
+
             }
             for(Box B: newState.boxes.values()){
                 System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
@@ -50,6 +54,7 @@ public class State {
             states.add(newState);
 
         }
+        //System.exit(0);
 
         return states;
 
@@ -298,7 +303,7 @@ public class State {
 
 
         for (Box B: boxes.values()){
-            System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
+            //System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
 
         }
 
