@@ -23,7 +23,7 @@ Starting the server using the searchclient:
     $ java -jar server.jar -l C:\Users\***\...\levels\SAD1.lvl -c "java SearchClient"
 
 Mathias:
-java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\AIproject\levels\boxHard2.lvl -c "java SearchClient" -g
+java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\AIproject\levels\isTunnelDynamic.lvl -c "java SearchClient" -g
 
 Simon:
 java -jar server.jar -l C:\Users\Simon\IdeaProjects\AIproject\levels\SAD1.lvl -c "java SearchClient"

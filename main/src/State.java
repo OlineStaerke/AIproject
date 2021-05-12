@@ -39,7 +39,9 @@ public class State {
             newState.createTunnels();
 
             System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
-            System.err.println(M);
+            for (String N: map.map.keySet()){
+                System.err.println("NODE: " + N + " isTunnel1way: " + stringToNode.get(N).isTunnelOneWay);
+            }
             for(Box B: newState.boxes.values()){
                 System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
 
@@ -48,7 +50,6 @@ public class State {
             states.add(newState);
 
         }
-        //System.exit(0);
 
         return states;
 
@@ -182,11 +183,7 @@ public class State {
     private void createTunnels(){
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
-            //if (map.map.get(n.NodeId).size() == 1) {
-              //  n.isTunnel = true;
-               // stringToNode.replace(node, n);
-                //continue;
-            //}
+
             var o = node.split(" ");
             int i = Integer.parseInt(o[0]);
             int j = Integer.parseInt(o[1]);
@@ -219,6 +216,18 @@ public class State {
 
             stringToNode.replace(node, n);
         }
+
+        for (String node: map.map.keySet()){
+            Plan P = new Plan();
+            Node n = stringToNode.get(node);
+
+            if (P.DFSForTunnels(map, node, map.map.get(node))){
+                n.isTunnelOneWay = true;
+                stringToNode.replace(node, n);
+            }
+
+        }
+
     }
 
     // Links boxes to agents and vice-versa

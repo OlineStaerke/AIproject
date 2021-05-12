@@ -345,6 +345,41 @@ public class Plan {
         return route;
     }
 
+
+    public boolean DFSForTunnels(Map map, String nodePosition, List<String> neighbors) {
+
+        for(String N: neighbors){
+            Deque<String> queue = new ArrayDeque<>();
+            queue.push(N);
+
+
+            HashSet<String> visited = new HashSet<>();
+            visited.add(nodePosition);
+            //Start runnning DFS
+
+            while (!queue.isEmpty()) {
+                String vertex = queue.pollFirst();
+                visited.add(vertex);
+
+                //If we are in goal, stop BFS
+                if (neighbors.contains(vertex) && !N.equals(vertex)) {
+                    return false;
+                }
+
+                //If not in goal, check neighbours not in visited.
+
+                for (String v : map.getAdjacent(vertex)) {
+                    if (!visited.contains(v)) queue.push(v);
+
+
+
+                }
+            }
+        }
+
+        return true;
+    }
+
     // dont touch.
     public HashSet<String> MathiasBFS(Map map, String root) {
 
