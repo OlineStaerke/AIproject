@@ -84,9 +84,23 @@ public class SubGoals{
         for (SubGoal sg : goalsToRemove) {
             goals.remove(sg);
         }
+
+        ArrayList<SubGoal> onlyBoxToGoal = new ArrayList<>();
+        for (SubGoal SG: goals)
+            if (SG.gType.equals(GoalType.BoxToGoal)){
+                onlyBoxToGoal.add(SG);
+
+            }
+
+        goals.removeAll(onlyBoxToGoal);
+
+
         for (Box B: state.boxes.values()) B.findPriority(new ArrayList<>(state.boxes.values()));
 
-        Collections.sort(goals, new SubGoal.CustomComparator());
+        Collections.sort(onlyBoxToGoal, new SubGoal.CustomComparator());
+        goals.addAll(onlyBoxToGoal);
+
+
 
 
 
