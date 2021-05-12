@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -9,6 +10,8 @@ public class Box extends Object {
     public ArrayList<Agent> owners = new ArrayList<>();
     public ArrayList<String> conflictRoute = new ArrayList<>();
     Boolean blankByOwn;
+    int PriorityValue;
+
 
 
 
@@ -85,6 +88,23 @@ public class Box extends Object {
         // Kill the old mainplan (our #1 prio is now to help the other agent) - Iff we are not currently helping anybody else
 
 
+
+    }
+
+
+    public void findPriority(ArrayList<Box> otherBoxes){
+        int newPrio = 0;
+
+        for(Box B: otherBoxes){
+            if (B.equals(this)) continue;
+
+            for (String goal: B.Goal) {
+                if (this.planToGoal.contains(goal)) {
+                    newPrio += 1;
+                }
+            }
+        }
+        PriorityValue = newPrio;
 
     }
 

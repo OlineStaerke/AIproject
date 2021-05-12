@@ -34,7 +34,7 @@ public class MaPPAlgorithm {
         
         int round = 0;
         while(!goalIsReached){
-           //System.err.println();
+            //System.err.println();
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
@@ -44,7 +44,7 @@ public class MaPPAlgorithm {
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-
+            //System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
