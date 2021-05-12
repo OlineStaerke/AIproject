@@ -18,7 +18,7 @@ public class SearchClient {
 
         HashMap<String, Box> boxes = new HashMap<>();
         HashMap<Character, ArrayList<Box>> boxes_lookup = new HashMap<>();
-
+        boolean betweenWalls = false;
 
 
 
@@ -71,9 +71,9 @@ public class SearchClient {
         // Iteration value for priority will increase for each loop
         Integer i_agent = 0;
         Integer i_box = 0;
-        for (int row = 1; row < numRows - 1; ++row) {
+        for (int row = 0; row < numRows - 1; ++row) {
             line = levelLines.get(row);
-            for (int col = 1; col < line.length() - 1; ++col) {
+            for (int col = 0; col < line.length() - 1; ++col) {
                 char c = line.charAt(col);
                 if (c != '+') {
 
@@ -90,10 +90,14 @@ public class SearchClient {
                         map.addEdge(node_string, (row + " " + tempCol));
                     }
                     String nextLine = levelLines.get(row + 1);
-                    if (nextLine.charAt(col) != '+') {
-                        // Temporary token to increment the id value for row
-                        int tempRow = row + 1;
-                        map.addEdge(node_string, (tempRow + " " + col));
+                    try{
+                        if (nextLine.charAt(col) != '+') {
+                            // Temporary token to increment the id value for row
+                            int tempRow = row + 1;
+                            map.addEdge(node_string, (tempRow + " " + col));
+                        }
+                    } catch (Exception e){
+                        e.printStackTrace();
                     }
 
                     //Check if it's an agent
@@ -218,12 +222,10 @@ public class SearchClient {
         }
         if (plan == null)
         {
-            System.err.println("Unable to solve level.");
             System.exit(0);
         }
         else
         {
-            System.err.format("Found solution of length %,d.\n", plan.length);
             int i =0;
             for (Action[] jointAction : plan)
             {
