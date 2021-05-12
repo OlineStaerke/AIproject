@@ -9,12 +9,12 @@ green: 2, 3, 7, C
 cyan: 5, Z
 #initial
 +++++++++++++++++++++++++++++++++++
-+AAAAAAAAA1CAAB+ABIJRQO        B 3+
-+AAAAA     AAAA+DBHKNPO        B  +
-+AAAAAAAA AAAAA+EFGLMOO  0     BCC+
-+AAAAAAAA      +   OOOO        BC +
-+AAAAAAAAAAAAA +BBBBBBBBB BBBBBBBB+
-+              +OOOOOOOOOOOOOOOOOO+
++AAAAAAAAA1CAAB+3                 +
++AAAAA     AAAA+ 0                +
++AAAAAAAA AAAAA+                  +
++AAAAAAAA      +                  +
++AAAAAAAAAAAAA +                  +
++              +                  +
 + AAAAAAAAAAAAA+                  +
 +BAAAAAAAAAAAAA+                  +
 +2AAAAAAAAAAAAA+                  +
@@ -30,23 +30,23 @@ cyan: 5, Z
 +++++++++++++++++++++++++++++++++++
 #goal
 +++++++++++++++++++++++++++++++++++
-+AAAAAAAAA BAA +0                 +
++AAAAAAAAA BAA +                  +
 +AAAAA12   AAAA+                  +
 +AAAAAAAA AAAAA+                  +
-+AAAAAAAA      +                 3+
++AAAAAAAA      +                  +
 +AAAAAAAAAAAAA +                  +
-+              +                 A+
++              +                  +
 + AAAAAAAAAAAAA+                  +
-+CAAAAAAAAAAAAA+EFGLMNOPQR        +
-+ AAAAAAAAAAAAA+ODHIJK            +
++CAAAAAAAAAAAAA+                  +
++ AAAAAAAAAAAAA+                  +
 +++++++++++++++++++++++++++++++++++
 +              +                  +
 +              +                  +
-+              +      E           +
-+     GG       +      D           +
-+     EZ       +      O           +
-+              +      N           +
-+     75       +      I           +
-+     46       +      A           +
++              +     E            +
++     GG       +     D            +
++     EZ       +     O            +
++              +     N            +
++     75       +     I            +
++     46       +     A            +
 +++++++++++++++++++++++++++++++++++
 #end
