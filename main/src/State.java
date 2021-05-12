@@ -182,7 +182,7 @@ public class State {
     private void createTunnels(){
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
-
+            if (n == null) continue;
 
                 var o = node.split(" ");
                 int i = Integer.parseInt(o[0]);
@@ -220,6 +220,7 @@ public class State {
         for (String node: map.map.keySet()){
             Plan P = new Plan();
             Node n = stringToNode.get(node);
+            if (n == null) continue;
 
             if (P.DFSForTunnels(map, node, map.map.get(node))){
                 n.isTunnelOneWay = true;

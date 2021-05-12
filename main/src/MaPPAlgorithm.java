@@ -75,7 +75,7 @@ public class MaPPAlgorithm {
                 //System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
                 //System.err.println();
                 //System.err.println(agent);
-                System.err.println("Current SubGoal:"+agent.currentGoal);
+                //System.err.println("Current SubGoal:"+agent.currentGoal);
                 String wantedMove = GetWantedMove(agent);
 
 
@@ -95,12 +95,12 @@ public class MaPPAlgorithm {
                     // Agent wants to move into an occupied cell
                     else if (state.occupiedNodes.containsKey(wantedMove)) {
 
-                        System.err.println("CONFLICT! I am agent:"+agent.ID);
+                        //System.err.println("CONFLICT! I am agent:"+agent.ID);
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
 
 
                         // Agent is blocking and is not currenly removing a box
@@ -227,7 +227,7 @@ public class MaPPAlgorithm {
                 }
 
             for(Agent AA : agentsInOrder) {
-                System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+                //System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
                 for (Box BB : AA.boxes) {
                     //System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
