@@ -74,6 +74,8 @@ public class SearchClient {
         for (int row = 0; row < numRows - 1; ++row) {
             line = levelLines.get(row);
             for (int col = 0; col < line.length() - 1; ++col) {
+                //System.err.println("Number of rows: " + numRows);
+                //System.err.println("Number of cols: " + line.length());
                 char c = line.charAt(col);
                 if (c != '+') {
 
@@ -90,14 +92,14 @@ public class SearchClient {
                         map.addEdge(node_string, (row + " " + tempCol));
                     }
                     String nextLine = levelLines.get(row + 1);
-                    try{
+                    try {
                         if (nextLine.charAt(col) != '+') {
                             // Temporary token to increment the id value for row
                             int tempRow = row + 1;
                             map.addEdge(node_string, (tempRow + " " + col));
                         }
                     } catch (Exception e){
-                        e.printStackTrace();
+                        System.err.println("Reading the file gave an OutOfBoundsException");
                     }
 
                     //Check if it's an agent
@@ -199,11 +201,18 @@ public class SearchClient {
 
         State initialState = SearchClient.parseLevel(serverMessages);
         ArrayList<State> componentStates = initialState.allStates();
+        System.err.println(componentStates);
         for(State S: componentStates){
-            //System.err.println(" QQ: " + S.agents.values());
-            //System.err.println(" WOO: " + S.boxes.values());
+            //System.err.println(S.map);
+            for(Box B: S.boxes.values()){
+                System.err.println(" BOX: " + B + " goals: " + B.Goal + " owners: " + B.owners);
+            }
+            for(Agent A: S.agents.values()){
+                System.err.println(" Agent: " + A + " goals: " + A.Goal + " boxes: " + A.boxes);
+            }
 
         }
+        //System.exit(0);
 
         Action[][] plan;
 
