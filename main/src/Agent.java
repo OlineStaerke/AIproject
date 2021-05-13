@@ -85,15 +85,7 @@ public class Agent extends Object {
                 wantedMove = state.stringToNode.get(agent.mainPlan.plan.get(0));
             }
 
-            for (Box b : boxes) {
 
-                if (b!=attached_box && b.currentowner.ID.equals(agent.ID)) {
-
-                    b.finalPlan.add(b.position);
-                    b.finalPlanString.add(b.position.NodeId);
-                }
-
-            }
             position = wantedMove;
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());

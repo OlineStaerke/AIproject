@@ -14,6 +14,20 @@ public class Plan {
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
         plan = breathFirstTraversal(map, Source, Destination,visited);
+
+        if (plan == null) {
+            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
+            for (String v: state.occupiedNodes.keySet()) {
+                Node n = state.stringToNode.get(v);
+                if (state.occupiedNodes.get(v) instanceof Box) {
+                    visitedNoTunnel.add(n.NodeId);
+                }
+            }
+            //System.err.println(visitedNoTunnel);
+            visitedNoTunnel.remove(Source);
+            plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
+            //System.err.println("2"+plan);
+        }
         //System.err.println("1"+plan);
         if (plan == null) {
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();

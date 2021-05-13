@@ -103,7 +103,7 @@ public class Box extends Object {
         if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
             currentowner.mainPlan.plan = new ArrayList<>();
             currentowner.planPi(state, new LinkedHashSet<>(), false);
-            System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
+            //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
         }
 
     }
@@ -127,6 +127,16 @@ public class Box extends Object {
         Plan P = new Plan();
         this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
 
+    }
+
+    public void findOwner(State state) {
+        for (Agent agent : owners) {
+            if ((!(agent.currentGoal.Obj instanceof Box) || agent.mainPlan.plan.size()==0)) {
+                currentowner = agent;
+                return;
+            }
+        }
+        currentowner = owners.get(0);
     }
 
 
