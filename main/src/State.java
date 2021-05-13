@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class State {
@@ -12,54 +13,69 @@ public class State {
     public LinkedHashSet<Agent> agentConflicts;
     public ArrayList<String> blankPlan;
 
-    public ArrayList<State> allStates(){
-        ArrayList<State> states = new ArrayList<>();
-        var newMaps = findConnectedComponents();
 
-        for(Map M : newMaps){
+    private ArrayList<State> recFindComponents(int sizeBefore){
+        ArrayList<Map> maps = findConnectedComponents();
+        var newStates = new ArrayList<State>();
+
+        for (Map M: maps){
             var newState = new State(M, NameToColor, stringToNode);
-            for(String AS : agents.keySet()){
-                if (M.map.containsKey(agents.get(AS).position.NodeId)){
-                    ArrayList<String> newGoals = new ArrayList<>();
-                    for (String g : agents.get(AS).Goal){
-                        if (M.map.containsKey(g)) newGoals.add(g);
-                    }
-                    agents.get(AS).Goal = newGoals;
-                    newState.agents.put(AS, agents.get(AS));
-                }
+            newState.boxes = boxes;
+            newState.agents = agents;
+            for(Box B: boxes.values()){
+                //System.err.println(" BOXBe4: " + B + " goals: " + B.Goal + " owners: " + B.owners);
             }
-            for(String BS : boxes.keySet()){
-                if (M.map.containsKey(boxes.get(BS).position.NodeId)){
-                    ArrayList<String> newGoals = new ArrayList<>();
-                    for (String g : boxes.get(BS).Goal){
-                        if (M.map.containsKey(g)) newGoals.add(g);
-                    }
-                    boxes.get(BS).Goal = newGoals;
-                    newState.boxes.put(BS, boxes.get(BS));
-                }
-            }
+            newState.transformBoxToWall();
 
-            for(Box B: newState.boxes.values()){
-                System.err.println("BOX: " + B + " ,goals: " + B.Goal);
-
-            }
-            newState.UpdateOccupiedNodes();
-            newState.createObjectAssociations();
             newState.UpdateOccupiedNodes();
             newState.createTunnels();
-
-            System.err.println("HERE!: " + newState.agents.values() + ", " + newState.boxes.values());
-            System.err.println(M);
-            for(Box B: newState.boxes.values()){
-                System.err.println("BOX AFTER: " + B + " ,goals: " + B.Goal);
-
-            }
-
-            states.add(newState);
+            newStates.add(newState);
 
         }
+        if (newStates.size() == 1 && sizeBefore == 1) return newStates;
+        var recCombined = new ArrayList<State>();
 
-        return states;
+        for(State S: newStates) recCombined.addAll(S.recFindComponents(newStates.size()));
+
+        return recCombined;
+    }
+
+    private void transformBoxToWall(){
+        var M = map;
+        var newAgents = new HashMap<String, Agent>();
+        for(String AS : agents.keySet()){
+            if (M.map.containsKey(agents.get(AS).position.NodeId)){
+                ArrayList<String> newGoals = new ArrayList<>();
+                for (String g : agents.get(AS).Goal){
+                    if (M.map.containsKey(g)) newGoals.add(g);
+                }
+                agents.get(AS).Goal = newGoals;
+                newAgents.put(AS, agents.get(AS));
+            }
+        }
+        var newBoxes = new HashMap<String, Box>();
+        for(String BS : boxes.keySet()){
+            if (M.map.containsKey(boxes.get(BS).position.NodeId)){
+                ArrayList<String> newGoals = new ArrayList<>();
+                for (String g : boxes.get(BS).Goal){
+                    if (M.map.containsKey(g)) newGoals.add(g);
+                }
+                boxes.get(BS).Goal = newGoals;
+                newBoxes.put(BS, boxes.get(BS));
+            }
+        }
+        boxes = newBoxes;
+        agents = newAgents;
+        for(Box B: boxes.values()){
+            //System.err.println(" BOXAFTER: " + B + " goals: " + B.Goal + " owners: " + B.owners);
+        }
+        createObjectAssociations();
+
+    }
+
+
+    public ArrayList<State> allStates(){
+        return recFindComponents(0);
 
     }
 
@@ -248,48 +264,66 @@ public class State {
     // Links boxes to agents and vice-versa
     private void createObjectAssociations() {
         Plan P = new Plan();
+        for (Agent A: agents.values()){
+            A.boxes = new ArrayList<>();
+        }
+        for (Box B: boxes.values()){
+            B.owners = new ArrayList<>();
+        }
 
         for (Agent A : agents.values()) {
+            var g = new ArrayList<String>();
+            g.add(A.position.NodeId);
+
             for (Box B : boxes.values()) {
 
                 if (NameToColor.get(A.ID.charAt(0)).equals(NameToColor.get(B.ID.charAt(0)))) {
-                    var foo = new ArrayList<String>();
-                    foo.add(B.position.NodeId);
-                    P.createPlan(this, A.position.NodeId, foo, new HashSet<>());
 
-                    // Can agent reach box?
-                    if (P.plan != null) {
-                        B.owners.add(agents.get(A.ID));
-                        A.boxes.add(boxes.get(B.ID));
+                    if (P.breathFirstTraversal(map, B.position.NodeId, g, new LinkedHashSet<>()) != null){
+                        B.owners.add(A);
+                        A.boxes.add(B);
                     }
 
                 }
+                var newGoals = new ArrayList<String>();
+                for (String BG : B.Goal){
+                    var bg = new ArrayList<String>();
+                    bg.add(BG);
+                    if (P.breathFirstTraversal(map, B.position.NodeId, bg, new LinkedHashSet<>()) != null){
+                        newGoals.add(BG);
+                    }
+                    B.Goal = newGoals;
+                }
+
+            }
+            var newGoals = new ArrayList<String>();
+            for (String AG : A.Goal){
+                var ag = new ArrayList<String>();
+                ag.add(AG);
+                if (P.breathFirstTraversal(map, A.position.NodeId, ag, new LinkedHashSet<>()) != null){
+                    newGoals.add(AG);
+                }
+                A.Goal = newGoals;
             }
         }
         var BoxesCopy = new HashMap<>(boxes);
 
         for (var box : boxes.entrySet()) {
-            if (box.getValue().currentowner == null) {
-                // Any agent can reach box?
-                if (box.getValue().owners.size() != 0){
-                    box.getValue().currentowner = box.getValue().owners.get(0);
-                }
-                // Otherwise, "remove" the box. Box can now be seen as a wall.
-                else{
-                    // Remove from neighbors
-                    for (String neighbors: map.map.get(box.getValue().position.NodeId)){
-                        map.map.get(neighbors).remove(box.getValue().position.NodeId);
-                    }
-
-                    map.map.remove(box.getValue().position.NodeId);
-                    BoxesCopy.remove(box.getKey());
+            if (box.getValue().owners.size() == 0) {
+                for (String neighbors: map.map.get(box.getValue().position.NodeId)){
+                    map.map.get(neighbors).remove(box.getValue().position.NodeId);
                 }
 
+                map.map.remove(box.getValue().position.NodeId);
+                BoxesCopy.remove(box.getKey());
             }
 
         }
 
         boxes = BoxesCopy;
+
+
+
         // Each box has a specific goal for now.
             /**
         ArrayList<String> doneGoals = new ArrayList<>();

@@ -199,11 +199,18 @@ public class SearchClient {
 
         State initialState = SearchClient.parseLevel(serverMessages);
         ArrayList<State> componentStates = initialState.allStates();
+        System.err.println(componentStates);
         for(State S: componentStates){
-            //System.err.println(" QQ: " + S.agents.values());
-            //System.err.println(" WOO: " + S.boxes.values());
+            //System.err.println(S.map);
+            for(Box B: S.boxes.values()){
+                System.err.println(" BOX: " + B + " goals: " + B.Goal + " owners: " + B.owners);
+            }
+            for(Agent A: S.agents.values()){
+                System.err.println(" Agent: " + A + " goals: " + A.Goal + " boxes: " + A.boxes);
+            }
 
         }
+        //System.exit(0);
 
         Action[][] plan;
 
