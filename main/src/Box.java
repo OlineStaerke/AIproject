@@ -103,18 +103,8 @@ public class Box extends Object {
         if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
             currentowner.mainPlan.plan = new ArrayList<>();
             currentowner.planPi(state, new LinkedHashSet<>(), false);
-            //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
+            System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
         }
-
-
-
-
-
-
-
-        // Kill the old mainplan (our #1 prio is now to help the other agent) - Iff we are not currently helping anybody else
-
-
 
     }
 

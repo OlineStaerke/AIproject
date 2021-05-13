@@ -94,11 +94,11 @@ public class MaPPAlgorithm {
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
            //Thread.sleep(500);
 
-            //System.err.println("-----------------------------------");
+            System.err.println("-----------------------------------");
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            //System.err.println("ROUND: "+round);
+            System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
@@ -182,6 +182,12 @@ public class MaPPAlgorithm {
                             // Maybe handle seperatly? idk
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
                                 System.err.println("OWN COLOUR");
+                                if (occupyingBox.currentowner.attached_box == null){
+                                    occupyingBox.currentowner.currentGoal = null;
+                                    occupyingBox.currentowner = agent;
+                                    occupyingBox.Taken = false;
+
+                                }
                                 if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
