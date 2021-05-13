@@ -129,5 +129,15 @@ public class Box extends Object {
 
     }
 
+    public void findOwner(State state) {
+        for (Agent agent : owners) {
+            if ((!(agent.currentGoal.Obj instanceof Box) || agent.mainPlan.plan.size()==0)) {
+                currentowner = agent;
+                return;
+            }
+        }
+        currentowner = owners.get(0);
+    }
+
 
 }

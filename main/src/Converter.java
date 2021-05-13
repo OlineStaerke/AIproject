@@ -81,7 +81,7 @@ public final class Converter {
 
             for(Box B: boxes){
                 if (B.finalPlan.size() != plan.size()){
-                    //System.err.println("############### FINAL PLANS OF DIFFERENT LENGTH! ###############");
+                    System.err.println("############### FINAL PLANS OF DIFFERENT LENGTH! ###############");
                     //System.err.println("Agent plan: " + plan.size());
                     //System.err.println("Box plan: " + B.finalPlan.size());
                     return null;

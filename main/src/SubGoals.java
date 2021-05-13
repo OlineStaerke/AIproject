@@ -178,7 +178,7 @@ public class SubGoals{
 
 
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
-            if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
+            if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Finished) {
                 if (savesg!=null) {
                     SortGoal(state);
                 }

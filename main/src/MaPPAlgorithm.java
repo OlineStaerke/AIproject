@@ -107,6 +107,7 @@ public class MaPPAlgorithm {
                 //System.err.println();
                 //System.err.println(agent);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
+                //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = GetWantedMove(agent);
 
 
@@ -161,7 +162,7 @@ public class MaPPAlgorithm {
                                 agent.conflicts =null;
                                 agent.blank = false;
                             } else {
-                                //System.err.println("Bring blank, not same conflict agent");
+
                                 occupyingAgent.blank = true;
                                 occupyingAgent.conflicts = agent;
                                 agent.blank = false;
@@ -178,10 +179,25 @@ public class MaPPAlgorithm {
                                 state.agentConflicts.add(occupyingBox.currentowner);
                             }
 
+
                             // Your own box is blocking :(
                             // Maybe handle seperatly? idk
+                            Agent oldowner = null;
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
-                                //System.err.println("OWN COLOUR");
+
+                                if (occupyingBox.currentowner.attached_box!=occupyingBox) {
+                                    if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox)) {
+                                        oldowner = occupyingBox.currentowner;
+                                        oldowner.currentGoal = null;
+                                    }
+
+                                    occupyingBox.currentowner = agent;
+                                    occupyingBox.Taken = false;
+
+
+                                }
+
+
                                 if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
@@ -202,9 +218,13 @@ public class MaPPAlgorithm {
                                 occupyingBox.blankByOwn = true;
                                 //occupyingBox.conflictRoute = new ArrayList<>();
 
+                                if (oldowner!=null) oldowner.planPi(state,new LinkedHashSet(),false);
 
-                                //System.err.println("PLAN2: " + agent.mainPlan.plan);
-                            } else{
+
+                                        } else{
+                                if (occupyingBox.currentowner == null){
+                                    occupyingBox.findOwner(state);
+                                }
                                 //System.err.println("Not same colour");
                                 if(agent.currentGoal!=null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
@@ -275,7 +295,18 @@ public class MaPPAlgorithm {
             goalIsReached = true;
             Boolean noroutes = true;
 
+
             for(Agent agent : agentsInOrder) {
+                for (Box b : agent.boxes) {
+
+
+                    if (b.finalPlan.size()<agent.finalPlan.size()-1) {
+                        b.finalPlan.add(b.position);
+                        b.finalPlanString.add(b.position.NodeId);
+                    }
+
+                }
+
 
                 if (!agent.isInGoal()) {
                     goalIsReached = false;
@@ -292,9 +323,9 @@ public class MaPPAlgorithm {
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
                 //System.err.println("Current Goal "+agent.currentGoal);
-                //System.err.println(agent.finalPlan);
+                //System.err.println(agent+"PLANANAN: "+agent.finalPlan.size());
                 for (Box BB : agent.boxes) {
-                    //System.err.println("PLANANAN:  " + BB.finalPlan);
+                    //System.err.println(BB+"PLANANAN:  " + BB.finalPlan.size());
                 }
 
 
@@ -318,7 +349,7 @@ public class MaPPAlgorithm {
 
                     if (!agent.isInGoal()) {
                         if (state.agentConflicts.size() > 0) {
-
+                            agent.subgoals.UpdateGoals(state);
                             state.blankPlan.addAll(agent.mainPlan.plan);
                             agent.blank = true;
                             LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
@@ -342,6 +373,7 @@ public class MaPPAlgorithm {
         }
 
     }
+
 
 
 
