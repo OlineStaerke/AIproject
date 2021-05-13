@@ -51,21 +51,15 @@ public class Plan {
             if (agent.conflicts!=null) {
                 otheragentplan.addAll(agent.conflicts.mainPlan.plan);
                 if (box.conflict_box!=null) {
-                    //System.err.println("HEY");
                     otheragentplan.addAll(box.conflict_box.planToGoal);
-                    //System.err.println(box.conflict_box.planToGoal);
-                    //agent.conflicts.attached_box.planToGoal = new ArrayList<>();
                 }
 
             }
-            //otheragentplan.addAll(box.conflictRoute);
 
         }
-        //System.err.println("OTHERAGENTPLAN"+otheragentplan);
         if(agent.conflicts!=null && agent.conflicts.ID.equals(agent.ID)) {
             otheragentplan.addAll(box.conflictRoute);
             }
-        //System.err.println("other agent plan"+otheragentplan);
 
 
         //Try to solve the level by adding occupied nodes to visited
@@ -86,7 +80,6 @@ public class Plan {
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
         }
-
         if (tuple_plan == null){
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
             for (String v: state.occupiedNodes.keySet()) {
@@ -102,12 +95,11 @@ public class Plan {
         }
 
 
-        //System.err.println("SECOND"+tuple_plan);
-
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
 
         }
+
         //System.err.println("THIRD"+tuple_plan);
         /**
         if (box.conflict_box!=null) {
@@ -432,6 +424,7 @@ public class Plan {
 
     public ArrayList<String> breathFirstTraversal(Map map, String root, List<String> goal, Set<String> visited) {
         if (goal == null) return new ArrayList<>();
+        visited = new HashSet<>(visited);
 
         ArrayList<String> route = new ArrayList<>();
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
@@ -529,48 +522,6 @@ public class Plan {
             }
         }
         return visited;
-    }
-
-
-    public int PriobreathFirstTraversal(State state, String root) {
-        var map = state.map;
-        var visited = new HashSet<String>();
-        ArrayList<String> route = new ArrayList<>();
-        Deque<ArrayList<String>> routes = new ArrayDeque<>();
-        Deque<String> queue = new ArrayDeque<>();
-        queue.push(root);
-
-        //Adding root to the list of routes to start with
-        ArrayList<String> root_route = new ArrayList<>();
-        root_route.add(root);
-        routes.add(root_route);
-
-
-        //Start runnning BFS
-        while (!queue.isEmpty()) {
-            String vertex = queue.pollFirst();
-            route = routes.pollFirst();
-
-            //If we are in goal, stop BFS
-            if (!state.stringToNode.get(vertex).isTunnelOneWay) {
-                return route.size();
-            }
-
-            //If not in goal, check neighbours not in visited.
-            if (!visited.contains(vertex)) {
-                visited.add(vertex);
-
-
-                for (String v : map.getAdjacent(vertex)) {
-                    ArrayList<String> newroute = new ArrayList<>(route) ;
-                    queue.addLast(v);
-                    newroute.add(v);
-                    routes.addLast(newroute);
-
-                }
-            }
-        }
-        return 100;
     }
 
 
