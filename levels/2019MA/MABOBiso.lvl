@@ -1,0 +1,19 @@
+#domain
+hospital
+#levelname
+MABob
+#colors
+green: 0, 1, A, B
+#initial
++++++++++++++
+++  B A 1 +0+
+++ +++++++  +
+++          +
++++++++++++++
+#goal
++++++++++++++
+++     0 A+ +
+++ +++++++  +
+++          +
++++++++++++++
+#end

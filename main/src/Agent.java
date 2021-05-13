@@ -38,13 +38,13 @@ public class Agent extends Object {
             if(o1.nextGoal!=null && o2.nextGoal!=null) {
 
                 for (String goal : o1.nextGoal.Obj.Goal) {
-                    if (o2.nextGoal.Obj.planToGoal.contains(goal)) {
+                    if (o2.nextGoal.Obj.planToGoal != null && o2.nextGoal.Obj.planToGoal.contains(goal)) {
                         o2_value+= 100;
                     }
                 }
 
                 for (String goal : o2.nextGoal.Obj.Goal) {
-                    if (o1.nextGoal.Obj.planToGoal.contains(goal)) {
+                    if (o1.nextGoal.Obj.planToGoal != null && o1.nextGoal.Obj.planToGoal.contains(goal)) {
                         o1_value+= 100;
                     }
                 }
@@ -155,7 +155,7 @@ public class Agent extends Object {
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
 
                     if(!conflicts.isInGoal()) {
-                        if (conflicts.conflicts!=null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0) {
+                        if (conflicts.conflicts!=null && conflicts.currentGoal != null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0) {
 
                             conflicts.bringBlank(state, conflicts);
                             //conflicts.planPi(state,new LinkedHashSet());
