@@ -201,9 +201,8 @@ public class Agent extends Object {
         }
     }
 
-    public void planGoals(State state, LinkedHashSet visited) throws InterruptedException {
+    public void planGoals(State state) throws InterruptedException {
         subgoals = new SubGoals(boxes, this, state);
-        planPi(state, visited, false);
     }
 
 
@@ -213,7 +212,7 @@ public class Agent extends Object {
         if (currentGoal != null) (currentGoal.Obj).Taken = false;
         var SG = currentGoal;
         if (!secondTry) {
-         SG = subgoals.ExtractNextGoal(currentGoal);}
+         SG = subgoals.ExtractNextGoal(currentGoal, state);}
 
 
         currentGoal = SG;

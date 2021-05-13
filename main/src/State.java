@@ -6,6 +6,7 @@ public class State {
     public Map map;
     public HashMap<String, Agent> agents;
     public HashMap<String, Box> boxes;
+    public HashMap<String, ArrayList<Box>> goals;
     public HashMap<String, Object> occupiedNodes;
     public HashMap<Character, String> NameToColor;
     public HashMap<String, Node> stringToNode;
@@ -90,6 +91,7 @@ public class State {
         NameToColor = NTC;
         stringToNode = STN;
         map = M;
+        goals = new HashMap<>();
 
     }
 
@@ -378,5 +380,7 @@ public class State {
         }
         return components;
     }
+
+
 
 }
