@@ -1,0 +1,23 @@
+#domain
+hospital
+#levelname
+MANOAsArk
+#colors
+blue: 0, 1, A, B
+#initial
++++++
++   +
++ + +
++ + +
++A+B+
++0 1+
++++++
+#goal
++++++
++B  +
++ + +
++ +A+
++ + +
++   +
++++++
+#end

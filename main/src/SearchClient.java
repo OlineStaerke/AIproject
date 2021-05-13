@@ -203,7 +203,7 @@ public class SearchClient {
         ArrayList<State> componentStates = initialState.allStates();
         System.err.println(componentStates);
         for(State S: componentStates){
-            //System.err.println(S.map);
+            System.err.println(S.map);
             for(Box B: S.boxes.values()){
                 System.err.println(" BOX: " + B + " goals: " + B.Goal + " owners: " + B.owners);
             }

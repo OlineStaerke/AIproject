@@ -216,10 +216,10 @@ public class Plan {
         if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box) {
             allPlans.addAll(agent.conflicts.currentGoal.Obj.planToGoal);
         }
-       // System.err.println(allPlans);
+
 
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
-        //System.err.println("1"+altPlans.plan);
+
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visited,allPlans, true);
 
@@ -236,11 +236,11 @@ public class Plan {
             }
             //System.err.println(visitedNoTunnel);
             visitedNoTunnel.remove(agent.position.NodeId);
+
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visitedNoTunnel,allPlans, true);
             altPlans.plan = altplan;
             //System.err.println("2"+plan);
         }
-
         //System.err.println("2"+altPlans.plan);
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
@@ -270,6 +270,7 @@ public class Plan {
     }
 
     public ArrayList<String> breathFirstTraversal_altpath(State state, String root, Set<String> visited,ArrayList<String> otherAgentPlan, Boolean second) {
+        visited = new HashSet<>(visited);
         Map map = state.map;
         ArrayList<String> route = new ArrayList<>();
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
@@ -321,6 +322,7 @@ public class Plan {
     }
 
     public ArrayList<Tuple> breathFirstTraversal_box(State state, Agent agent, Box box, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second, Boolean third) throws InterruptedException {
+        visited = new HashSet<Tuple>(visited);
         String rootagent = agent.position.NodeId;
         String rootbox = box.position.NodeId;
         Map map = state.map;

@@ -104,9 +104,9 @@ public class MaPPAlgorithm {
 
                 agent.subgoals.UpdateGoals(state);
 
-                //System.err.println();
-                //System.err.println(agent);
-                //System.err.println("Current SubGoal:"+agent.currentGoal);
+                System.err.println();
+                System.err.println(agent);
+                System.err.println("Current SubGoal:"+agent.currentGoal);
                 String wantedMove = GetWantedMove(agent);
 
 
@@ -161,7 +161,7 @@ public class MaPPAlgorithm {
                                 agent.conflicts =null;
                                 agent.blank = false;
                             } else {
-                                //System.err.println("Bring blank, not same conflict agent");
+                                System.err.println("Bring blank, not same conflict agent");
                                 occupyingAgent.blank = true;
                                 occupyingAgent.conflicts = agent;
                                 agent.blank = false;
@@ -181,7 +181,7 @@ public class MaPPAlgorithm {
                             // Your own box is blocking :(
                             // Maybe handle seperatly? idk
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
-                                //System.err.println("OWN COLOUR");
+                                System.err.println("OWN COLOUR");
                                 if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
@@ -203,7 +203,7 @@ public class MaPPAlgorithm {
                                 //occupyingBox.conflictRoute = new ArrayList<>();
 
 
-                                //System.err.println("PLAN2: " + agent.mainPlan.plan);
+                                System.err.println("PLAN2: " + agent.mainPlan.plan);
                             } else{
                                 //System.err.println("Not same colour");
                                 if(agent.currentGoal!=null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
@@ -258,7 +258,7 @@ public class MaPPAlgorithm {
                 }
 
             for(Agent AA : agentsInOrder) {
-                //System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+                System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
                 for (Box BB : AA.boxes) {
                     //System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
@@ -286,12 +286,12 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==6000) {
+            if (round==200) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
-                //System.err.println("Current Goal "+agent.currentGoal);
+                System.err.println("Current Goal "+agent.currentGoal);
                 //System.err.println(agent.finalPlan);
                 for (Box BB : agent.boxes) {
                     //System.err.println("PLANANAN:  " + BB.finalPlan);
