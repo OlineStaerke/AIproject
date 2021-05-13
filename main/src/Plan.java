@@ -225,6 +225,22 @@ public class Plan {
 
             altPlans.plan = altplan;
         }
+
+        if (altPlans.plan == null) {
+            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
+            for (String v: state.occupiedNodes.keySet()) {
+                Node n = state.stringToNode.get(v);
+                if (state.occupiedNodes.get(v) instanceof Box) {
+                    visitedNoTunnel.add(n.NodeId);
+                }
+            }
+            //System.err.println(visitedNoTunnel);
+            visitedNoTunnel.remove(agent.position.NodeId);
+            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visitedNoTunnel,allPlans, true);
+            altPlans.plan = altplan;
+            //System.err.println("2"+plan);
+        }
+
         //System.err.println("2"+altPlans.plan);
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
@@ -566,6 +582,8 @@ public class Plan {
         return agentneighbours.contains(box.Goal.get(0)) && agentGoalNode.isTunnel;
 
     }
+
+
 
 
 }
