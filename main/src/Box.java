@@ -44,6 +44,33 @@ public class Box extends Object {
         return false;
     }
 
+    public void setGoal(String goal, State state) {
+        for (String g : Goal) {
+            if (!g.equals(goal)) {
+                ArrayList<Box> boxes = state.goals.get(g);
+                boxes.remove(this);
+                state.goals.put(g,boxes);
+            }
+        }
+        if (Goal.contains(goal)) {
+            Goal = new ArrayList<>();
+            Goal.add(goal);
+
+            for (Box box : state.boxes.values()) {
+                if (box != this) {
+                    box.Goal.remove(goal);
+                }
+
+            }
+        }
+    }
+
+    public void findPlanToGoal(State state) {
+        Plan plan = new Plan();
+        plan.createPlan(state,position.NodeId,Goal,new LinkedHashSet<>());
+        planToGoal = plan.plan;
+    }
+
 
     @Override
     void bringBlank(State state, Agent agent) throws InterruptedException {

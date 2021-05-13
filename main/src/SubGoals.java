@@ -123,8 +123,8 @@ public class SubGoals{
 
         Collections.sort(onlyBoxToGoal, new SubGoal.CustomComparator());
         goals.addAll(onlyBoxToGoal);
-        System.err.println("GOALS: ");
-        for(SubGoal SG: onlyBoxToGoal) System.err.println(SG);
+        //System.err.println("GOALS: ");
+        //for(SubGoal SG: onlyBoxToGoal) System.err.println(SG);
 
 
     }
@@ -148,7 +148,7 @@ public class SubGoals{
         return false;
     }
 
-    public SubGoal ExtractNextGoal(SubGoal currentGoal){
+    public SubGoal ExtractNextGoal(SubGoal currentGoal, State state){
 
         if (currentGoal!=null) {
 
@@ -161,7 +161,7 @@ public class SubGoals{
                     return sg;
                 }
                 //add current Obj as the last element in goals, to make sure other goals are treated first, if it has been brought blank by it self.
-                if (currentGoal.gType == GoalType.BoxBlanked && sg.Obj.ID == currentGoal.Obj.ID && sg.gType == GoalType.BoxToGoal && currentGoal.Obj instanceof Box && ((Box) currentGoal.Obj).blankByOwn) {
+                if (currentGoal.gType == GoalType.BoxBlanked && sg.Obj.ID == currentGoal.Obj.ID && sg.gType == GoalType.BoxToGoal && ((Box) currentGoal.Obj).blankByOwn) {
                     savesg = sg;
 
                 }
@@ -173,8 +173,12 @@ public class SubGoals{
                 goals.add(savesg);
             }
 
+
             for (SubGoal sg : goals) {
                 if (!sg.Finished && sg.gType == GoalType.BoxToGoal && !((sg.Obj).Taken)) {
+                    if (savesg!=null) {
+                        SortGoal(state);
+                    }
                     return sg;
                 }
             }
@@ -182,15 +186,21 @@ public class SubGoals{
 
             //Return the same goal, if an agent has moved to a box and the box is not yet in its goal.
             if ((currentGoal.gType == GoalType.BoxToGoal)&& !currentGoal.Obj.isInSubGoal()) {
+                if (savesg!=null) {
+                    SortGoal(state);
+                }
                 return currentGoal;
             }
         }
         // Otherwise, select the next goal
         for(SubGoal sg2: goals){
             if (!sg2.Finished && !(sg2.Obj).Taken){
+
                 return sg2;
             }
         }
+
+
         return null;
     }
 

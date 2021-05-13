@@ -30,20 +30,51 @@ public class MaPPAlgorithm {
         System.err.println("BEGIN: " + state.agents.values());
         for(Agent agent : state.agents.values()){
             // Finds initial plan with BFS
-            agent.planGoals(state, new LinkedHashSet());
-
+            agent.planGoals(state);
 
         }
+
+
         for(Box box : state.boxes.values()){
-            // Finds initial plan with BFS
-            Plan plan = new Plan();
-            plan.createPlan(state,box.position.NodeId,box.Goal,new LinkedHashSet<>());
-            box.planToGoal = plan.plan;
+            for (String goal: box.Goal) {
+                ArrayList<Box> boxesForGoal;
 
+                if (state.goals.containsKey(goal)) boxesForGoal = state.goals.get(goal);
+                else boxesForGoal = new ArrayList<>();
 
+                if (!boxesForGoal.contains(box)) {
+                    boxesForGoal.add(box);
+                    state.goals.put(goal, boxesForGoal);
+                }
+
+            }
         }
+        //Try and find a path to goal, and choose the one closesest to each goal
+
+        for (String goal : state.goals.keySet()) {
+            Plan plan = new Plan();
+            ArrayList<Box> boxes = state.goals.get(goal);
+            ArrayList<String> boxPositions = new ArrayList<>();
+            for (Box box : boxes) {
+                boxPositions.add(box.position.NodeId);
+            }
+            plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>());
+            Integer i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
+            Box boxForGoal = boxes.get(i);
+            boxForGoal.setGoal(goal,state);
+            Collections.reverse(Arrays.asList(plan.plan));
+            boxForGoal.planToGoal = plan.plan;
+        }
+
+        System.err.println("GOALA"+state.goals);
+        System.err.println();
+
+
+
         for (Agent agent : state.agents.values()) {
             agent.subgoals.SortGoal(state);
+            agent.planPi(state, new LinkedHashSet(), false);
+            System.err.println(agent.subgoals.goals);
         }
         //state.UpdateOccupiedNodes();
 
@@ -68,12 +99,12 @@ public class MaPPAlgorithm {
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            System.err.println("ROUND: "+round);
+            //System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals(state);
-                //System.err.println("ALL SUBGOALS:"+agent.subgoals.goals);
+
                 //System.err.println();
                 //System.err.println(agent);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
@@ -256,7 +287,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==20000) {
+            if (round==30000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
@@ -275,7 +306,7 @@ public class MaPPAlgorithm {
             if (noroutes) {
 
                 for (Agent agent : agentsInOrder) {
-                    agent.nextGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal);
+                    agent.nextGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal,state);
                     if (agent.nextGoal == null) agent.nextGoal = agent.currentGoal;
                     agent.blank = false;
                 }
