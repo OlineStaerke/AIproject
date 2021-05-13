@@ -213,23 +213,32 @@ public class Plan {
         allPlans.addAll(agent.conflicts.mainPlan.plan);
         allPlans.addAll(state.occupiedNodesString());
 
+        if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box) {
+            allPlans.addAll(agent.conflicts.currentGoal.Obj.planToGoal);
+        }
+        System.err.println(allPlans);
+
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
+        System.err.println("1"+altPlans.plan);
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visited,allPlans, true);
 
             altPlans.plan = altplan;
         }
+        System.err.println("2"+altPlans.plan);
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
+        System.err.println("3"+altPlans.plan);
 
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
+        System.err.println("4"+altPlans.plan);
 
         plan = altPlans.plan;
         //plan.remove(0);
@@ -250,6 +259,7 @@ public class Plan {
         Deque<ArrayList<String>> routes = new ArrayDeque<>();
         Deque<String> queue = new ArrayDeque<>();
         queue.push(root);
+        ArrayList<String> routesFinal =null;
 
 
         //Adding root to the list of routes to start with
@@ -272,8 +282,11 @@ public class Plan {
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
                     if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)&& (!node.isTunnelDynamic || second)) {
                         route.add(node.getNodeId());
+                        if (node.isTunnel) {
+                            routesFinal = route;
+                        }
 
-                        return route;
+                        else return route;
                     }
 
 
@@ -288,7 +301,7 @@ public class Plan {
                 }
             }
         }
-        return null;
+        return routesFinal;
     }
 
     public ArrayList<Tuple> breathFirstTraversal_box(State state, String rootagent, String rootbox, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second, Boolean third) throws InterruptedException {
