@@ -207,7 +207,7 @@ public class MaPPAlgorithm {
                                 //System.err.println("PLAN2: " + agent.mainPlan.plan);
                             } else{
                                 //System.err.println("Not same colour");
-                                if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                if(agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
                                 }
