@@ -216,29 +216,29 @@ public class Plan {
         if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box) {
             allPlans.addAll(agent.conflicts.currentGoal.Obj.planToGoal);
         }
-        System.err.println(allPlans);
+       // System.err.println(allPlans);
 
         altPlans.plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
-        System.err.println("1"+altPlans.plan);
+        //System.err.println("1"+altPlans.plan);
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visited,allPlans, true);
 
             altPlans.plan = altplan;
         }
-        System.err.println("2"+altPlans.plan);
+        //System.err.println("2"+altPlans.plan);
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
-        System.err.println("3"+altPlans.plan);
+        //System.err.println("3"+altPlans.plan);
 
         if (altPlans.plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
 
             altPlans.plan = altplan;
         }
-        System.err.println("4"+altPlans.plan);
+        //System.err.println("4"+altPlans.plan);
 
         plan = altPlans.plan;
         //plan.remove(0);

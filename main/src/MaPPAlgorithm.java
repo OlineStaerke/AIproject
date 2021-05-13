@@ -66,15 +66,14 @@ public class MaPPAlgorithm {
             boxForGoal.planToGoal = plan.plan;
         }
 
-        System.err.println("GOALA"+state.goals);
-        System.err.println();
+
 
 
 
         for (Agent agent : state.agents.values()) {
             agent.subgoals.SortGoal(state);
             agent.planPi(state, new LinkedHashSet(), false);
-            System.err.println(agent.subgoals.goals);
+            //System.err.println(agent.subgoals.goals);
         }
         //state.UpdateOccupiedNodes();
 
@@ -287,7 +286,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==5000) {
+            if (round==6000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
