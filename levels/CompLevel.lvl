@@ -15,18 +15,18 @@ cyan: 5, Z
 +AAAAAAAA      +CCCC              +
 +AAAAAAAAAAAAA +BBBBBBBBBBBBBBBBBB+
 +              +       R0 S       +
-+ AAAAAAAAAAAAA+         R        +
-+BAAAAAAAAAAAAA+             Y    +
-+2AAAAAAAAAAAAA+                  +
++ AAAAA2AAAAAAA+         R        +
++ AAAAABAAAAAAA+             Y    +
++ AAAAAAAAAAAAA+                  +
 +++++++++++++++++++++++++++++++++++
-+4ZZZ  5   GGG6+AZZZ Z9Z          +
-+ZZZZ      GGGE+IZ Z Z  Z ZZ      +
-+ZZZZ       GGG+NZ Z Z Z  ZZ      +
-+ZZZZ        GG+OZ Z Z  Z ZZ      +
-+              +DZ Z ZCZ  ZZ      +
-+              +EZ Z Z Z ZZZ      +
-+BB            + Z Z Z Z ZZZ      +
-+7B            +   8 Z   ZZZ      +
++4ZZZ  5   GGG6+AZZZ Z9Z CCCC     +
++ZZZZ      GGGE+IZ Z Z  ZCZZAAAAA +
++ZZZZ       GGG+NZ Z Z Z CZZ      +
++ZZZZ        GG+OZ Z Z  ZCZZ AAAAA+
++              +DZ Z Z ZCCZZ      +
++              +EZ Z Z ZCZZZAAAA  +
++BB            + Z Z Z ZC ZZ   A A+
++7B            +   8 Z   ZZZ A    +
 +++++++++++++++++++++++++++++++++++
 #goal
 +++++++++++++++++++++++++++++++++++
@@ -36,8 +36,8 @@ cyan: 5, Z
 +AAAAAAAA      +                  +
 +AAAAAAAAAAAAA +                  +
 +              +                  +
-+ AAAAAAAAAAAAA+                  +
-+CAAAAAAAAAAAAA+                  +
++ AAAAA AAAAAAA+                  +
++ AAAAACAAAAAAA+                  +
 + AAAAAAAAAAAAA+      S0RRY       +
 +++++++++++++++++++++++++++++++++++
 +              +    A             +
