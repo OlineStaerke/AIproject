@@ -210,9 +210,13 @@ public class SearchClient {
             for(Agent A: S.agents.values()){
                 System.err.println(" Agent: " + A + " goals: " + A.Goal + " boxes: " + A.boxes);
             }
+            for(String n : S.map.map.keySet()) {
+                Node N = S.stringToNode.get(n);
+                System.err.println(n + " IS TUNNEL " + N.isTunnel);
+            }
 
         }
-        //System.exit(0);
+        System.exit(0);
 
         Action[][] plan;
 
