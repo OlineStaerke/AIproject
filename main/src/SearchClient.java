@@ -242,7 +242,7 @@ public class SearchClient {
         }
         else
         {
-            System.err.println("MAP4");
+            //System.err.println("MAP4");
 
             int i =0;
             for (Action[] jointAction : plan)

@@ -371,7 +371,7 @@ public class MaPPAlgorithm {
 
                         }
                         else {
-                            System.err.println("6");
+                            //System.err.println("6");
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(agent.position.NodeId);
                                 agent.planPi(state, visited,false);

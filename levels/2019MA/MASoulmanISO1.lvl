@@ -3,19 +3,11 @@ hospital
 #levelname
 MASoulman
 #colors
-blue: 0, A
-red: 1, B
-cyan: 2, C
-purple: 3, D
-green: 4, E
-orange: 5, F
-pink: 6, G
-grey: 7, H
-lightblue: 8, I
-brown: 9, J
+cyan: 0, C
+purple: 1, D
 #initial
 +++++++++++++
-+2    +D+++3+
++0    +D+++1+
 + +++ +D+++ +
 + +++ +D+++ +
 + +++ + +++ +
