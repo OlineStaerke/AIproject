@@ -89,7 +89,7 @@ public class MaPPAlgorithm {
         
         int round = 0;
         while(!goalIsReached){
-            //System.err.println();
+          //  System.err.println();
 
 
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
@@ -107,8 +107,8 @@ public class MaPPAlgorithm {
                 agent.subgoals.UpdateGoals(state);
 
                 //System.err.println();
-               // System.err.println(agent);
-               // System.err.println("Current SubGoal:"+agent.currentGoal);
+                //System.err.println("Current SubGoal:"+agent.currentGoal);
+                //System.err.println("ATTACHED BOX+"+agent.attached_box);
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = GetWantedMove(agent);
 
@@ -193,8 +193,8 @@ public class MaPPAlgorithm {
                             Agent oldowner = null;
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
 
-                                if (occupyingBox.currentowner.attached_box!=occupyingBox) {
-                                    if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox)) {
+                                if (!occupyingBox.currentowner.thisAttachedBox(state, occupyingBox)) {
+                                    if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox) || occupyingBox.currentowner.attached_box == occupyingBox) {
                                         oldowner = occupyingBox.currentowner;
                                         oldowner.currentGoal = null;
                                     }
@@ -206,7 +206,7 @@ public class MaPPAlgorithm {
                                 }
 
 
-                                if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                if(agent.currentGoal!=null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
                                 }else {
@@ -227,8 +227,6 @@ public class MaPPAlgorithm {
                                 //occupyingBox.conflictRoute = new ArrayList<>();
 
                                 if (oldowner!=null) oldowner.planPi(state,new LinkedHashSet(),false);
-
-
                                         } else{
                                 if (occupyingBox.currentowner == null){
                                     occupyingBox.findOwner(state);
@@ -333,9 +331,9 @@ public class MaPPAlgorithm {
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
                 //System.err.println("Current Goal "+agent.currentGoal);
-                //System.err.println(agent+"PLANANAN: "+agent.finalPlan.size());
+                //System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
                 for (Box BB : agent.boxes) {
-                    //System.err.println(BB+"PLANANAN:  " + BB.finalPlan.size());
+                   // System.err.println(BB+"PLANANAN:  " + BB.finalPlan.size());
                 }
 
 
@@ -357,7 +355,8 @@ public class MaPPAlgorithm {
                 for (Agent agent : agentsInOrder) {
                     //System.err.println(agent + " "+agent.isInGoal());
 
-                    if (!agent.isInGoal()) {
+                    if (!agent.isInGoal() && agent.nextGoal!=null) {
+
 
                         if (state.agentConflicts.size() > 0) {
 
@@ -367,11 +366,12 @@ public class MaPPAlgorithm {
                             LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                             visited.remove(agent.position.NodeId);
                             agent.planPi(state, visited, false);
+
                             break;
 
                         }
                         else {
-                            //System.err.println("6");
+
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(agent.position.NodeId);
                                 agent.planPi(state, visited,false);

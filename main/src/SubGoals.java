@@ -153,8 +153,6 @@ public class SubGoals{
     public SubGoal ExtractNextGoal(SubGoal currentGoal, State state){
 
         if (currentGoal!=null) {
-
-            currentGoal.Obj.Taken=false;
             SubGoal savesg = null;
 
             for (SubGoal sg : goals) {
@@ -239,7 +237,7 @@ public class SubGoals{
 
         @Override
         public String toString(){
-            return "gType: " + gType.toString() + ", Object: " + Obj.toString() + " finished: " + Finished;
+            return "gType: " + gType.toString() + ", Object: " + Obj.toString() + " finished: " + Finished + " taken: " + Obj.Taken;
 
         }
 

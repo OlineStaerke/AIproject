@@ -101,7 +101,7 @@ public class Agent extends Object {
             }
 
 
-
+            //Add elements to attached box final plan
 
             if (attached_box!=null) {
                 Node wantedMoveBox;
@@ -134,15 +134,16 @@ public class Agent extends Object {
             }
 
 
-
+            // if blank call conflicts
             if (blank) {
+               // System.err.println("CONFLICTS");
+                //System.err.println(ID+" "+conflicts);
 
                 if (state.blankPlan.size()>0) {
                     state.blankPlan.remove(0);
                 }
 
                 //The conflicts has been solved
-
                 if (mainPlan.plan.size()==0 && conflicts!=null ) {
 
                     blank = false;
@@ -151,7 +152,7 @@ public class Agent extends Object {
                     // THIS LINE OF CODE RUINS STUFF WITH BOXES LETS TRY TO FIX IT!!
 
                     if(!conflicts.isInGoal()) {
-                        if (conflicts.conflicts!=null && conflicts.currentGoal != null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0) {
+                        if (conflicts.conflicts!=null && conflicts.currentGoal != null && conflicts.mainPlan.plan.size() ==0) {
 
                             conflicts.bringBlank(state, conflicts);
                             //conflicts.planPi(state,new LinkedHashSet());
@@ -159,7 +160,7 @@ public class Agent extends Object {
                         }
                         else {
                             if (conflicts.mainPlan.plan.size()==0){
-                            //conflicts.planPi(state,new LinkedHashSet());
+                            //conflicts.planPi(state,new LinkedHashSet(), false);
                             }
                         }
                     }
@@ -187,6 +188,12 @@ public class Agent extends Object {
         if (attached_box!=null) {return true;}
 
         return (state.map.getAdjacent(position.NodeId).contains(currentGoal.Obj.position.NodeId));
+    }
+
+    boolean thisAttachedBox(State state, Box attachedB) {
+        if (attached_box!=null && attached_box.equals(attachedB)) {return true;}
+
+        return (state.map.getAdjacent(position.NodeId).contains(attachedB.position.NodeId));
     }
 
     boolean isInSubGoal() {
@@ -224,7 +231,6 @@ public class Agent extends Object {
 
                         attached_box = (Box) SG.Obj;
                         ((Box) SG.Obj).currentowner = this;
-
                         mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
 
 
@@ -242,8 +248,8 @@ public class Agent extends Object {
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
                         attached_box = (Box) SG.Obj;
+                        attached_box.currentowner = this;
                         mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
-                        ((Box) SG.Obj).currentowner = this;
                         if (!secondTry) (SG.Obj).planToGoal = new ArrayList<>(SG.Obj.mainPlan.plan);
 
 
@@ -313,6 +319,7 @@ public class Agent extends Object {
             //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {
+            if (currentGoal!=null) (currentGoal.Obj).Taken = false;
             //System.err.println("PLANPI2");
             mainPlan.createAltPaths(state, agent);
             attached_box = null;
