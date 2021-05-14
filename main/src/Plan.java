@@ -132,24 +132,24 @@ public class Plan {
          **/
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false, false);
-
+            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<>(),goal,false, false);
         }
 
 
-        //System.err.println("FOURTH"+tuple_plan);
 
         //System.err.println("SECOND"+tuple_plan);
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, false);
 
         }
+        System.err.println("FIFTH"+tuple_plan);
 
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, true);
 
         }
+        System.err.println("SIXTH"+tuple_plan);
 
         //System.err.println("SECOND"+tuple_plan);
         if (tuple_plan==null) {

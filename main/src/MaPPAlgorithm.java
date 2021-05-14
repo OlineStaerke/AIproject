@@ -324,7 +324,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==30000) {
+            if (round==2000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
