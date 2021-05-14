@@ -98,15 +98,15 @@ public class MaPPAlgorithm {
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            //System.err.println("ROUND: "+round);
+            System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals(state);
 
                 //System.err.println();
-                //System.err.println(agent);
-                //System.err.println("Current SubGoal:"+agent.currentGoal);
+               // System.err.println(agent);
+               // System.err.println("Current SubGoal:"+agent.currentGoal);
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = GetWantedMove(agent);
 
@@ -324,7 +324,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==30000) {
+            if (round==1000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);

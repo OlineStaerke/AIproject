@@ -244,6 +244,8 @@ public class Agent extends Object {
                         attached_box = (Box) SG.Obj;
                         mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
                         ((Box) SG.Obj).currentowner = this;
+                        if (!secondTry) (SG.Obj).planToGoal = new ArrayList<>(SG.Obj.mainPlan.plan);
+
 
 
 

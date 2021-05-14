@@ -247,7 +247,7 @@ public class SearchClient {
 
                     System.out.print(jointAction[action].name);
                 }
-                System.out.println();
+               // System.out.println();
                 // We must read the server's response to not fill up the stdin buffer and block the server.
                 serverMessages.readLine();
             }

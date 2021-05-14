@@ -57,6 +57,8 @@ public class Plan {
         ArrayList otheragentplan = new ArrayList();
         //System.err.println(box+" "+box.conflict_box);
 
+        //System.err.println("createplanfor:"+agent.currentGoal);
+
         if (goal==null) {
 
             if (box.conflicts!=null) {
@@ -64,10 +66,12 @@ public class Plan {
             }
             if (agent.conflicts!=null) {
                 otheragentplan.addAll(agent.conflicts.mainPlan.plan);
-                if (box.conflict_box!=null) {
-                    otheragentplan.addAll(box.conflict_box.planToGoal);
-                }
 
+            }
+            if (box.conflict_box!=null) {
+
+                otheragentplan.addAll(box.conflict_box.planToGoal);
+                otheragentplan.add(box.conflict_box.position);
             }
 
         }
@@ -89,13 +93,15 @@ public class Plan {
 
 
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
-        //System.err.println("FIRST"+tuple_plan);
+       // System.err.println("FIRST"+tuple_plan);
 
 
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
         }
+        //System.err.println("Second"+tuple_plan);
+
         if (tuple_plan == null){
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
             for (String v: state.occupiedNodes.keySet()) {
@@ -109,14 +115,13 @@ public class Plan {
             visitedNoTunnel.remove(rootAgent);
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visitedNoTunnel,otheragentplan,goal,false, false);
         }
-
+        //System.err.println("THIRD"+tuple_plan);
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, true);
 
         }
-
-        //System.err.println("THIRD"+tuple_plan);
+        //System.err.println("FOURTH"+tuple_plan);
         /**
         if (box.conflict_box!=null) {
             occupied = new LinkedHashSet();
@@ -132,9 +137,11 @@ public class Plan {
          **/
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false, false);
+            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,false, true);
 
         }
+        //if (tuple_plan==null) System.err.println("OTHERAGENTPLAN"+otheragentplan);
+        //System.err.println("FIFTH"+tuple_plan);
 
 
         //System.err.println("FOURTH"+tuple_plan);
@@ -191,9 +198,7 @@ public class Plan {
 
             plan = plan_agent;
             box.mainPlan.plan = plan_box;
-            if(goal!=null) {
-                box.planToGoal = new ArrayList<>(plan_box);
-            }
+
             //System.err.println("PLAN AGENT:"+plan);
             //System.err.println("PLAN BOX:"+plan_box);
         }
@@ -376,8 +381,9 @@ public class Plan {
              if (!visited.contains(vertex) && !occupied.contains(vertex_box) && !occupied.contains(vertex_agent)){
                    //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
 
-                 if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
-                    if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent && (!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
+                     if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
+
+                     if (!node_box.NodeId.equals(rootbox) && !node_agent.NodeId.equals(rootagent) && ((!action.equals(ActionType.Pull))|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
 
                         Tuple last_position = new Tuple(node_agent.NodeId, node_box.NodeId);
                         route_agent.add(last_position);

@@ -38,4 +38,4 @@ java -jar server.jar -l C:\Users\Mathi\Desktop\8_semester\AI\AIproject\levels\20
 
 RUN ALL:
 Oline:
-java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/2019MA -c "java SearchClient" -t 180 -o "/Users/olinestaerke/Desktop/OUTMA.zip"
+java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/2019SA -c "java SearchClient" -t 180 -o "/Users/olinestaerke/Desktop/OUTSA.zip"

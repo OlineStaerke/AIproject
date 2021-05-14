@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 
 public class SubGoals{
     public ArrayList<SubGoal> goals;
@@ -108,8 +109,18 @@ public class SubGoals{
     }
 
     public void SortGoal(State state) {
+/**
+        for (SubGoal sg: goals) {
+            if (sg.Obj instanceof Box && sg.gType.equals(GoalType.BoxToGoal)) {
+                Plan plan = new Plan();
+                plan.createPlan(state,sg.Obj.position.NodeId,sg.Obj.Goal,new LinkedHashSet<>());
+                if (plan.plan != null) sg.Obj.planToGoal = new ArrayList<>(plan.plan);
+            }
+        }
+ **/
         for (SubGoal sg: goals) {
             if (sg.Obj instanceof Box) ((Box) sg.Obj).findPriority(state);
+            //System.err.println(sg + " "+ sg.Obj.PriorityValue + sg.Obj.planToGoal);
         }
 
         ArrayList<SubGoal> onlyBoxToGoal = new ArrayList<>();
