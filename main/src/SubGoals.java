@@ -109,15 +109,6 @@ public class SubGoals{
     }
 
     public void SortGoal(State state) {
-/**
-        for (SubGoal sg: goals) {
-            if (sg.Obj instanceof Box && sg.gType.equals(GoalType.BoxToGoal)) {
-                Plan plan = new Plan();
-                plan.createPlan(state,sg.Obj.position.NodeId,sg.Obj.Goal,new LinkedHashSet<>());
-                if (plan.plan != null) sg.Obj.planToGoal = new ArrayList<>(plan.plan);
-            }
-        }
- **/
         for (SubGoal sg: goals) {
             if (sg.Obj instanceof Box) ((Box) sg.Obj).findPriority(state);
             //System.err.println(sg + " "+ sg.Obj.PriorityValue + sg.Obj.planToGoal);

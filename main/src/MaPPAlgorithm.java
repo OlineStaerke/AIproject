@@ -85,6 +85,7 @@ public class MaPPAlgorithm {
 
         ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
         Collections.sort(agentsInOrder,new Agent.CustomComparator());
+        System.err.println("1");
         
         int round = 0;
         while(!goalIsReached){
@@ -101,6 +102,7 @@ public class MaPPAlgorithm {
             System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
+                System.err.println("2");
 
                 agent.subgoals.UpdateGoals(state);
 
@@ -296,6 +298,7 @@ public class MaPPAlgorithm {
 
             // Boxes are automatically checked in agent.isInGoal
             state.UpdateOccupiedNodes();
+            System.err.println("3");
 
 
 
@@ -324,7 +327,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==1000) {
+            if (round==130) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
@@ -355,7 +358,9 @@ public class MaPPAlgorithm {
                     //System.err.println(agent + " "+agent.isInGoal());
 
                     if (!agent.isInGoal()) {
+
                         if (state.agentConflicts.size() > 0) {
+
                             agent.subgoals.UpdateGoals(state);
                             state.blankPlan.addAll(agent.mainPlan.plan);
                             agent.blank = true;
@@ -364,7 +369,9 @@ public class MaPPAlgorithm {
                             agent.planPi(state, visited, false);
                             break;
 
-                        } else {
+                        }
+                        else {
+                            System.err.println("6");
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(agent.position.NodeId);
                                 agent.planPi(state, visited,false);

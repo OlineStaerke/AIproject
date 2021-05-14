@@ -381,9 +381,8 @@ public class Plan {
              if (!visited.contains(vertex) && !occupied.contains(vertex_box) && !occupied.contains(vertex_agent)){
                    //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
 
-                     if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
-
-                     if (!node_box.NodeId.equals(rootbox) && !node_agent.NodeId.equals(rootagent) && ((!action.equals(ActionType.Pull))|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
+                 if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
+                    if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent && (!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
 
                         Tuple last_position = new Tuple(node_agent.NodeId, node_box.NodeId);
                         route_agent.add(last_position);

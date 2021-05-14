@@ -126,6 +126,7 @@ public class Box extends Object {
                 }
             }
         }
+        Plan P = new Plan();
         this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
 
     }

@@ -220,8 +220,10 @@ public class SearchClient {
             // Run MaPPAlgorithm
             for(State S : componentStates)
                 MaPPAlgorithm.MaPPVanilla(S);
+            System.err.println("MAP");
 
             plan = Converter.getConversion(initialState.agents);
+            System.err.println("MAP2");
             //System.err.println("Length of plan:"+plan.length);
             //System.err.println(Arrays.deepToString(plan));
         }
@@ -231,10 +233,13 @@ public class SearchClient {
         }
         if (plan == null)
         {
+
             System.exit(0);
         }
         else
         {
+            System.err.println("MAP4");
+
             int i =0;
             for (Action[] jointAction : plan)
             {
