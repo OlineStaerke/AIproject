@@ -172,6 +172,11 @@ public class MaPPAlgorithm {
                         }
                         // Box is blocking
                         else{
+                            agent.stuck++;
+
+                            if (agent.stuck == 1){
+                                agent.planPi(state, new LinkedHashSet<>(), true);
+                            }
 
                             var occupyingBox = (Box) occupyingObject;
 
@@ -262,6 +267,7 @@ public class MaPPAlgorithm {
                     }
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
+                        agent.stuck = 0;
                         agent.ExecuteMove(agent,state,  false);
                     } else {
                         agent.ExecuteMove(agent,state, true);

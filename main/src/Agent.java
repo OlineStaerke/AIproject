@@ -10,6 +10,8 @@ public class Agent extends Object {
     public SubGoals.SubGoal nextGoal;
     public SubGoals subgoals;
     Box attached_box;
+    public int stuck;
+
 
 
 
@@ -23,6 +25,8 @@ public class Agent extends Object {
         currentGoal = null;
         this.Taken = false;
         this.planToGoal = new ArrayList<>();
+        stuck = 0;
+
 
 
     }
@@ -180,8 +184,9 @@ public class Agent extends Object {
     }
 
     boolean attachedBox(State state) {
-        if (attached_box==null) {return false;}
-        return (state.map.getAdjacent(position.NodeId).contains(attached_box.position.NodeId));
+        if (attached_box!=null) {return true;}
+
+        return (state.map.getAdjacent(position.NodeId).contains(currentGoal.Obj.position.NodeId));
     }
 
     boolean isInSubGoal() {

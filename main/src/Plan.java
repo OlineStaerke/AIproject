@@ -264,7 +264,7 @@ public class Plan {
 
         plan = altPlans.plan;
         //plan.remove(0);
-
+        if (plan == null) plan = new ArrayList<>();
         ArrayList<String> planblank = new ArrayList<>(plan);
         state.blankPlan = planblank;
 
