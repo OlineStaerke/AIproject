@@ -212,7 +212,7 @@ public class SearchClient {
             }
             for(String n : S.map.map.keySet()) {
                 Node N = S.stringToNode.get(n);
-                //System.err.println(n + " IS TUNNEL " + N.isTunnel);
+                //System.err.println(n + " IS COR " + N.isCorridor);
             }
 
         }

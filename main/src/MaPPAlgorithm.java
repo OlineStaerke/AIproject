@@ -99,7 +99,7 @@ public class MaPPAlgorithm {
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            //System.err.println("ROUND: "+round);
+            System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
                 //System.err.println("2");

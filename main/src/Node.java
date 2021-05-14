@@ -3,6 +3,7 @@ public class Node{
     boolean isTunnel = false;
     boolean isTunnelDynamic = false;
     boolean isTunnelOneWay = false;
+    boolean isCorridor = false;
 
 
 
