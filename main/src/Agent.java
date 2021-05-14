@@ -312,7 +312,7 @@ public class Agent extends Object {
         }
         //System.err.println(conflicts.mainPlan.plan);
         //System.err.println(attached_box.position.NodeId);
-        if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
+        if (subgoals.ExtractNextGoal(currentGoal, state) != null && attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
             //System.err.println("PLANPI");
             subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet(), false);

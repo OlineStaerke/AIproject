@@ -59,11 +59,15 @@ public class MaPPAlgorithm {
                 boxPositions.add(box.position.NodeId);
             }
             plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>());
-            Integer i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
+
+            Integer i = boxPositions.indexOf(plan.plan.get(plan.plan.size() - 1));
+
             Box boxForGoal = boxes.get(i);
             boxForGoal.setGoal(goal,state);
+
             Collections.reverse(Arrays.asList(plan.plan));
             boxForGoal.planToGoal = plan.plan;
+
         }
 
 
@@ -157,6 +161,10 @@ public class MaPPAlgorithm {
                                 //System.err.println("Same conflict agent");
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(occupyingAgent.position.NodeId);
+
+                                if (occupyingAgent.subgoals.ExtractNextGoal(occupyingAgent.currentGoal, state)!=null) occupyingAgent.planPi(state, visited, false);
+                                else occupyingAgent.bringBlank(state,occupyingAgent);
+
                                 occupyingAgent.planPi(state, visited, false);
                                 //occupyingAgent.mainPlan.plan.remove(0);
 
