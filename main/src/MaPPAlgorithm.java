@@ -75,6 +75,10 @@ public class MaPPAlgorithm {
             agent.planPi(state, new LinkedHashSet(), false);
             //System.err.println(agent.subgoals.goals);
         }
+
+        for (Agent agent : state.agents.values()) {
+            agent.findPriority(state);
+        }
         //state.UpdateOccupiedNodes();
 
         boolean goalIsReached = false;
@@ -107,7 +111,7 @@ public class MaPPAlgorithm {
                 agent.subgoals.UpdateGoals(state);
 
                 //System.err.println();
-                //System.err.println("Current SubGoal:"+agent.currentGoal);
+                System.err.println("Current SubGoal:"+agent.currentGoal);
                 //System.err.println("ATTACHED BOX+"+agent.attached_box);
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = GetWantedMove(agent);
@@ -133,8 +137,8 @@ public class MaPPAlgorithm {
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
-
-                       // System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        System.err.println("agent "+agent);
+                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
                       //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
@@ -194,7 +198,7 @@ public class MaPPAlgorithm {
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
 
                                 if (!occupyingBox.currentowner.thisAttachedBox(state, occupyingBox)) {
-                                    if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox) || occupyingBox.currentowner.attached_box == occupyingBox) {
+                                    if (occupyingBox.currentowner.currentGoal!=null && occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox) || occupyingBox.currentowner.attached_box == occupyingBox) {
                                         oldowner = occupyingBox.currentowner;
                                         oldowner.currentGoal = null;
                                     }
@@ -325,15 +329,16 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==30000) {
+            if (round==200) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
+                System.err.println("-----------");
                 //System.err.println("Current Goal "+agent.currentGoal);
-                //System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
+                System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
                 for (Box BB : agent.boxes) {
-                   // System.err.println(BB+"PLANANAN:  " + BB.finalPlan.size());
+                    System.err.println(BB+"PLANANAN:  " + BB.mainPlan.plan);
                 }
 
 

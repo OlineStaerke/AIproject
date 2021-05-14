@@ -267,6 +267,11 @@ public class Plan {
 
             altPlans.plan = altplan;
         }
+        if (altPlans.plan==null) {
+            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(), new ArrayList<>(), true); //Run BFS, to create new alternative plan
+
+            altPlans.plan = altplan;
+        }
         //System.err.println("4"+altPlans.plan);
 
         plan = altPlans.plan;
