@@ -38,19 +38,6 @@ public class Agent extends Object {
             Integer o2_value = 0;
             Integer o1_value = 0;
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
-            if(o1.nextGoal!=null) {
-                o1_value = o1.nextGoal.Obj.PriorityValue;
-            }
-            if(o2.nextGoal!=null) {
-                o2_value = o2.nextGoal.Obj.PriorityValue;
-            }
-
-            return o2_value-o1_value;
-
-            /**
-            Integer o2_value = 0;
-            Integer o1_value = 0;
-            //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
 
             if(o1.nextGoal!=null && o2.nextGoal!=null) {
 
@@ -81,7 +68,6 @@ public class Agent extends Object {
 
             Integer comparevalue = o2.mainPlan.plan.size() + o2_value;
             return (comparevalue).compareTo(((Integer) o1.mainPlan.plan.size())+o1_value);
-             **/
         }
     }
 
@@ -326,49 +312,18 @@ public class Agent extends Object {
         }
         //System.err.println(conflicts.mainPlan.plan);
         //System.err.println(attached_box.position.NodeId);
-        if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
-            System.err.println("PLANPI");
+        if (subgoals.ExtractNextGoal(currentGoal, state) != null && attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
+            //System.err.println("PLANPI");
             subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet(), false);
             //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {
             if (currentGoal!=null) (currentGoal.Obj).Taken = false;
-            System.err.println("PLANPI2");
+            //System.err.println("PLANPI2");
             mainPlan.createAltPaths(state, agent);
             attached_box = null;
         }
-
-
-
-    }
-
-    public void findPriority(State state){
-        var otherBoxes = state.boxes.values();
-        int newPrio = 0;
-
-        for(Box B: otherBoxes){
-
-
-            for (String goal: B.Goal) {
-
-
-                if (this.mainPlan.plan!=null && this.mainPlan.plan.contains(goal)) {
-                    newPrio += 1;
-                }
-            }
-        }
-        for(Agent A: state.agents.values()){
-            if (A.equals(this)) continue;
-            for (String goal: A.Goal) {
-
-                if (this.mainPlan.plan!=null && this.mainPlan.plan.contains(goal)) {
-                    newPrio += 1;
-                }
-            }
-        }
-
-        this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
 
     }
 
