@@ -65,10 +65,10 @@ public class Box extends Object {
         }
     }
 
-    public void findPlanToGoal(State state) {
+    public ArrayList<String> findPlanToGoal(State state) {
         Plan plan = new Plan();
         plan.createPlan(state,position.NodeId,Goal,new LinkedHashSet<>());
-        planToGoal = plan.plan;
+        return plan.plan;
     }
 
 

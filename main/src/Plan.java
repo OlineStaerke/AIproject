@@ -252,7 +252,9 @@ public class Plan {
         allPlans.addAll(agent.conflicts.mainPlan.plan);
         allPlans.addAll(state.occupiedNodesString());
 
-        if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box) {
+        if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box && !agent.conflicts.currentGoal.Obj.isInSubGoal()) {
+
+            ArrayList planBox = ((Box) agent.conflicts.currentGoal.Obj).findPlanToGoal(state);
             allPlans.addAll(agent.conflicts.currentGoal.Obj.planToGoal);
         }
 

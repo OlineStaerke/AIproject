@@ -81,7 +81,7 @@ public class MaPPAlgorithm {
         }
 
         for (Agent agent : state.agents.values()) {
-            agent.findPriority(state);
+            //agent.findPriority(state);
         }
         //state.UpdateOccupiedNodes();
 
@@ -103,11 +103,11 @@ public class MaPPAlgorithm {
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
            //Thread.sleep(500);
 
-            //System.err.println("-----------------------------------");
+
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            System.err.println("ROUND: "+round);
+            //System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
                 //System.err.println("2");
@@ -115,7 +115,9 @@ public class MaPPAlgorithm {
                 agent.subgoals.UpdateGoals(state);
 
                 //System.err.println();
-                System.err.println("Current SubGoal:"+agent.currentGoal);
+               // System.err.println("agent "+agent);
+                //System.err.println("conflicts"+agent.conflicts);
+                //System.err.println("Current SubGoal:"+agent.currentGoal);
                 //System.err.println("ATTACHED BOX+"+agent.attached_box);
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = GetWantedMove(agent);
@@ -141,8 +143,8 @@ public class MaPPAlgorithm {
                         // Bring Blank and move
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
-                        System.err.println("agent "+agent);
-                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+
+                      //  System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
                       //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
@@ -204,7 +206,6 @@ public class MaPPAlgorithm {
                             // Maybe handle seperatly? idk
                             Agent oldowner = null;
                             if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
-
                                 if (!occupyingBox.currentowner.thisAttachedBox(state, occupyingBox)) {
                                     if (occupyingBox.currentowner.currentGoal!=null && occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox) || occupyingBox.currentowner.attached_box == occupyingBox) {
                                         oldowner = occupyingBox.currentowner;
@@ -337,16 +338,17 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==200) {
+            if (round==30000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
-                System.err.println("-----------");
+                //.println("-----------");
+                //System.err.println("AGent"+agent);
                 //System.err.println("Current Goal "+agent.currentGoal);
-                System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
+                //System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
                 for (Box BB : agent.boxes) {
-                    System.err.println(BB+"PLANANAN:  " + BB.mainPlan.plan);
+                    //System.err.println(BB+"PLANANAN:  " + BB.mainPlan.plan);
                 }
 
 

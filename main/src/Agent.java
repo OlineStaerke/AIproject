@@ -164,9 +164,14 @@ public class Agent extends Object {
                             }
                         }
                     }
-                    if (conflicts.conflicts == agent) {
-                        conflicts.conflicts = null;
-                        conflicts = null;
+                    if (blankInCircle()) {
+                        if (conflicts == agent || (currentGoal!=null && !(agent.currentGoal.gType == SubGoals.GoalType.BoxBlanked && attached_box ==null))) {
+                            conflicts.conflicts = null;
+                            conflicts = null;
+                        }
+                        else {
+                            //conflicts.conflicts = null;
+                        }
                     }
 
                 }
@@ -312,23 +317,34 @@ public class Agent extends Object {
         }
         //System.err.println(conflicts.mainPlan.plan);
         //System.err.println(attached_box.position.NodeId);
-        if (subgoals.ExtractNextGoal(currentGoal, state) != null && attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
-            //System.err.println("PLANPI");
+        if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
             subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet(), false);
             //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {
             if (currentGoal!=null) (currentGoal.Obj).Taken = false;
-            //System.err.println("PLANPI2");
             mainPlan.createAltPaths(state, agent);
             attached_box = null;
         }
 
+
+
     }
 
 
+    public Boolean blankInCircle() {
+        Agent nextAgent = conflicts;
+        HashSet visited = new HashSet();
+        while (nextAgent!=null) {
+            visited.add(nextAgent);
+            if (nextAgent.equals(this)) return true;
+            nextAgent = nextAgent.conflicts;
+            if (visited.contains(nextAgent)) return false;
 
+        }
+        return false;
+    }
 
 }
 
