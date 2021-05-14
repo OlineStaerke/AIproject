@@ -91,6 +91,8 @@ public class Plan {
         ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
         //System.err.println("FIRST"+tuple_plan);
 
+
+
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
         }
@@ -110,7 +112,7 @@ public class Plan {
 
 
         if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
+            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, true);
 
         }
 
@@ -329,6 +331,7 @@ public class Plan {
 
     public ArrayList<Tuple> breathFirstTraversal_box(State state, Agent agent, Box box, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second, Boolean third) throws InterruptedException {
         visited = new HashSet<Tuple>(visited);
+        occupied= new HashSet<String>(occupied);
         String rootagent = agent.position.NodeId;
         String rootbox = box.position.NodeId;
         Map map = state.map;

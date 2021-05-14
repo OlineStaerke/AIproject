@@ -132,7 +132,8 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                       // System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                      //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
                         // Agent is blocking and is not currenly removing a box
