@@ -212,7 +212,7 @@ public class SearchClient {
             }
             for(String n : S.map.map.keySet()) {
                 Node N = S.stringToNode.get(n);
-                //System.err.println(n + " IS TUNNEL " + N.isTunnel);
+                //System.err.println(n + " IS COR " + N.isCorridor);
             }
 
         }
@@ -242,7 +242,7 @@ public class SearchClient {
         }
         else
         {
-            System.err.println("MAP4");
+            //System.err.println("MAP4");
 
             int i =0;
             for (Action[] jointAction : plan)

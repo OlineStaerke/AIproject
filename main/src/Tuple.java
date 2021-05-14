@@ -23,4 +23,10 @@ public class Tuple {
         var objTuple = (Tuple) obj;
         return objTuple.agentpos.equals(agentpos) && objTuple.boxpos.equals(boxpos);
     }
+
+    @Override
+    public String toString(){
+        return "(" + agentpos + "," + boxpos  +")";
+    }
+
 }

@@ -256,6 +256,14 @@ public class State {
                 n.isTunnel = true;
                 stringToNode.replace(node, n);
             }
+            if (map.map.get(node).size() == 1 && map.map.get(map.map.get(node).get(0)).size() > 2){
+                n.isTunnel = false;
+                n.isTunnelOneWay = false;
+                n.isTunnelDynamic = false;
+                n.isCorridor = true;
+            }
+            stringToNode.replace(node, n);
+
 
 
         }
