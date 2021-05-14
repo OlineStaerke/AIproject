@@ -85,7 +85,7 @@ public class MaPPAlgorithm {
 
         ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
         Collections.sort(agentsInOrder,new Agent.CustomComparator());
-        System.err.println("1");
+        //System.err.println("1");
         
         int round = 0;
         while(!goalIsReached){
@@ -99,10 +99,10 @@ public class MaPPAlgorithm {
             //System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            System.err.println("ROUND: "+round);
+            //System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
-                System.err.println("2");
+                //System.err.println("2");
 
                 agent.subgoals.UpdateGoals(state);
 
@@ -298,7 +298,7 @@ public class MaPPAlgorithm {
 
             // Boxes are automatically checked in agent.isInGoal
             state.UpdateOccupiedNodes();
-            System.err.println("3");
+            //System.err.println("3");
 
 
 
@@ -327,7 +327,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==130) {
+            if (round==30000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);

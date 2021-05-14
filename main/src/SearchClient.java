@@ -191,7 +191,7 @@ public class SearchClient {
         //System.err.println("SearchClient initializing. I am sending this using the error output stream.");
 
         // Send client name to server.
-        //System.out.println("SearchClient");
+        System.out.println("SearchClient");
 
         // We can also print comments to stdout by prefixing with a #.
         System.out.println("#This is a comment.");
@@ -201,22 +201,22 @@ public class SearchClient {
 
         State initialState = SearchClient.parseLevel(serverMessages);
         ArrayList<State> componentStates = initialState.allStates();
-        System.err.println(componentStates);
+        //System.err.println(componentStates);
         for(State S: componentStates){
-            System.err.println(S.map);
+            //System.err.println(S.map);
             for(Box B: S.boxes.values()){
-                System.err.println(" BOX: " + B + " goals: " + B.Goal + " owners: " + B.owners);
+                //System.err.println(" BOX: " + B + " goals: " + B.Goal + " owners: " + B.owners);
             }
             for(Agent A: S.agents.values()){
-                System.err.println(" Agent: " + A + " goals: " + A.Goal + " boxes: " + A.boxes);
+                //System.err.println(" Agent: " + A + " goals: " + A.Goal + " boxes: " + A.boxes);
             }
             for(String n : S.map.map.keySet()) {
                 Node N = S.stringToNode.get(n);
-                System.err.println(n + " IS TUNNEL " + N.isTunnel);
+                //System.err.println(n + " IS TUNNEL " + N.isTunnel);
             }
 
         }
-        System.exit(0);
+        //System.exit(0);
 
         Action[][] plan;
 
@@ -224,10 +224,10 @@ public class SearchClient {
             // Run MaPPAlgorithm
             for(State S : componentStates)
                 MaPPAlgorithm.MaPPVanilla(S);
-            System.err.println("MAP");
+            //System.err.println("MAP");
 
             plan = Converter.getConversion(initialState.agents);
-            System.err.println("MAP2");
+            //System.err.println("MAP2");
             //System.err.println("Length of plan:"+plan.length);
             //System.err.println(Arrays.deepToString(plan));
         }
@@ -256,7 +256,7 @@ public class SearchClient {
 
                     System.out.print(jointAction[action].name);
                 }
-               // System.out.println();
+                System.out.println();
                 // We must read the server's response to not fill up the stdin buffer and block the server.
                 serverMessages.readLine();
             }
