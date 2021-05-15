@@ -14,19 +14,19 @@ cyan: 5,9, Z
 +AAAAAAAA AAAAA+AAAAAAAAAAAAAAAAA +
 +AAAAAAAA      +CCCC              +
 +AAAAAAAAAAAAA +BBBBBBBBBBBBBBBBBB+
-+              +       R0 S       +
-+ AAAAA2AAAAAAA+         R        +
-+Z  AAABAAAAAAA+             Y    +
-+9AAAAAAAAAAAAA+                  +
++              +  ++  R+   +      +
++ZAAAAA2AAAAAAA+ +Y  +++ ++       +
++9AAAAABAAAAAAA+++++  +RS+        +
++AAAAAAAAAAAAAA+0       ++        +
 +++++++++++++++++++++++++++++++++++
-+4ZZ   5   GGG6+ZZZZZZZZZZZZZZZZZZ+
-+ZZZ       GGGE+ ADEFGHIJKLMNOPQRZ+
-+ZZ         GGG+8ZZZZZZZZZZZZZZZZZ+
-+            GG+                 Z+
-+              + ZZZZZZZZZZZZZZZZZ+
-+              +                 Z+
-+BB            +ZZZZZZZZZZZZZZZZZZ+
-+7B            +ZZZZZZZZZZZZZZZZZZ+
++4ZZ+ +EE+ +GG6+ZZZZZZZZZZZZZZZZZZ+
++ZZ+   ++   +GG+                  +
++Z+          +G+8ZZZZZZZZZZZZZZZZZ+
++              + Z  R     L     AZ+
++      5       +    Q  O  K  I  DZ+
++B+          +C+ZZ  P  N  J  H  EZ+
++BB+   ++   +CC+ZZ     M     G  FZ+
++7BB+ +EE+ +CCE+ZZZZZZZZZZZZZZZZZZ+
 +++++++++++++++++++++++++++++++++++
 #goal
 +++++++++++++++++++++++++++++++++++
@@ -35,18 +35,18 @@ cyan: 5,9, Z
 +AAAAAAAA AAAAA+                  +
 +AAAAAAAA      +                  +
 +AAAAAAAAAAAAA +                  +
-+              +                  +
-+ AAAAA AAAAAAA+                  +
-+   AAACAAAAAAA+                  +
-+ AAAAAAAAAAAAA+      S0RRY       +
++              +  ++   +   +      +
++ AAAAA AAAAAAA+ +   +++ ++       +
++ AAAAACAAAAAAA+++++  +  +        +
++AAAAAAAAAAAAAA+SRR0Y   ++        +
 +++++++++++++++++++++++++++++++++++
-+              +ZZZZZZZZZZZZZZZZZZ+
-+              +                 Z+
-+              + ZZZZZZZZZZZZZZZZZ+
-+     GG       +                 Z+
-+     EZ       + ZZZZZZZZZZZZZZZZZ+
-+              +ADEFGHIJKLMNOPQR Z+
-+     75       +ZZZZZZZZZZZZZZZZZZ+
-+     46       +ZZZZZZZZZZZZZZZZZZ+
++   + +  + +   +ZZZZZZZZZZZZZZZZZZ+
++  +   ++   +  + RQPONMLKJIHGFEDA +
++ +          + + ZZZZZZZZZZZZZZZZZ+
++      GG      + Z               Z+
++      EZ      +                 Z+
++ +   4567   + +ZZ               Z+
++  +   ++   +  +ZZ               Z+
++   + +  + +   +ZZZZZZZZZZZZZZZZZZ+
 +++++++++++++++++++++++++++++++++++
 #end
