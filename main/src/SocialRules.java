@@ -17,16 +17,15 @@ public class SocialRules {
         visited.remove(agent.position.getNodeId());
         InitAllPlans();
         InitBoxVisited(); // Initialize array of box positions
-
-
     }
 
     private void InitAllPlans() {
         allPlans = new ArrayList<>();
         allPlans.addAll(agent.conflicts.mainPlan.plan);
         allPlans.addAll(state.occupiedNodesString());
-        if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box && !agent.conflicts.currentGoal.Obj.isInSubGoal()) {
-
+        if(agent.conflicts.currentGoal!=null
+                && agent.conflicts.currentGoal.Obj instanceof Box
+                && !agent.conflicts.currentGoal.Obj.isInSubGoal()) {
             allPlans.addAll(agent.conflicts.currentGoal.Obj.planToGoal);
         }
     }

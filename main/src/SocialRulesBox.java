@@ -29,18 +29,16 @@ public class SocialRulesBox {
     }
 
     private void InitAllPlans() {
-        allPlans = new ArrayList<>();
+        allPlans = new ArrayList<String>();
         if (goal==null) {
             if (box.conflicts!=null) {
                 allPlans.addAll(box.conflicts.mainPlan.plan);
             }
             if (agent.conflicts!=null) {
                 allPlans.addAll(agent.conflicts.mainPlan.plan);
-            }
-            if (box.conflict_box!=null) {
-
-                allPlans.addAll(box.conflict_box.planToGoal);
-                allPlans.add(box.conflict_box.position);
+                if (box.conflict_box != null){
+                    allPlans.addAll(box.conflict_box.planToGoal);
+                }
             }
         }
         if(agent.conflicts!=null && agent.conflicts.ID.equals(agent.ID)) {
@@ -85,79 +83,77 @@ public class SocialRulesBox {
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,true, false);
         }
-        else return tuple_plan;
+        //else return tuple_plan;
         //System.err.println("Second"+tuple_plan);
 
         if (tuple_plan == null){
             InitNoTunnelVisited();
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visitedNoTunnel,allPlans,goal,false, false);
         }
-        else return tuple_plan;
+        //else return tuple_plan;
 
-        /**
         if (tuple_plan == null){
             InitInGoalVisited();
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visitedInGoal,allPlans,goal,false, false);
         }
-        else return tuple_plan;
-         **/
+        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,true, true);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<>(),goal,false, false);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),allPlans,goal,true, false);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),allPlans,goal,true, true);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
 
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),allPlans,goal,true, true);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,false,true);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
         //System.err.println("SECOND"+tuple_plan);
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,true,true);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
         //System.err.println("THIRD"+tuple_plan);
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true,true);
 
         }
-        else return tuple_plan;
+        //else return tuple_plan;
         //System.err.println("FOUR"+tuple_plan);
 
 
-        if (tuple_plan!=null) return tuple_plan;
+        //if (tuple_plan!=null) return tuple_plan;
         //System.err.println("SIXTH"+tuple_plan);
 
-        return null;
+        return tuple_plan;
     }
 
 

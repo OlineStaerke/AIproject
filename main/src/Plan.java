@@ -52,119 +52,10 @@ public class Plan {
     }
 
     public void createPlanWithBox(State state,Agent agent, ArrayList<String> goal,Box box) throws InterruptedException {
-        String rootAgent = agent.position.NodeId;
-        String rootBox = agent.attached_box.position.NodeId;
-        ArrayList otheragentplan = new ArrayList();
-        //System.err.println(box+" "+box.conflict_box);
-
-        if (goal==null) {
-
-            if (box.conflicts!=null) {
-                otheragentplan.addAll(box.conflicts.mainPlan.plan);
-            }
-            if (agent.conflicts!=null) {
-                otheragentplan.addAll(agent.conflicts.mainPlan.plan);
-                if (box.conflict_box!=null) {
-                    otheragentplan.addAll(box.conflict_box.planToGoal);
-                }
-
-            }
-
-        }
-        if(agent.conflicts!=null && agent.conflicts.ID.equals(agent.ID)) {
-            otheragentplan.addAll(box.conflictRoute);
-            }
-
-
-        //Try to solve the level by adding occupied nodes to visited
-        LinkedHashSet occupied = new LinkedHashSet(state.occupiedNodes.keySet());
-        occupied.remove(rootAgent);
-        occupied.remove(rootBox);
-        otheragentplan.addAll(occupied);
-
-        //System.err.println("OTHERAGENTPLAN"+otheragentplan);
-
-
-
-
-
-        ArrayList<Tuple> tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,false, false);
-        //System.err.println("FIRST"+tuple_plan);
-
-
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
-        }
-        if (tuple_plan == null){
-            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
-            for (String v: state.occupiedNodes.keySet()) {
-                Node n = state.stringToNode.get(v);
-                if (!n.isTunnel&& !n.isTunnelDynamic) {
-                    visitedNoTunnel.add(n.NodeId);
-                }
-            }
-            //System.err.println(visitedNoTunnel);
-            visitedNoTunnel.remove(rootBox);
-            visitedNoTunnel.remove(rootAgent);
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visitedNoTunnel,otheragentplan,goal,false, false);
-        }
-
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, true);
-
-        }
-
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<>(),goal,false, false);
-        }
-
-
-
-        //System.err.println("SECOND"+tuple_plan);
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, false);
-
-        }
-        //System.err.println("FIFTH"+tuple_plan);
-
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true, true);
-
-        }
-        //System.err.println("SIXTH"+tuple_plan);
-
-        //System.err.println("SECOND"+tuple_plan);
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),otheragentplan,goal,true,true);
-
-        }
-        //System.err.println("THIRD"+tuple_plan);
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,false,true);
-
-        }
-        //System.err.println("FOUR"+tuple_plan);
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),occupied,new ArrayList<String>(),goal,true,true);
-
-        }
-
-        //System.err.println("FIFTH"+tuple_plan);
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true, true);
-
-        }
-        //System.err.println("SIXTH"+tuple_plan);
-
-
-
+        Plan altPlans = new Plan();
+        ArrayList<Tuple> tuple_plan;
+        SocialRulesBox SR = new SocialRulesBox(state,agent,goal,box);
+        tuple_plan = SR.runBFS(altPlans);
         if (tuple_plan!=null) {
             ArrayList plan_agent = new ArrayList<>();
             ArrayList plan_box = new ArrayList<>();
@@ -172,95 +63,24 @@ public class Plan {
                 plan_agent.add(T.agentpos);
                 plan_box.add(T.boxpos);
             }
-            //plan_agent.remove(0);
-            //plan_box.remove(0);
 
             plan = plan_agent;
             box.mainPlan.plan = plan_box;
-            if(goal!=null) {
+            if (goal != null){
                 box.planToGoal = new ArrayList<>(plan_box);
             }
-            //System.err.println("PLAN AGENT:"+plan);
-            //System.err.println("PLAN BOX:"+plan_box);
+
         }
         box.conflictRoute = new ArrayList<>();
-
-
-
     }
-
 
     public void createAltPaths(State state, Agent agent) {
-        //System.err.println("### NOW COMPUTING Alternative plan ###");
-        Map map = state.map;
-
-
-        Set<String> visited = new LinkedHashSet<>(state.occupiedNodes.keySet());
-        visited.remove(agent.position.getNodeId());
 
         Plan altPlans = new Plan(); // Initialize plan
-
-        ArrayList<String> allPlans = new ArrayList<>();
-
-
-
-        allPlans.addAll(agent.conflicts.mainPlan.plan);
-        allPlans.addAll(state.occupiedNodesString());
-
-        if(agent.conflicts.currentGoal!=null && agent.conflicts.currentGoal.Obj instanceof Box) {
-            allPlans.addAll(agent.conflicts.currentGoal.Obj.planToGoal);
-        }
-
-
-        altPlans.plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
-
-        if (altPlans.plan==null) {
-            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visited,allPlans, true);
-
-            altPlans.plan = altplan;
-        }
-
-        if (altPlans.plan == null) {
-            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
-            for (String v: state.occupiedNodes.keySet()) {
-                Node n = state.stringToNode.get(v);
-                if (state.occupiedNodes.get(v) instanceof Box) {
-                    visitedNoTunnel.add(n.NodeId);
-                }
-            }
-            //System.err.println(visitedNoTunnel);
-            visitedNoTunnel.remove(agent.position.NodeId);
-
-            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visitedNoTunnel,allPlans, true);
-            altPlans.plan = altplan;
-            //System.err.println("2"+plan);
-        }
-        //System.err.println("2"+altPlans.plan);
-        if (altPlans.plan==null) {
-            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, false); //Run BFS, to create new alternative plan
-
-            altPlans.plan = altplan;
-        }
-        //System.err.println("3"+altPlans.plan);
-
-        if (altPlans.plan==null) {
-            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(),allPlans, true); //Run BFS, to create new alternative plan
-
-            altPlans.plan = altplan;
-        }
-        //System.err.println("4"+altPlans.plan);
-
+        SocialRules SR = new SocialRules(state,agent);
+        altPlans.plan = SR.runBFS(altPlans);
         plan = altPlans.plan;
-        //plan.remove(0);
-        if (plan == null) plan = new ArrayList<>();
-        ArrayList<String> planblank = new ArrayList<>(plan);
-        state.blankPlan = planblank;
-
-    }
-
-
-    public ArrayList<String> getPlan() {
-        return this.plan;
+        state.blankPlan = new ArrayList<>(plan);
     }
 
     public ArrayList<String> breathFirstTraversal_altpath(State state, String root, Set<String> visited,ArrayList<String> otherAgentPlan, Boolean second) {
@@ -538,8 +358,5 @@ public class Plan {
         return agentneighbours.contains(box.Goal.get(0)) && agentGoalNode.isTunnel;
 
     }
-
-
-
 
 }

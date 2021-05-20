@@ -41,4 +41,4 @@ java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/2019MA -c "
 
 RUN ALL:
 Simon:
-java -jar server.jar -l C:\Users\Simon\IdeaProjects\AIproject\levels\2021 -c "java SearchClient"
+java -jar server.jar -l C:\Users\Simon\IdeaProjects\AIproject\levels\2021 -c "java SearchClient" -o "C:\Users\Simon\OneDrive\Bureau\AlgorithmsMassive\results"
