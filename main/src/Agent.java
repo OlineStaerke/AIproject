@@ -163,7 +163,7 @@ public class Agent extends Object {
                             }
                         }
                     }
-                    if (conflicts.conflicts == agent) {
+                    if (agent.blankInCircle()) {
                         conflicts.conflicts = null;
                         conflicts = null;
                     }
@@ -281,9 +281,10 @@ public class Agent extends Object {
     // Must update the new position of blanked agent
     public void bringBlank(State state, Agent agent) throws InterruptedException {
 
+
         //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
         blank = true;
-        if ( mainPlan.plan.size()!=0 && (!state.occupiedNodes.containsKey(mainPlan.plan.get(0)))){
+        if (mainPlan.plan.size()!=0 && ((!state.occupiedNodes.containsKey(nextMove())))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
@@ -305,17 +306,68 @@ public class Agent extends Object {
         //System.err.println(conflicts.mainPlan.plan);
         //System.err.println(attached_box.position.NodeId);
         if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
-            //System.err.println("PLANPI");
-            subgoals.UpdatedBlanked(attached_box,false);
+              subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet(), false);
             //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {
-            //System.err.println("PLANPI2");
-            mainPlan.createAltPaths(state, agent);
+             mainPlan.createAltPaths(state, agent);
             attached_box = null;
         }
 
+    }
+
+    public String nextMove() {
+        for (String s: mainPlan.plan) {
+            if (!s.equals(position.NodeId)) {
+                String wantedMove = s;
+
+                // if the wanted move is a box position
+                if (attached_box!=null) {
+                    if (wantedMove.equals(attached_box.position.NodeId) && attached_box.mainPlan.plan.size() > 0) {
+                        wantedMove = attached_box.mainPlan.plan.get(mainPlan.plan.indexOf(s));
+                    }
+
+                }
+                return wantedMove;
+            }
+        }
+        return null;
+    }
+
+
+    public String GetWantedMove() {
+        if (mainPlan.plan == null || mainPlan.plan.size() == 0) return position.NodeId;
+        String wantedMove = mainPlan.plan.get(0);
+
+
+        // if the wanted move is a box position
+        if (attached_box!=null) {
+            if (wantedMove.equals(attached_box.position.NodeId) && attached_box.mainPlan.plan.size() > 0) {
+                wantedMove = attached_box.mainPlan.plan.get(0);
+            }
+            // wantedMove = position: Stay.
+            else {
+                wantedMove = mainPlan.plan.get(0);
+            }
+
+        }
+
+
+        return wantedMove;
+    }
+
+    public Boolean blankInCircle() {
+        Agent nextAgent = conflicts;
+        HashSet visited = new HashSet();
+        while (nextAgent!=null) {
+            visited.add(nextAgent);
+            if (nextAgent.equals(this)) return true;
+            nextAgent = nextAgent.conflicts;
+            if (visited.contains(nextAgent)) return false;
+
+        }
+        return false;
     }
 
 

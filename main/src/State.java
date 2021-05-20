@@ -194,6 +194,8 @@ public class State {
                 if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnelDynamic = true;
                 if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnelDynamic = true;
 
+                if (S & SE && NE & !N & !E & !W & !NW & !SW) n.isTunnelDynamic = true;
+
 
 
             }

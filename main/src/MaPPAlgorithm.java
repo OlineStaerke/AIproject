@@ -3,26 +3,6 @@ import java.util.*;
 
 public class MaPPAlgorithm {
 
-    public static String GetWantedMove(Agent agent) {
-        if (agent.mainPlan.plan == null || agent.mainPlan.plan.size() == 0) return agent.position.NodeId;
-        String wantedMove = agent.mainPlan.plan.get(0);
-
-
-        // if the wanted move is a box position
-        if (agent.attached_box!=null) {
-            if (wantedMove.equals(agent.attached_box.position.NodeId) && agent.attached_box.mainPlan.plan.size() > 0) {
-                wantedMove = agent.attached_box.mainPlan.plan.get(0);
-            }
-            // wantedMove = position: Stay.
-            else {
-                wantedMove = agent.mainPlan.plan.get(0);
-            }
-
-        }
-
-
-        return wantedMove;
-    }
 
 
     public static void MaPPVanilla(State state) throws InterruptedException {
@@ -106,9 +86,11 @@ public class MaPPAlgorithm {
 
                 //System.err.println();
                 //System.err.println(agent);
+                //System.err.println(agent.mainPlan.plan);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
+                //System.err.println("conflicts"+agent.conflicts);
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
-                String wantedMove = GetWantedMove(agent);
+                String wantedMove = agent.GetWantedMove();
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
@@ -132,7 +114,7 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                       // System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
                       //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
@@ -157,7 +139,6 @@ public class MaPPAlgorithm {
                                 visited.remove(occupyingAgent.position.NodeId);
                                 occupyingAgent.planPi(state, visited, false);
                                 //occupyingAgent.mainPlan.plan.remove(0);
-
                                 occupyingAgent.blank = true;
                                 occupyingObject.conflicts = null;
                                 agent.conflicts =null;
@@ -220,6 +201,7 @@ public class MaPPAlgorithm {
 
 
                                 occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
+
                                 occupyingBox.bringBlank(state,  occupyingBox.currentowner);
                                 occupyingBox.blankByOwn = true;
                                 //occupyingBox.conflictRoute = new ArrayList<>();
@@ -282,6 +264,14 @@ public class MaPPAlgorithm {
                     //Update the subgoals
                     agent.subgoals.UpdateGoals(state);
 
+                for(Agent AA : agentsInOrder) {
+                    //System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+                    for (Box BB : AA.boxes) {
+                        //System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
+                    }
+
+                }
+
                 }
 
             for(Agent AA : agentsInOrder) {
@@ -303,6 +293,7 @@ public class MaPPAlgorithm {
             Boolean noroutes = true;
 
 
+
             for(Agent agent : agentsInOrder) {
                 for (Box b : agent.boxes) {
 
@@ -310,6 +301,11 @@ public class MaPPAlgorithm {
                     if (b.finalPlan.size()<agent.finalPlan.size()-1) {
                         b.finalPlan.add(b.position);
                         b.finalPlanString.add(b.position.NodeId);
+
+                    }
+                    if (b.finalPlan.size()>agent.finalPlan.size()-1) {
+                        b.finalPlan.remove(b.finalPlan.size()-1);
+                        b.finalPlanString.remove(b.finalPlan.size()-1);
                     }
 
                 }
@@ -322,17 +318,21 @@ public class MaPPAlgorithm {
                     noroutes = false;
                 }
 
+
             }
 
             if (round==20000) {
                 goalIsReached = true;
             }
+
+            //System.err.println("-------------------------");System.err.println("-------------------------");
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
                 //System.err.println("Current Goal "+agent.currentGoal);
-                //System.err.println(agent+"PLANANAN: "+agent.finalPlan.size());
+
+                //System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
                 for (Box BB : agent.boxes) {
-                    //System.err.println(BB+"PLANANAN:  " + BB.finalPlan.size());
+                   // if(BB.ID.equals("H0")) System.err.println(BB+"PLANANAN:  " + BB.position.isTunnelDynamic + " "+BB.position.isTunnel);
                 }
 
 
