@@ -47,14 +47,14 @@ public class SocialRules {
 
         // First case: No tunnel, not through any other elements, and not ending on the conflict plab
         ArrayList<String> plan = altPlans.breathFirstTraversal_altpath(state, agent.position.getNodeId(), visited,allPlans, false); //Run BFS, to create new alternative plan
-        // Second case: Can be a tunnel, not through any other elements, and not ending on the conflict plab
+        // Second case: Can be a tunnel, not through any other elements, and not ending on the conflict plan
         // System.err.println("1"+plan);
         if (plan==null) {
             ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), visited,allPlans, true);
             plan = altplan;
         }
         else return plan;
-        //System.err.println("2"+plan);
+        //System.err.println("2"+plan)
 
         // Third case Not Through any boxes, and its okay to end at a tunnel, but dont go through other elements and end at conflict agent plan
         if (plan == null) {
@@ -78,14 +78,7 @@ public class SocialRules {
             plan = altplan;
         }
         else return plan;
-        //System.err.println("5"+plan);
 
-        // Sixth case NO rules, just move away from your position.
-        if (plan==null) {
-            ArrayList<String> altplan = altPlans.breathFirstTraversal_altpath(state,agent.position.getNodeId(), new LinkedHashSet<>(), new ArrayList<>(), true); //Run BFS, to create new alternative plan
-            plan = altplan;
-        }
-        else return plan;
         //System.err.println("6"+plan);
 
         // Seventh Return empty list

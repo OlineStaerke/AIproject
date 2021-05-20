@@ -133,27 +133,26 @@ public class SocialRulesBox {
         }
         else return tuple_plan;
 
+        if (tuple_plan==null) {
+            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,false,true);
+
+        }
+        else return tuple_plan;
         //System.err.println("SECOND"+tuple_plan);
         if (tuple_plan==null) {
-            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,false,true);
+            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,true,true);
 
         }
         else return tuple_plan;
         //System.err.println("THIRD"+tuple_plan);
 
         if (tuple_plan==null) {
-            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,true,true);
+            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true,true);
 
         }
         else return tuple_plan;
         //System.err.println("FOUR"+tuple_plan);
 
-        if (tuple_plan==null) {
-            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,true,true);
-
-        }
-
-        else return tuple_plan;
 
         if (tuple_plan!=null) return tuple_plan;
         //System.err.println("SIXTH"+tuple_plan);
