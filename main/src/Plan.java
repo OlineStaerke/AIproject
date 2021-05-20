@@ -116,20 +116,6 @@ public class Plan {
 
         }
 
-        //System.err.println("THIRD"+tuple_plan);
-        /**
-        if (box.conflict_box!=null) {
-            occupied = new LinkedHashSet();
-            occupied.add(box.conflict_box.position.NodeId);
-        }
-
-        System.err.println(occupied);
-
-        if (tuple_plan==null) {
-            tuple_plan = breathFirstTraversal_box(state,rootAgent,rootBox,new LinkedHashSet<>(),occupied,otheragentplan,goal,true, false);
-
-        }
-         **/
 
         if (tuple_plan==null) {
             tuple_plan = breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<>(),goal,false, false);

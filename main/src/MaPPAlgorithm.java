@@ -204,7 +204,7 @@ public class MaPPAlgorithm {
                                 }
 
 
-                                if(agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                if(agent.currentGoal!=null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
                                 }else {
@@ -324,7 +324,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==30000) {
+            if (round==20000) {
                 goalIsReached = true;
             }
             //System.err.println("GOAL IS REACHED"+goalIsReached);
