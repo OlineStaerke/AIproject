@@ -165,15 +165,15 @@ public class State {
                 Integer i = Integer.parseInt(adjPosition.split(" ")[0]);
                 Integer j = Integer.parseInt(adjPosition.split(" ")[1]);
 
-                boolean E = map.map.containsKey((i+1) + " " + j) && (!occupiedNodes.containsKey((i+1) + " " + j) || (occupiedNodes.get((i+1) + " " + j) instanceof Agent));
-                boolean W = map.map.containsKey((i-1) + " " + j) && (!occupiedNodes.containsKey((i-1) + " " + j) || (occupiedNodes.get((i-1) + " " + j) instanceof Agent));
-                boolean N = map.map.containsKey(i + " " + (1+j)) && (!occupiedNodes.containsKey(i+ " " + (j+1)) || (occupiedNodes.get(i + " " + (j+1)) instanceof Agent));
-                boolean S = map.map.containsKey(i + " " + (j-1))&& (!occupiedNodes.containsKey(i + " " + (j-1)) || (occupiedNodes.get(i + " " + (j-1)) instanceof Agent));
+                boolean N = map.map.containsKey((i-1) + " " + j) && (!occupiedNodes.containsKey((i-1) + " " + j) || (occupiedNodes.get((i-1) + " " + j) instanceof Agent));
+                boolean S = map.map.containsKey((i+1) + " " + j) && (!occupiedNodes.containsKey((i+1) + " " + j) || (occupiedNodes.get((i+1) + " " + j) instanceof Agent));
+                boolean E = map.map.containsKey(i + " " + (1+j)) && (!occupiedNodes.containsKey(i+ " " + (j+1)) || (occupiedNodes.get(i + " " + (j+1)) instanceof Agent));
+                boolean W = map.map.containsKey(i + " " + (j-1))&& (!occupiedNodes.containsKey(i + " " + (j-1)) || (occupiedNodes.get(i + " " + (j-1)) instanceof Agent));
 
-                boolean NE = map.map.containsKey((i+1) + " " + (j+1))&& (!occupiedNodes.containsKey((i+1) + " " + (j+1)) || (occupiedNodes.get((i+1) + " " + (j+1)) instanceof Agent));
-                boolean NW = map.map.containsKey((i-1) + " " + (j+1))&& (!occupiedNodes.containsKey((i-1) + " " + (j+1)) || (occupiedNodes.get((i-1) + " " + (j+1)) instanceof Agent));
-                boolean SE = map.map.containsKey((i+1) + " " + (j-1))&& (!occupiedNodes.containsKey((i+1) + " " + (j-1)) || (occupiedNodes.get((i+1) + " " + (j-1)) instanceof Agent));
-                boolean SW = map.map.containsKey((i-1) + " " + (j-1))&& (!occupiedNodes.containsKey((i-1) + " " + (j-1)) || (occupiedNodes.get((i-1) + " " + (j-1)) instanceof Agent));
+                boolean NE = map.map.containsKey((i-1) + " " + (j+1))&& (!occupiedNodes.containsKey((i-1) + " " + (j+1)) || (occupiedNodes.get((i-1) + " " + (j+1)) instanceof Agent));
+                boolean NW = map.map.containsKey((i-1) + " " + (j-1))&& (!occupiedNodes.containsKey((i-1) + " " + (j-1)) || (occupiedNodes.get((i-1) + " " + (j-1)) instanceof Agent));
+                boolean SE = map.map.containsKey((i+1) + " " + (j+1))&& (!occupiedNodes.containsKey((i+1) + " " + (j+1)) || (occupiedNodes.get((i+1) + " " + (j+1)) instanceof Agent));
+                boolean SW = map.map.containsKey((i+1) + " " + (j-1))&& (!occupiedNodes.containsKey((i+1) + " " + (j-1)) || (occupiedNodes.get((i+1) + " " + (j-1)) instanceof Agent));
 
                 Node n = stringToNode.get(adjPosition);
                 n.isTunnelDynamic =false;
@@ -217,15 +217,15 @@ public class State {
                 int i = Integer.parseInt(o[0]);
                 int j = Integer.parseInt(o[1]);
 
-                boolean E = map.map.containsKey((i + 1) + " " + j);
-                boolean W = map.map.containsKey((i - 1) + " " + j);
-                boolean N = map.map.containsKey(i + " " + (1 + j));
-                boolean S = map.map.containsKey(i + " " + (j - 1));
+                boolean N = map.map.containsKey((i - 1) + " " + j);
+                boolean S = map.map.containsKey((i + 1) + " " + j);
+                boolean E = map.map.containsKey(i + " " + (1 + j));
+                boolean W = map.map.containsKey(i + " " + (j - 1));
 
-                boolean NE = map.map.containsKey((i + 1) + " " + (j + 1));
-                boolean NW = map.map.containsKey((i - 1) + " " + (j + 1));
-                boolean SE = map.map.containsKey((i + 1) + " " + (j - 1));
-                boolean SW = map.map.containsKey((i - 1) + " " + (j - 1));
+                boolean NE = map.map.containsKey((i - 1) + " " + (j + 1));
+                boolean NW = map.map.containsKey((i - 1) + " " + (j - 1));
+                boolean SE = map.map.containsKey((i + 1) + " " + (j + 1));
+                boolean SW = map.map.containsKey((i + 1) + " " + (j - 1));
 
                 if ((S & !SE & !SW)) n.isTunnel = true;
                 if ((N & !NE & !NW)) n.isTunnel = true;
