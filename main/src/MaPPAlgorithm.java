@@ -287,7 +287,7 @@ public class MaPPAlgorithm {
                 }
 
             for(Agent AA : agentsInOrder) {
-                System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+                //System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
                 for (Box BB : AA.boxes) {
                     //System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
@@ -332,7 +332,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==4000) {
+            if (round==20000) {
                 goalIsReached = true;
             }
 
