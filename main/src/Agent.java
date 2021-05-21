@@ -242,7 +242,7 @@ public class Agent extends Object {
             Boolean check_wantedMoveAgent = (!state.occupiedNodes.containsKey(wantedMoveAgent)) || wantedMoveAgent.equals(attached_box.position.NodeId);
             Boolean check_wantedMoveBox = (!state.occupiedNodes.containsKey(wantedMoveBox)) || wantedMoveBox.equals(position.NodeId);
             if(check_wantedMoveAgent && check_wantedMoveBox) {
-
+                System.err.println("HI");
                 state.blankPlan = new ArrayList<>(mainPlan.plan);
                 return;
             }

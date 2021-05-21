@@ -144,7 +144,7 @@ public class SubGoals{
 
     public Boolean ExistsBlankGoal() {
         for (SubGoal sg : goals) {
-            if (sg.gType == GoalType.BoxBlanked && !sg.Finished) return true;
+            if (sg.gType.equals(GoalType.BoxBlanked) && !sg.Finished) return true;
         }
         return false;
     }
@@ -198,7 +198,7 @@ public class SubGoals{
 
         }
         for(SubGoal sg2: goals){
-            if (!sg2.Finished && !(sg2.Obj).Taken && sg2.gType.equals(GoalType.BoxToGoal)){
+            if (!sg2.Finished && !(sg2.Obj).Taken && sg2.gType.equals(GoalType.BoxToGoal) && !sg2.Obj.isInSubGoal()){
                 return sg2;
             }
         }
