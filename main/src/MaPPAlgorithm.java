@@ -333,7 +333,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==200) {
+            if (round==20000) {
                 goalIsReached = true;
             }
 
@@ -360,6 +360,7 @@ public class MaPPAlgorithm {
                 }
 
                 Collections.sort(agentsInOrder,new Agent.CustomComparator());
+                //System.err.println("Sorted agents"+agentsInOrder);
 
 
                 for (Agent agent : agentsInOrder) {

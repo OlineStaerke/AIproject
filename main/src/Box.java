@@ -128,6 +128,14 @@ public class Box extends Object {
                 }
             }
         }
+
+        for(Agent A: state.agents.values()){
+            for (String goal: A.Goal) {
+                if (this.planToGoal!=null && this.planToGoal.contains(goal)) {
+                    newPrio += 1;
+                }
+            }
+        }
         Plan P = new Plan();
         this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
 
