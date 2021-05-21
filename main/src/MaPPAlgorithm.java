@@ -172,76 +172,77 @@ public class MaPPAlgorithm {
 
                                 var occupyingBox = (Box) occupyingObject;
 
-                            if (state.stringToNode.get(wantedMove).isTunnel) {
-                                state.agentConflicts.add(occupyingBox.currentowner);
-                            }
+                                if (state.stringToNode.get(wantedMove).isTunnel) {
+                                    state.agentConflicts.add(occupyingBox.currentowner);
+                                }
 
 
-                            // Your own box is blocking :(
-                            // Maybe handle seperatly? idk
-                            Agent oldowner = null;
-                            if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))) {
+                                // Your own box is blocking :(
+                                // Maybe handle seperatly? idk
+                                Agent oldowner = null;
+                                if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))) {
 
-                                if (occupyingBox.currentowner.attached_box != occupyingBox) {
-                                    if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox)) {
-                                        oldowner = occupyingBox.currentowner;
-                                        oldowner.currentGoal = null;
+                                    if (occupyingBox.currentowner.attached_box != occupyingBox) {
+                                        if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox)) {
+                                            oldowner = occupyingBox.currentowner;
+                                            oldowner.currentGoal = null;
+                                        }
+
+                                        occupyingBox.currentowner = agent;
+                                        occupyingBox.Taken = false;
+
+
                                     }
 
-                                    occupyingBox.currentowner = agent;
-                                    occupyingBox.Taken = false;
+
+                                    if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                        ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
+                                        occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
+                                    } else {
+                                        occupyingBox.conflict_box = null;
+                                    }
 
 
-                                }
+                                    occupyingBox.currentowner.blank = true;
+                                    occupyingBox.currentowner.conflicts = agent;
+                                    occupyingBox.conflicts = agent;
+                                    occupyingBox.conflictRoute = agent.mainPlan.plan;
+                                    //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
 
-                                if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
-                                    ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
-                                    occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
+                                    //occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
+
+                                    occupyingBox.bringBlank(state, occupyingBox.currentowner);
+                                    occupyingBox.blankByOwn = true;
+                                    //occupyingBox.conflictRoute = new ArrayList<>();
+
+                                    if (oldowner != null) oldowner.planPi(state, new LinkedHashSet(), false);
+
                                 } else {
-                                    occupyingBox.conflict_box = null;
+                                    if (occupyingBox.currentowner == null) {
+                                        occupyingBox.findOwner(state);
+                                    }
+                                    //System.err.println("Not same colour");
+                                    if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                        ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
+                                        occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
+                                    } else {
+                                        occupyingBox.conflict_box = null;
+                                    }
+                                    occupyingBox.conflictRoute = new ArrayList<>();
+                                    occupyingBox.currentowner.blank = true;
+                                    occupyingBox.currentowner.conflicts = agent;
+                                    occupyingBox.conflicts = agent;
+                                    //System.err.println("OWNER: " + occupyingBox.owner.ID);
+
+                                    occupyingBox.bringBlank(state, occupyingBox.currentowner);
+                                    occupyingBox.blankByOwn = false;
+
+
                                 }
-
-
-                                occupyingBox.currentowner.blank = true;
-                                occupyingBox.currentowner.conflicts = agent;
-                                occupyingBox.conflicts = agent;
-                                occupyingBox.conflictRoute = agent.mainPlan.plan;
-                                //System.err.println("OWNER: " + occupyingBox.owner.ID);
-
-
-                                //occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
-
-                                occupyingBox.bringBlank(state, occupyingBox.currentowner);
-                                occupyingBox.blankByOwn = true;
-                                //occupyingBox.conflictRoute = new ArrayList<>();
-
-                                if (oldowner != null) oldowner.planPi(state, new LinkedHashSet(), false);
-
-                            } else {
-                                if (occupyingBox.currentowner == null) {
-                                    occupyingBox.findOwner(state);
-                                }
-                                //System.err.println("Not same colour");
-                                if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
-                                    ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
-                                    occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
-                                } else {
-                                    occupyingBox.conflict_box = null;
-                                }
-                                occupyingBox.conflictRoute = new ArrayList<>();
-                                occupyingBox.currentowner.blank = true;
-                                occupyingBox.currentowner.conflicts = agent;
-                                occupyingBox.conflicts = agent;
-                                //System.err.println("OWNER: " + occupyingBox.owner.ID);
-
-                                occupyingBox.bringBlank(state, occupyingBox.currentowner);
-                                occupyingBox.blankByOwn = false;
-
 
                             }
-
-                            }
+                        }
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
                             agent.executeMove(state, true);
                             //Double NoOp
