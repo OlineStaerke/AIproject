@@ -222,9 +222,8 @@ public class MaPPAlgorithm {
 
                                 if (oldowner!=null) oldowner.planPi(state,new LinkedHashSet(),false);
 
-
-                                        } else{
-                                if (occupyingBox.currentowner == null){
+                            } else{
+                                 if (occupyingBox.currentowner == null){
                                     occupyingBox.findOwner(state);
                                 }
                                 //System.err.println("Not same colour");
@@ -288,7 +287,7 @@ public class MaPPAlgorithm {
                 }
 
             for(Agent AA : agentsInOrder) {
-                //System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
+                System.err.println("PLANANAN:  " + AA.ID + "  " + AA.mainPlan.plan);
                 for (Box BB : AA.boxes) {
                     //System.err.println("PLANANAN:  " + BB.ID + "  " + BB.mainPlan.plan);
                 }
@@ -333,7 +332,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==20000) {
+            if (round==4000) {
                 goalIsReached = true;
             }
 
@@ -357,6 +356,7 @@ public class MaPPAlgorithm {
                     agent.nextGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal,state);
                     if (agent.nextGoal == null) agent.nextGoal = agent.currentGoal;
                     agent.blank = false;
+                    if (agent.nextGoal!=null) agent.nextGoal.Obj.findPriority(state);
                 }
 
                 Collections.sort(agentsInOrder,new Agent.CustomComparator());

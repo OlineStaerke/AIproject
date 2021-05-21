@@ -113,43 +113,47 @@ public class Box extends Object {
     }
 
 
-    public void findPriority(State state){
-        var otherBoxes = state.boxes.values();
-        int newPrio = 0;
-
-        for(Box B: otherBoxes){
-            if (B.equals(this)) continue;
-
-            for (String goal: B.Goal) {
+    public void findPriority(State state) {
 
 
-                if (this.planToGoal!=null && this.planToGoal.contains(goal)) {
-                    newPrio += 1;
+            var otherBoxes = state.boxes.values();
+            int newPrio = 0;
+
+            for (Box B : otherBoxes) {
+                if (B.equals(this)) continue;
+
+                for (String goal : B.Goal) {
+
+
+                    if (this.planToGoal != null && this.planToGoal.contains(goal)) {
+                        newPrio += 1;
+                    }
                 }
             }
-        }
 
-        for(Agent A: state.agents.values()){
-            for (String goal: A.Goal) {
-                if (this.planToGoal!=null && this.planToGoal.contains(goal)) {
-                    newPrio += 1;
+            for (Agent A : state.agents.values()) {
+                for (String goal : A.Goal) {
+                    if (this.planToGoal != null && this.planToGoal.contains(goal)) {
+                        newPrio += 1;
+                    }
                 }
             }
-        }
-        Plan P = new Plan();
-        this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
+            Plan P = new Plan();
+            this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
+
 
     }
 
-    public void findOwner(State state) {
-        for (Agent agent : owners) {
-            if ((!(agent.currentGoal.Obj instanceof Box) || agent.mainPlan.plan.size()==0)) {
-                currentowner = agent;
-                return;
+        public void findOwner (State state){
+            for (Agent agent : owners) {
+                if ((!(agent.currentGoal.Obj instanceof Box) || agent.mainPlan.plan.size() == 0)) {
+                    currentowner = agent;
+                    return;
+                }
             }
+            currentowner = owners.get(0);
         }
-        currentowner = owners.get(0);
-    }
+
 
 
 }

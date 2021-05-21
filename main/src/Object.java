@@ -36,5 +36,9 @@ public abstract class Object{
 
     }
 
+    public void findPriority(State state)
+    {
+
+    }
 
 }
