@@ -29,7 +29,7 @@ Simon:
 java -jar server.jar -l C:\Users\Simon\IdeaProjects\AIproject\levels\SAD1.lvl -c "java SearchClient"
 
 Oline:
-java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject/levels/test8.lvl -c "java SearchClient"
+java -jar server.jar -l /Users/olinestaerke/Desktop/AIproject2/levels/complevels/Dqanon.lvl -c "java SearchClient"
 
 RUN ALL:
 Mathias:

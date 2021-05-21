@@ -67,7 +67,7 @@ public class Box extends Object {
 
     public void findPlanToGoal(State state) {
         Plan plan = new Plan();
-        plan.createPlan(state,position.NodeId,Goal,new LinkedHashSet<>());
+        plan.createPlan(state,position.NodeId,Goal,new LinkedHashSet<>(),null);
         planToGoal = plan.plan;
     }
 
@@ -88,8 +88,6 @@ public class Box extends Object {
         }
 
 
-        currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
-
         //Add this subgoal to the last one.
         if (currentowner.currentGoal.gType == SubGoals.GoalType.BoxBlanked) {
             currentowner.subgoals.goals.remove(currentowner.currentGoal);
@@ -98,15 +96,19 @@ public class Box extends Object {
 
         //System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
 
+            currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
 
-        //TODO: Overlook these if statements again
-        if (currentowner.mainPlan.plan.size()==0 || (currentowner.currentGoal.Obj.ID == ID && currentowner.attachedBox(state))) {
 
-            currentowner.mainPlan.plan = new ArrayList<>();
-            currentowner.planPi(state, new LinkedHashSet<>(), false);
+            //TODO: Overlook these if statements again
+        //(currentowner.currentGoal.Obj.equals(this) && currentowner.attachedBox(state))
+            if (currentowner.mainPlan.plan.size()== 0||state.occupiedNodes.containsKey(currentowner.nextMove())) {
+                currentowner.mainPlan.plan = new ArrayList<>();
+                currentowner.planPi(state, new LinkedHashSet<>(), false);
 
-            //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
-        }
+                //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
+            }
+
+
 
     }
 

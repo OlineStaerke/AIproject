@@ -38,7 +38,7 @@ public class MaPPAlgorithm {
             for (Box box : boxes) {
                 boxPositions.add(box.position.NodeId);
             }
-            plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>());
+            plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>(),null);
             Integer i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
             Box boxForGoal = boxes.get(i);
             boxForGoal.setGoal(goal,state);
@@ -53,7 +53,14 @@ public class MaPPAlgorithm {
         for (Agent agent : state.agents.values()) {
             agent.subgoals.SortGoal(state);
             agent.planPi(state, new LinkedHashSet(), false);
+            Plan plan = new Plan();
+            plan.createPlan(state, agent.position.NodeId, agent.Goal, new LinkedHashSet<>(),agent);
+            agent.planToGoal = plan.plan;
             //System.err.println(agent.subgoals.goals);
+        }
+
+        for (Agent agent : state.agents.values()) {
+            agent.findPriority(state);
         }
         //state.UpdateOccupiedNodes();
 
@@ -74,23 +81,27 @@ public class MaPPAlgorithm {
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
            //Thread.sleep(500);
 
-            //System.err.println("-----------------------------------");
-            //System.err.println(state.occupiedNodes);
+            System.err.println("-----------------------------------");
+           // System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
-            //System.err.println("ROUND: "+round);
+           // System.err.println("ROUND: "+round);
 
             for(Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals(state);
 
-                //System.err.println();
-                //System.err.println(agent);
+                System.err.println();
+                //System.err.println("OCC"+state.occupiedNodes);
+                System.err.println(agent);
+                //System.err.println("attached box"+agent.attached_box);
                 //System.err.println(agent.mainPlan.plan);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
                 //System.err.println("conflicts"+agent.conflicts);
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = agent.GetWantedMove();
+                //System.err.println("wantedmove"+wantedMove);
+               // System.err.println(agent.finalPlan);
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
@@ -114,7 +125,7 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
                       //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
@@ -157,6 +168,7 @@ public class MaPPAlgorithm {
                             agent.stuck++;
 
                             if (agent.stuck == 1){
+                                LinkedHashSet =
                                 agent.planPi(state, new LinkedHashSet<>(), true);
                             }
 
@@ -237,7 +249,6 @@ public class MaPPAlgorithm {
                             }
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
                             agent.ExecuteMove(agent,state, true);
-
                             //Double NoOp
                             agent.mainPlan.plan.add(0,agent.position.NodeId);
                             if (agent.attached_box!=null) {
@@ -310,8 +321,7 @@ public class MaPPAlgorithm {
 
                 }
 
-
-                if (!agent.isInGoal()) {
+                  if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
                 if (agent.mainPlan.plan.size()>0) {
@@ -321,16 +331,15 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==20000) {
+            if (round==500) {
                 goalIsReached = true;
             }
 
-            //System.err.println("-------------------------");System.err.println("-------------------------");
+            //System.err.println("-------------------------");
             //System.err.println("GOAL IS REACHED"+goalIsReached);
             for (Agent agent : agentsInOrder) {
                 //System.err.println("Current Goal "+agent.currentGoal);
-
-                //System.err.println(agent+"PLANANAN: "+agent.mainPlan.plan);
+                //System.err.println(agent+"PLANANAN: "+agent.finalPlan);
                 for (Box BB : agent.boxes) {
                    // if(BB.ID.equals("H0")) System.err.println(BB+"PLANANAN:  " + BB.position.isTunnelDynamic + " "+BB.position.isTunnel);
                 }

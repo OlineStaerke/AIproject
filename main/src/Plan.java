@@ -6,10 +6,9 @@ public class Plan {
     ArrayList<String> plan = new ArrayList<String>();
     HashMap<String, ArrayList<String>> precomputedDistance;
 
-    public void createPlan(State state, String Source,List<String> Destination,Set<String> visited) {
+    public void createPlan(State state, String Source,List<String> Destination,Set<String> visited, Agent agent) {
         Map map = state.map;
         if (Destination == null) return;
-        state.UpdateOccupiedNodes();
         //System.err.println("OCC"+state.occupiedNodes.keySet());
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
@@ -28,6 +27,8 @@ public class Plan {
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
             //System.err.println("2"+plan);
         }
+
+
         //System.err.println("1"+plan);
         if (plan == null) {
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
@@ -42,6 +43,24 @@ public class Plan {
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
             //System.err.println("2"+plan);
         }
+
+/**
+        //Only go though your own boxes
+        if (plan == null && agent!=null) {
+            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
+            for (String v: state.occupiedNodes.keySet()) {
+                Node n = state.stringToNode.get(v);
+                if (state.occupiedNodes.get(v) instanceof Box && !agent.boxes.contains(state.occupiedNodes.get(v))) {
+                    visitedNoTunnel.add(n.NodeId);
+                }
+            }
+            //System.err.println(visitedNoTunnel);
+            visitedNoTunnel.remove(Source);
+            plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
+            //System.err.println("2"+plan);
+        }
+ **/
+
         if (plan==null){
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
             //System.err.println("3"+plan);

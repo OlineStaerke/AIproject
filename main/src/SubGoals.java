@@ -130,6 +130,7 @@ public class SubGoals{
     }
 
     public Boolean InGoal(){
+
         for(SubGoal sg: goals){
             if (!sg.Obj.isInSubGoal() || (sg.gType == GoalType.BoxBlanked && !sg.Finished)) {
 

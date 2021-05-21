@@ -35,7 +35,7 @@ public class Agent extends Object {
     public static class CustomComparator implements Comparator<Agent> {
         @Override
         public int compare(Agent o1, Agent o2) {
-            Integer o2_value = 0;
+            /**Integer o2_value = 0;
             Integer o1_value = 0;
             //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
 
@@ -68,6 +68,28 @@ public class Agent extends Object {
 
             Integer comparevalue = o2.mainPlan.plan.size() + o2_value;
             return (comparevalue).compareTo(((Integer) o1.mainPlan.plan.size())+o1_value);
+             **/
+
+            Integer o2_value = 0;
+            Integer o1_value = 0;
+            //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
+            if(o1.nextGoal!=null) {
+                o1_value = o1.nextGoal.Obj.PriorityValue;
+            }
+            if(o2.nextGoal!=null) {
+                o2_value = o2.nextGoal.Obj.PriorityValue;
+            }
+
+            if (o1.subgoals.ExistsBlankGoal()) {
+
+                o1_value+= 2000;
+            }
+            if (o2.subgoals.ExistsBlankGoal()) {
+
+                o2_value+= 2000;
+            }
+
+            return o2_value-o1_value;
         }
     }
 
@@ -133,8 +155,9 @@ public class Agent extends Object {
 
             }
 
-
-
+            if (currentGoal!=null && attached_box==null && attachedBox(state) && mainPlan.plan.size()==0) {
+                planPi(state, new LinkedHashSet(), true);
+            }
             if (blank) {
 
                 if (state.blankPlan.size()>0) {
@@ -231,7 +254,7 @@ public class Agent extends Object {
                     } else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited, this);
                         ((Box) SG.Obj).currentowner = this;
                     }
                     break;
@@ -250,7 +273,7 @@ public class Agent extends Object {
                     } else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited,this);
                         ((Box) SG.Obj).currentowner = this;
                     }
                     break;
@@ -258,7 +281,7 @@ public class Agent extends Object {
                 case AgentToGoal:
                     List<String> goalListAgent = new ArrayList<>();
                     goalListAgent.addAll(SG.Obj.Goal);
-                    mainPlan.createPlan(state, position.NodeId, goalListAgent, visited);
+                    mainPlan.createPlan(state, position.NodeId, goalListAgent, visited,this);
                     attached_box = null;
                     planToGoal = new ArrayList<>(mainPlan.plan);
                     break;
@@ -369,6 +392,36 @@ public class Agent extends Object {
         }
         return false;
     }
+
+
+    public void findPriority(State state){
+        var otherBoxes = state.boxes.values();
+        int newPrio = 0;
+
+        for(Box B: otherBoxes){
+
+
+            for (String goal: B.Goal) {
+
+                if (this.planToGoal!=null && this.planToGoal.contains(goal)) {
+                    newPrio += 1;
+                }
+            }
+        }
+        for(Agent A: state.agents.values()){
+            if (A.equals(this)) continue;
+            for (String goal: A.Goal) {
+
+                if (this.planToGoal!=null && this.planToGoal.contains(goal)) {
+                    newPrio += 1;
+                }
+            }
+        }
+
+        this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
+
+    }
+
 
 
 
