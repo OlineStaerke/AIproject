@@ -8,7 +8,6 @@ public class Plan {
     public void createPlan(State state, String Source,List<String> Destination,Set<String> visited, Agent agent) {
         Map map = state.map;
         if (Destination == null) return;
-        //System.err.println("OCC"+state.occupiedNodes.keySet());
         visited.addAll(state.occupiedNodes.keySet());
         visited.remove(Source);
         plan = breathFirstTraversal(map, Source, Destination,visited);
@@ -21,14 +20,11 @@ public class Plan {
                     visitedNoTunnel.add(n.NodeId);
                 }
             }
-            //System.err.println(visitedNoTunnel);
             visitedNoTunnel.remove(Source);
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
-            //System.err.println("2"+plan);
         }
 
 
-        //System.err.println("1"+plan);
         if (plan == null) {
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
             for (String v: state.occupiedNodes.keySet()) {
@@ -37,10 +33,8 @@ public class Plan {
                     visitedNoTunnel.add(n.NodeId);
                 }
             }
-            //System.err.println(visitedNoTunnel);
             visitedNoTunnel.remove(Source);
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
-            //System.err.println("2"+plan);
         }
 
 
@@ -53,17 +47,14 @@ public class Plan {
                     visitedNoTunnel.add(n.NodeId);
                 }
             }
-            //System.err.println(visitedNoTunnel);
             visitedNoTunnel.remove(Source);
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
-            //System.err.println("2"+plan);
         }
 
 
 
         if (plan==null){
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
-            //System.err.println("3"+plan);
         }
 
 
@@ -156,12 +147,12 @@ public class Plan {
     }
 
     public ArrayList<Tuple> breathFirstTraversal_box(State state, Agent agent, Box box, Set<Tuple> visited,Set<String> occupied,ArrayList<String> otherAgentPlan, ArrayList<String> goal, Boolean second, Boolean third) throws InterruptedException {
-        visited = new HashSet<Tuple>(visited);
-        occupied= new HashSet<String>(occupied);
+        visited = new HashSet<>(visited);
+        occupied= new HashSet<>(occupied);
         String rootagent = agent.position.NodeId;
         String rootbox = box.position.NodeId;
         Map map = state.map;
-        ArrayList<Tuple> route_agent = new ArrayList<Tuple>();
+        ArrayList<Tuple> route_agent = new ArrayList<>();
         Deque<ActionType> actionList = new ArrayDeque<>();
 
 
@@ -342,7 +333,6 @@ public class Plan {
         return true;
     }
 
-    // dont touch.
     public HashSet<String> connectedComponentsBFS(Map map, String root) {
 
         Deque<String> queue = new ArrayDeque<>();
