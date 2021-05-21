@@ -1,61 +1,12 @@
-import java.lang.reflect.Array;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class Plan {
     ArrayList<String> plan = new ArrayList<String>();
 
-    public void createPlan(State state, String Source,List<String> Destination,Set<String> visited, Agent agent) {
-        Map map = state.map;
+    public void createPlan(State state, String Source,List<String> Destination, Agent agent) {
         if (Destination == null) return;
-        visited.addAll(state.occupiedNodes.keySet());
-        visited.remove(Source);
-        plan = breathFirstTraversal(map, Source, Destination,visited);
-
-        if (plan == null) {
-            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
-            for (String v: state.occupiedNodes.keySet()) {
-                Node n = state.stringToNode.get(v);
-                if (state.occupiedNodes.get(v) instanceof Box) {
-                    visitedNoTunnel.add(n.NodeId);
-                }
-            }
-            visitedNoTunnel.remove(Source);
-            plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
-        }
-
-
-        if (plan == null) {
-            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
-            for (String v: state.occupiedNodes.keySet()) {
-                Node n = state.stringToNode.get(v);
-                if (!n.isTunnel&& !n.isTunnelDynamic) {
-                    visitedNoTunnel.add(n.NodeId);
-                }
-            }
-            visitedNoTunnel.remove(Source);
-            plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
-        }
-
-
-        //Only go though your own boxes
-        if (plan == null && agent!=null) {
-            LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
-            for (String v: state.occupiedNodes.keySet()) {
-                Node n = state.stringToNode.get(v);
-                if (state.occupiedNodes.get(v) instanceof Box && !agent.boxes.contains(state.occupiedNodes.get(v))) {
-                    visitedNoTunnel.add(n.NodeId);
-                }
-            }
-            visitedNoTunnel.remove(Source);
-            plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
-        }
-
-
-
-        if (plan==null){
-            plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
-        }
+        SocialRules SR = new SocialRules(state, agent);
+        plan = SR.findMainPlan(this, Source, Destination);
 
 
 
@@ -152,7 +103,7 @@ public class Plan {
         String rootagent = agent.position.NodeId;
         String rootbox = box.position.NodeId;
         Map map = state.map;
-        ArrayList<Tuple> route_agent = new ArrayList<>();
+        ArrayList<Tuple> route_agent;
         Deque<ActionType> actionList = new ArrayDeque<>();
 
 
