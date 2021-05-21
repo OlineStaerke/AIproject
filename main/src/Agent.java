@@ -158,7 +158,7 @@ public class Agent extends Object {
                         attached_box = (Box) SG.Obj;
                         ((Box) SG.Obj).currentowner = this;
 
-                        mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
+                        mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj, secondTry);
 
 
                     } else {
@@ -175,7 +175,7 @@ public class Agent extends Object {
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
                         attached_box = (Box) SG.Obj;
-                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
+                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj, secondTry);
                     } else {
 
                         attached_box = null;

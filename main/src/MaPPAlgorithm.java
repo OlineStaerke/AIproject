@@ -93,6 +93,7 @@ public class MaPPAlgorithm {
                //System.err.println();
                 //System.err.println("OCC"+state.occupiedNodes);
                 //System.err.println(agent);
+                //System.err.println(agent.stuck);
                 //System.err.println("attached box"+agent.attached_box);
                 //System.err.println(agent.mainPlan.plan);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
@@ -100,13 +101,10 @@ public class MaPPAlgorithm {
                 //System.err.println("All SubGoal:"+agent.subgoals.goals);
                 String wantedMove = agent.GetWantedMove();
                 //System.err.println("wantedmove"+wantedMove);
-               // System.err.println(agent.finalPlan);
+               // System.err.println(agent.mainPlan.plan);
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
-
-
-
 
 
                     if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null) && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
@@ -124,8 +122,8 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
-                      //  System.err.println("currentplan"+agent.mainPlan.plan);
+                        //System.err.println("!! I want: " + wantedMove + " !! Occypied by :" + occupyingObject);
+                        //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
                         // Agent is blocking and is not currenly removing a box
@@ -133,17 +131,16 @@ public class MaPPAlgorithm {
                             var occupyingAgent = (Agent) occupyingObject;
 
                             //When conflict only move one at a time
-                           if (state.stringToNode.get(wantedMove).isTunnel) {
+                            if (state.stringToNode.get(wantedMove).isTunnel) {
+                                state.agentConflicts.add(occupyingAgent);
+                            } else {
                                 state.agentConflicts.add(occupyingAgent);
                             }
-                           else {
-                               state.agentConflicts.add(occupyingAgent);
-                           }
 
 
                             //Avoid deadlocks.
                             //TODO: check if we can remove && occupyingAgent.mainPlan.plan.size()>0
-                            if (occupyingAgent.conflicts == agent && occupyingAgent.mainPlan.plan.size()>0) {
+                            if (occupyingAgent.conflicts == agent && occupyingAgent.mainPlan.plan.size() > 0) {
                                 //System.err.println("Same conflict agent");
                                 LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
                                 visited.remove(occupyingAgent.position.NodeId);
@@ -151,29 +148,29 @@ public class MaPPAlgorithm {
                                 //occupyingAgent.mainPlan.plan.remove(0);
                                 occupyingAgent.blank = true;
                                 occupyingObject.conflicts = null;
-                                agent.conflicts =null;
+                                agent.conflicts = null;
                                 agent.blank = false;
                             } else {
 
                                 occupyingAgent.blank = true;
                                 occupyingAgent.conflicts = agent;
                                 agent.blank = false;
-                                occupyingAgent.bringBlank(state,occupyingAgent);
+                                occupyingAgent.bringBlank(state, occupyingAgent);
                             }
 
                         }
                         // Box is blocking
-                        else{
+                        else {
                             agent.stuck++;
 
-                            if (agent.stuck == 1){
-                                //System.err.println("STUCK");
+                            if (agent.stuck == 1) {
+                                //System.err.println(agent+"STUCK");
                                 LinkedHashSet visited = new LinkedHashSet<>();
                                 visited.add(wantedMove);
                                 agent.planPi(state, visited, true);
-                            }
+                            } else {
 
-                            var occupyingBox = (Box) occupyingObject;
+                                var occupyingBox = (Box) occupyingObject;
 
                             if (state.stringToNode.get(wantedMove).isTunnel) {
                                 state.agentConflicts.add(occupyingBox.currentowner);
@@ -183,9 +180,9 @@ public class MaPPAlgorithm {
                             // Your own box is blocking :(
                             // Maybe handle seperatly? idk
                             Agent oldowner = null;
-                            if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))){
+                            if (state.NameToColor.get(occupyingBox.ID.charAt(0)).equals(state.NameToColor.get(agent.ID.charAt(0)))) {
 
-                                if (occupyingBox.currentowner.attached_box!=occupyingBox) {
+                                if (occupyingBox.currentowner.attached_box != occupyingBox) {
                                     if (occupyingBox.currentowner.currentGoal.Obj.equals(occupyingBox)) {
                                         oldowner = occupyingBox.currentowner;
                                         oldowner.currentGoal = null;
@@ -198,39 +195,38 @@ public class MaPPAlgorithm {
                                 }
 
 
-                                if(agent.currentGoal!=null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
-                                    ((Box) agent.currentGoal.Obj).conflict_box= occupyingBox;
+                                if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                    ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
-                                }else {
+                                } else {
                                     occupyingBox.conflict_box = null;
                                 }
 
 
                                 occupyingBox.currentowner.blank = true;
                                 occupyingBox.currentowner.conflicts = agent;
-                                occupyingBox.conflicts=agent;
+                                occupyingBox.conflicts = agent;
                                 occupyingBox.conflictRoute = agent.mainPlan.plan;
                                 //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
 
-                                occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
+                                //occupyingBox.currentowner.mainPlan.plan = new ArrayList<>();
 
-                                occupyingBox.bringBlank(state,  occupyingBox.currentowner);
+                                occupyingBox.bringBlank(state, occupyingBox.currentowner);
                                 occupyingBox.blankByOwn = true;
                                 //occupyingBox.conflictRoute = new ArrayList<>();
 
-                                if (oldowner!=null) oldowner.planPi(state,new LinkedHashSet(),false);
+                                if (oldowner != null) oldowner.planPi(state, new LinkedHashSet(), false);
 
-                            } else{
-                                 if (occupyingBox.currentowner == null){
+                            } else {
+                                if (occupyingBox.currentowner == null) {
                                     occupyingBox.findOwner(state);
                                 }
                                 //System.err.println("Not same colour");
-                                if(agent.currentGoal!=null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
+                                if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {
                                     ((Box) agent.currentGoal.Obj).conflict_box = occupyingBox;
                                     occupyingBox.conflict_box = (Box) agent.currentGoal.Obj;
-                                }
-                                else {
+                                } else {
                                     occupyingBox.conflict_box = null;
                                 }
                                 occupyingBox.conflictRoute = new ArrayList<>();
@@ -239,9 +235,8 @@ public class MaPPAlgorithm {
                                 occupyingBox.conflicts = agent;
                                 //System.err.println("OWNER: " + occupyingBox.owner.ID);
 
-                                occupyingBox.bringBlank(state,occupyingBox.currentowner);
+                                occupyingBox.bringBlank(state, occupyingBox.currentowner);
                                 occupyingBox.blankByOwn = false;
-
 
 
                             }
