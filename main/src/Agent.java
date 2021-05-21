@@ -7,9 +7,11 @@ public class Agent extends Object {
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
     public SubGoals.SubGoal nextGoal;
+    public SubGoals.SubGoal lastGoal;
     public SubGoals subgoals;
     Box attached_box;
     public int stuck;
+
 
     public Agent(Node node, String ID) {
         finalPlan = new ArrayList<>();
@@ -144,7 +146,7 @@ public class Agent extends Object {
         if (!secondTry) {
          SG = subgoals.ExtractNextGoal(currentGoal, state);}
 
-
+        if(!SG.equals(currentGoal)) lastGoal=currentGoal;
         currentGoal = SG;
 
 
@@ -158,7 +160,7 @@ public class Agent extends Object {
                         attached_box = (Box) SG.Obj;
                         ((Box) SG.Obj).currentowner = this;
 
-                        mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj, secondTry);
+                        mainPlan.createPlanWithBox(state, this, null, (Box) SG.Obj);
 
 
                     } else {
@@ -175,7 +177,7 @@ public class Agent extends Object {
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
                         attached_box = (Box) SG.Obj;
-                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj, secondTry);
+                        mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
                     } else {
 
                         attached_box = null;
