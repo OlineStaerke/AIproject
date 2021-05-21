@@ -6,7 +6,7 @@ import java.util.*;
 
 public class SearchClient {
 
-    // Reads the level into an object "State", which ultimately creates a graph.
+    // Prases Level by following the protocol of how levels are defined.
     public static State parseLevel(BufferedReader serverMessages)
             throws IOException {
         HashMap<String, Node> stringToNode = new HashMap<>();
@@ -18,9 +18,6 @@ public class SearchClient {
 
         HashMap<String, Box> boxes = new HashMap<>();
         HashMap<Character, ArrayList<Box>> boxes_lookup = new HashMap<>();
-        boolean betweenWalls = false;
-
-
 
         // We can assume that the level file is conforming to specification, since the server verifies this.
         // Read domain
@@ -68,15 +65,11 @@ public class SearchClient {
 
         }
 
-        // Iteration value for priority will increase for each loop
-        Integer i_agent = 0;
-        Integer i_box = 0;
         for (int row = 0; row < numRows - 1; ++row) {
             line = levelLines.get(row);
             for (int col = 0; col < line.length() - 1; ++col) {
-                //System.err.println("Number of rows: " + numRows);
-                //System.err.println("Number of cols: " + line.length());
                 char c = line.charAt(col);
+                // Not a wall
                 if (c != '+') {
 
                     //First add node
@@ -106,6 +99,7 @@ public class SearchClient {
                     if ('0' <= c && c <= '9') {
                         //System.err.println(agents_lookup);
 
+                        // Add agent of certain char to the agent map
                         if (agents_lookup.containsKey(c)) {
                             Integer newi = agents_lookup.get(c).size()+1;
                             Agent agent = new Agent(node, c + newi.toString());
@@ -113,6 +107,7 @@ public class SearchClient {
                             ArrayList<Agent> addAgent = new ArrayList<>(agents_lookup.get(c));
                             agents_lookup.replace(c,addAgent);
                         }
+                        // Create a new entry in the map
                         else {
                             Agent agent = new Agent(node, c+"");
                             agents.put(c+"", agent);
@@ -123,9 +118,8 @@ public class SearchClient {
 
 
                     }
-                    //Else check if it's a box
+                    //Else check if it's a box, same procedure as agent
                     else if ('A' <= c && c <= 'Z') {
-                        //System.err.println(boxes_lookup);
 
                         if (boxes_lookup.containsKey(c)) {
                             Integer newi = boxes_lookup.get(c).size()+1;
