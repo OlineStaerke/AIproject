@@ -1,4 +1,3 @@
-import java.security.cert.CertificateRevokedException;
 import java.util.*;
 
 public class MaPPAlgorithm {
@@ -111,7 +110,7 @@ public class MaPPAlgorithm {
 
 
                     if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null) && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
-                        agent.ExecuteMove(agent, state, false);
+                        agent.executeMove(state, false);
                     }
 
 
@@ -249,7 +248,7 @@ public class MaPPAlgorithm {
 
                             }
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                            agent.ExecuteMove(agent,state, true);
+                            agent.executeMove(state, true);
                             //Double NoOp
                             agent.mainPlan.plan.add(0,agent.position.NodeId);
                             if (agent.attached_box!=null) {
@@ -263,13 +262,13 @@ public class MaPPAlgorithm {
                     // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
                         agent.stuck = 0;
-                        agent.ExecuteMove(agent,state,  false);
+                        agent.executeMove(state,  false);
                     } else {
-                        agent.ExecuteMove(agent,state, true);
+                        agent.executeMove(state, true);
                     }
                 }
                     else {
-                        agent.ExecuteMove(agent,state, true);
+                        agent.executeMove(state, true);
 
                     }
 
