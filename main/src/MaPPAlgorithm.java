@@ -12,7 +12,7 @@ public class MaPPAlgorithm {
 
         ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
         Collections.sort(agentsInOrder,new Agent.CustomComparator());
-        
+
         int round = 0;
         while(!goalIsReached){
             if (state.occupiedNodesString() != null) {
@@ -39,7 +39,7 @@ public class MaPPAlgorithm {
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||
-                    agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
+                        agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
 
                     // Agent can move freely
                     if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null)
@@ -161,13 +161,13 @@ public class MaPPAlgorithm {
 
                             }
                         }
-                            // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
-                            agent.executeMove(state, true);
-                            //Double NoOp
-                            agent.mainPlan.plan.add(0,agent.position.NodeId);
-                            if (agent.attached_box!=null) {
-                                agent.attached_box.mainPlan.plan.add(0,agent.attached_box.position.NodeId);
-                            }
+                        // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
+                        agent.executeMove(state, true);
+                        //Double NoOp
+                        agent.mainPlan.plan.add(0,agent.position.NodeId);
+                        if (agent.attached_box!=null) {
+                            agent.attached_box.mainPlan.plan.add(0,agent.attached_box.position.NodeId);
+                        }
 
 
 
@@ -181,14 +181,14 @@ public class MaPPAlgorithm {
                         agent.executeMove(state, true);
                     }
                 }
-                    else {
-                        agent.executeMove(state, true);
+                else {
+                    agent.executeMove(state, true);
 
-                    }
-
-                    //Update the subgoals
-                    agent.subgoals.UpdateGoals(state);
                 }
+
+                //Update the subgoals
+                agent.subgoals.UpdateGoals(state);
+            }
 
             state.UpdateOccupiedNodes();
 
