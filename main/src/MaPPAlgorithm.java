@@ -6,11 +6,9 @@ public class MaPPAlgorithm {
 
     public static void MaPPVanilla(State state) throws InterruptedException {
 
-        //System.err.println("BEGIN: " + state.agents.values());
+        // Init all goals
         for(Agent agent : state.agents.values()){
-            // Finds initial plan with BFS
             agent.planGoals(state);
-
         }
 
 
@@ -29,7 +27,6 @@ public class MaPPAlgorithm {
             }
         }
         //Try and find a path to goal, and choose the one closesest to each goal
-
         for (String goal : state.goals.keySet()) {
             Plan plan = new Plan();
             ArrayList<Box> boxes = state.goals.get(goal);
@@ -38,14 +35,12 @@ public class MaPPAlgorithm {
                 boxPositions.add(box.position.NodeId);
             }
             plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>(),null);
-            Integer i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
+            int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
             Box boxForGoal = boxes.get(i);
             boxForGoal.setGoal(goal,state);
             Collections.reverse(Arrays.asList(plan.plan));
             boxForGoal.planToGoal = plan.plan;
         }
-
-
 
 
 
@@ -55,7 +50,6 @@ public class MaPPAlgorithm {
             Plan plan = new Plan();
             plan.createPlan(state, agent.position.NodeId, agent.Goal, new LinkedHashSet<>(),agent);
             agent.planToGoal = plan.plan;
-            //System.err.println(agent.subgoals.goals);
         }
 
         for (Agent agent : state.agents.values()) {
@@ -327,7 +321,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==1000) {
+            if (round==20000) {
                 goalIsReached = true;
             }
 
