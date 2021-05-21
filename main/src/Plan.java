@@ -71,11 +71,11 @@ public class Plan {
 
     }
 
-    public void createPlanWithBox(State state,Agent agent, ArrayList<String> goal,Box box, Boolean secondtry) throws InterruptedException {
+    public void createPlanWithBox(State state,Agent agent, ArrayList<String> goal,Box box) throws InterruptedException {
         Plan altPlans = new Plan();
         ArrayList<Tuple> tuple_plan;
         SocialRulesBox SR = new SocialRulesBox(state,agent,goal,box);
-        tuple_plan = SR.runBFS(altPlans, secondtry);
+        tuple_plan = SR.runBFS(altPlans);
 
         if (tuple_plan!=null) {
             ArrayList plan_agent = new ArrayList<>();

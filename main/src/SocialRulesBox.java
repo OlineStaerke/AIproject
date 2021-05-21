@@ -73,10 +73,21 @@ public class SocialRulesBox {
     }
 
     // Tries to find the best route under different rules
-    public ArrayList<Tuple> runBFS(Plan altPlans, Boolean secondtry) throws InterruptedException {
-        ArrayList<Tuple> tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,false, false);
-
-
+    public ArrayList<Tuple> runBFS(Plan altPlans) throws InterruptedException {
+        ArrayList<Tuple> tuple_plan = null;
+        /**
+        System.err.println(agent+" "+agent.lastGoal);
+        if (agent.lastGoal!=null && agent.lastGoal.Obj.equals(box)) tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,agent.currentGoal.Obj.Goal, false, false);
+**/
+        if (tuple_plan ==null) {
+            tuple_plan = altPlans.breathFirstTraversal_box(state, agent, box, new LinkedHashSet<>(), visited, allPlans, goal, false, false);
+        }
+        if (tuple_plan==null) {
+            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,false, false);
+        }
+        if (tuple_plan==null) {
+            tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,true, false);
+        }
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,true, false);
         }
