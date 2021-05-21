@@ -204,13 +204,9 @@ public class Agent extends Object {
                     bringBlank(state,conflicts);
 
             }
-            if (mainPlan.plan == null) mainPlan.plan = new ArrayList<>();
-
-
         }
         else {
             attached_box = null;
-
         }
     }
 
@@ -232,30 +228,19 @@ public class Agent extends Object {
             return;
         }
 
-
-        if ( attached_box!= null && mainPlan.plan.size()!=0 ){
-
-            //If the first move is its own position, look one further
-            String wantedMoveAgent = mainPlan.plan.get(0);
-            String wantedMoveBox = attached_box.mainPlan.plan.get(0);
-
-            Boolean check_wantedMoveAgent = (!state.occupiedNodes.containsKey(wantedMoveAgent)) || wantedMoveAgent.equals(attached_box.position.NodeId);
-            Boolean check_wantedMoveBox = (!state.occupiedNodes.containsKey(wantedMoveBox)) || wantedMoveBox.equals(position.NodeId);
-            if(check_wantedMoveAgent && check_wantedMoveBox) {
-
-                state.blankPlan = new ArrayList<>(mainPlan.plan);
-                return;
-            }
-        }
+        // If the agent has an attached box AND
+        // The agent's box' position is in the conflicting agent's plan OR
+        // The conflicting agent has a box and his box' plan contains our agent's box's position
+        // Then update the blank plan and create a new plan to let him through
         if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
-              subgoals.UpdatedBlanked(attached_box,false);
+            subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet(), false);
         }
+        // The agent has no box, he will just find a new plan to let the other agent through
         else {
             mainPlan.createAltPaths(state, agent);
             attached_box = null;
         }
-
     }
 
     // Look-up the next agent's move (ignoring NoOP's)

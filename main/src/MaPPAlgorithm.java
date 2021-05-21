@@ -6,59 +6,7 @@ public class MaPPAlgorithm {
 
     public static void MaPPVanilla(State state) throws InterruptedException {
         // Init all goals for the agents
-        Plan plan = new Plan();
-
-        for(Agent agent : state.agents.values()){
-            agent.planGoals(state);
-
-        }
-
-
-        for(Box box : state.boxes.values()){
-            for (String goal: box.Goal) {
-                ArrayList<Box> boxesForGoal;
-
-                if (state.goals.containsKey(goal)) boxesForGoal = state.goals.get(goal);
-                else boxesForGoal = new ArrayList<>();
-
-                if (!boxesForGoal.contains(box)) {
-                    boxesForGoal.add(box);
-                    state.goals.put(goal, boxesForGoal);
-                }
-
-            }
-        }
-
-        //Assign goals to each box, and their plan to goal
-        for (String goal : state.goals.keySet()) {
-            ArrayList<Box> boxes = state.goals.get(goal);
-            ArrayList<String> boxPositions = new ArrayList<>();
-            for (Box box : boxes) {
-                boxPositions.add(box.position.NodeId);
-            }
-            plan.createPlan(state,goal,boxPositions,null);
-            int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
-            Box boxForGoal = boxes.get(i);
-            boxForGoal.setGoal(goal,state);
-            Collections.reverse(Arrays.asList(plan.plan));
-            boxForGoal.planToGoal = plan.plan;
-        }
-
-
-
-
-        // Create the initial plan for each agent
-        for (Agent agent : state.agents.values()) {
-            agent.subgoals.SortGoal(state);
-            agent.planPi(state, new LinkedHashSet(), false);
-            plan.createPlan(state, agent.position.NodeId, agent.Goal,agent);
-            agent.planToGoal = plan.plan;
-        }
-
-
-        for (Agent agent : state.agents.values()) {
-            agent.findPriority(state);
-        }
+        InitAgentsAndBoxes(state);
 
         boolean goalIsReached = false;
 
@@ -235,6 +183,8 @@ public class MaPPAlgorithm {
             goalIsReached = true;
             Boolean noroutes = true;
 
+
+            //Ensure all plans have the same length
             for(Agent agent : agentsInOrder) {
                 for (Box b : agent.boxes) {
 
@@ -250,10 +200,10 @@ public class MaPPAlgorithm {
                     }
 
                 }
-
-                  if (!agent.isInGoal()) {
+                if (!agent.isInGoal()) {
                     goalIsReached = false;
                 }
+
                 if (agent.mainPlan.plan.size()>0) {
                     noroutes = false;
                 }
@@ -261,6 +211,7 @@ public class MaPPAlgorithm {
 
             }
 
+            //Timeout after 20.000 steps
             if (round==20000) {
                 goalIsReached = true;
             }
@@ -269,17 +220,21 @@ public class MaPPAlgorithm {
             if (noroutes) {
 
                 for (Agent agent : agentsInOrder) {
+                    //Find the next goal for eaxh agent and compute their priority.
                     agent.nextGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal,state);
                     if (agent.nextGoal == null) agent.nextGoal = agent.currentGoal;
                     agent.blank = false;
                     if (agent.nextGoal!=null) agent.nextGoal.Obj.findPriority(state);
                 }
 
+                //Sort the agents on priority
                 Collections.sort(agentsInOrder,new Agent.CustomComparator());
 
                 for (Agent agent : agentsInOrder) {
 
+
                     if (!agent.isInGoal()) {
+                        //Only set one agent free
                         if (state.agentConflicts.size() > 0) {
                             agent.subgoals.UpdateGoals(state);
                             state.blankPlan.addAll(agent.mainPlan.plan);
@@ -290,21 +245,70 @@ public class MaPPAlgorithm {
                             break;
 
                         } else {
-                                LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                                visited.remove(agent.position.NodeId);
-                                agent.planPi(state, visited,false);
-
+                            LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                            visited.remove(agent.position.NodeId);
+                            agent.planPi(state, visited,false);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public static void InitAgentsAndBoxes(State state) throws InterruptedException {
+        Plan plan = new Plan();
+        for(Agent agent : state.agents.values()){
+            agent.planGoals(state);
+
+        }
+
+
+        for(Box box : state.boxes.values()){
+            for (String goal: box.Goal) {
+                ArrayList<Box> boxesForGoal;
+
+                if (state.goals.containsKey(goal)) boxesForGoal = state.goals.get(goal);
+                else boxesForGoal = new ArrayList<>();
+
+                if (!boxesForGoal.contains(box)) {
+                    boxesForGoal.add(box);
+                    state.goals.put(goal, boxesForGoal);
                 }
 
             }
         }
 
+        //Assign goals to each box, and their plan to goal
+        for (String goal : state.goals.keySet()) {
+            ArrayList<Box> boxes = state.goals.get(goal);
+            ArrayList<String> boxPositions = new ArrayList<>();
+            for (Box box : boxes) {
+                boxPositions.add(box.position.NodeId);
+            }
+            plan.createPlan(state,goal,boxPositions,null);
+            int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
+            Box boxForGoal = boxes.get(i);
+            boxForGoal.setGoal(goal,state);
+            Collections.reverse(Arrays.asList(plan.plan));
+            boxForGoal.planToGoal = plan.plan;
+        }
+
+
+
+
+        // Create the initial plan for each agent
+        for (Agent agent : state.agents.values()) {
+            agent.subgoals.SortGoal(state);
+            agent.planPi(state, new LinkedHashSet(), false);
+            plan.createPlan(state, agent.position.NodeId, agent.Goal,agent);
+            agent.planToGoal = plan.plan;
+        }
+
+
+        for (Agent agent : state.agents.values()) {
+            agent.findPriority(state);
+        }
     }
-
-
-
 
 
 }
