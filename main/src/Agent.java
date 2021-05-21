@@ -10,8 +10,6 @@ public class Agent extends Object {
     Box attached_box;
     public int stuck;
 
-    ArrayList<ArrayList<String>> earlierStuckPlans;
-
 
     public Agent(Node node, String ID) {
         finalPlan = new ArrayList<>();
@@ -24,7 +22,6 @@ public class Agent extends Object {
         this.Taken = false;
         this.planToGoal = new ArrayList<>();
         stuck = 0;
-        earlierStuckPlans = new ArrayList<>();
     }
 
     public ArrayList<Node> getFinalPlan(){
