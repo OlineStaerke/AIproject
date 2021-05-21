@@ -3,7 +3,6 @@ import java.util.*;
 public class MaPPAlgorithm {
 
 
-
     public static void MaPPVanilla(State state) throws InterruptedException {
         // Init all goals for the agents
         InitAgentsAndBoxes(state);
@@ -11,31 +10,29 @@ public class MaPPAlgorithm {
         boolean goalIsReached = false;
 
         ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
-        Collections.sort(agentsInOrder,new Agent.CustomComparator());
-        
-        int round = 0;
-        while(!goalIsReached){
+        Collections.sort(agentsInOrder, new Agent.CustomComparator());
 
-            round+=1;
+        int round = 0;
+        while (!goalIsReached) {
+
+            round += 1;
 
             // Loop over each agent, in order by priority
-            for(Agent agent : agentsInOrder) {
+            for (Agent agent : agentsInOrder) {
 
                 agent.subgoals.UpdateGoals(state);
 
                 String wantedMove = agent.getWantedMoveWithBox();
 
 
-                if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||
-                    agent.blank||(!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
+                if ((agent.mainPlan.plan.size() > 0) && (state.blankPlan.size() == 0 ||
+                        agent.blank || (!state.agentConflicts.contains(agent) && !agent.position.isTunnel))) {
 
                     // Agent can move freely
-                    if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box!=null)
+                    if (wantedMove.equals(agent.position.NodeId) || ((agent.attached_box != null)
                             && (wantedMove.equals(agent.attached_box.position.NodeId)))) {
                         agent.executeMove(state, false);
                     }
-
-
 
 
                     // Agent wants to move into an occupied cell
@@ -79,12 +76,12 @@ public class MaPPAlgorithm {
                         else {
                             agent.stuck++;
                             //Agent is stuck, recompute path
+
                             if (agent.stuck == 1) {
                                 LinkedHashSet visited = new LinkedHashSet<>();
                                 visited.add(wantedMove);
                                 agent.planPi(state, visited, true);
                             } else {
-
                                 var occupyingBox = (Box) occupyingObject;
 
                                 if (state.stringToNode.get(wantedMove).isTunnel) {
@@ -147,29 +144,26 @@ public class MaPPAlgorithm {
 
                                 }
 
+                                //}
                             }
-                        }
                             // Do nothing, (NoOP). So the agent waits if he cannot enter a cell, or he has tried to make someone blank.
                             agent.executeMove(state, true);
                             //Double NoOp
-                            agent.mainPlan.plan.add(0,agent.position.NodeId);
-                            if (agent.attached_box!=null) {
-                                agent.attached_box.mainPlan.plan.add(0,agent.attached_box.position.NodeId);
+                            agent.mainPlan.plan.add(0, agent.position.NodeId);
+                            if (agent.attached_box != null) {
+                                agent.attached_box.mainPlan.plan.add(0, agent.attached_box.position.NodeId);
                             }
 
 
-
-
-                    }
-                    // Empty cell
+                        }
+                        // Empty cell
                     else if (!state.occupiedNodes.containsKey(wantedMove)) {
-                        agent.stuck = 0;
-                        agent.executeMove(state,  false);
+                            agent.stuck = 0;
+                            agent.executeMove(state, false);
+                        } else {
+                            agent.executeMove(state, true);
+                        }
                     } else {
-                        agent.executeMove(state, true);
-                    }
-                }
-                    else {
                         agent.executeMove(state, true);
 
                     }
@@ -178,76 +172,77 @@ public class MaPPAlgorithm {
                     agent.subgoals.UpdateGoals(state);
                 }
 
-            state.UpdateOccupiedNodes();
+                state.UpdateOccupiedNodes();
 
-            goalIsReached = true;
-            Boolean noroutes = true;
-
-
-            //Ensure all plans have the same length
-            for(Agent agent : agentsInOrder) {
-                for (Box b : agent.boxes) {
-
-
-                    if (b.finalPlan.size()<agent.finalPlan.size()-1) {
-                        b.finalPlan.add(b.position);
-                        b.finalPlanString.add(b.position.NodeId);
-
-                    }
-                    if (b.finalPlan.size()>agent.finalPlan.size()-1) {
-                        b.finalPlan.remove(b.finalPlan.size()-1);
-                        b.finalPlanString.remove(b.finalPlan.size()-1);
-                    }
-
-                }
-                if (!agent.isInGoal()) {
-                    goalIsReached = false;
-                }
-
-                if (agent.mainPlan.plan.size()>0) {
-                    noroutes = false;
-                }
-
-
-            }
-
-            //Timeout after 20.000 steps
-            if (round==20000) {
                 goalIsReached = true;
-            }
+                Boolean noroutes = true;
 
 
-            if (noroutes) {
-
+                //Ensure all plans have the same length
                 for (Agent agent : agentsInOrder) {
-                    //Find the next goal for eaxh agent and compute their priority.
-                    agent.nextGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal,state);
-                    if (agent.nextGoal == null) agent.nextGoal = agent.currentGoal;
-                    agent.blank = false;
-                    if (agent.nextGoal!=null) agent.nextGoal.Obj.findPriority(state);
+                    for (Box b : agent.boxes) {
+
+
+                        if (b.finalPlan.size() < agent.finalPlan.size() - 1) {
+                            b.finalPlan.add(b.position);
+                            b.finalPlanString.add(b.position.NodeId);
+
+                        }
+                        if (b.finalPlan.size() > agent.finalPlan.size() - 1) {
+                            b.finalPlan.remove(b.finalPlan.size() - 1);
+                            b.finalPlanString.remove(b.finalPlan.size() - 1);
+                        }
+
+                    }
+                    if (!agent.isInGoal()) {
+                        goalIsReached = false;
+                    }
+
+                    if (agent.mainPlan.plan.size() > 0) {
+                        noroutes = false;
+                    }
+
+
                 }
 
-                //Sort the agents on priority
-                Collections.sort(agentsInOrder,new Agent.CustomComparator());
+                //Timeout after 20.000 steps
+                if (round == 20000) {
+                    goalIsReached = true;
+                }
 
-                for (Agent agent : agentsInOrder) {
+
+                if (noroutes) {
+
+                    for (Agent agent : agentsInOrder) {
+                        //Find the next goal for eaxh agent and compute their priority.
+                        agent.nextGoal = agent.subgoals.ExtractNextGoal(agent.currentGoal, state);
+                        if (agent.nextGoal == null) agent.nextGoal = agent.currentGoal;
+                        agent.blank = false;
+                        if (agent.nextGoal != null) agent.nextGoal.Obj.findPriority(state);
+                    }
+
+                    //Sort the agents on priority
+                    Collections.sort(agentsInOrder, new Agent.CustomComparator());
+
+                    for (Agent agent : agentsInOrder) {
 
 
-                    if (!agent.isInGoal()) {
-                        //Only set one agent free
-                        if (state.agentConflicts.size() > 0) {
-                            agent.subgoals.UpdateGoals(state);
-                            state.blankPlan.addAll(agent.mainPlan.plan);
-                            agent.blank = true;
-                            LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                            visited.remove(agent.position.NodeId);
-                            agent.planPi(state, visited, false);
-                            break;
+                        if (!agent.isInGoal()) {
+                            //Only set one agent free
+                            if (state.agentConflicts.size() > 0) {
+                                agent.subgoals.UpdateGoals(state);
+                                state.blankPlan.addAll(agent.mainPlan.plan);
+                                agent.blank = true;
+                                LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                                visited.remove(agent.position.NodeId);
+                                agent.planPi(state, visited, false);
+                                break;
 
-                        } else {
-                            LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
-                            visited.remove(agent.position.NodeId);
-                            agent.planPi(state, visited,false);
+                            } else {
+                                LinkedHashSet visited = new LinkedHashSet(state.occupiedNodes.keySet());
+                                visited.remove(agent.position.NodeId);
+                                agent.planPi(state, visited, false);
+                            }
                         }
                     }
                 }
@@ -255,60 +250,61 @@ public class MaPPAlgorithm {
         }
     }
 
-    public static void InitAgentsAndBoxes(State state) throws InterruptedException {
-        Plan plan = new Plan();
+public static void InitAgentsAndBoxes(State state) throws InterruptedException {
+    Plan plan = new Plan();
         for(Agent agent : state.agents.values()){
-            agent.planGoals(state);
+        agent.planGoals(state);
 
-        }
-
-
-        for(Box box : state.boxes.values()){
-            for (String goal: box.Goal) {
-                ArrayList<Box> boxesForGoal;
-
-                if (state.goals.containsKey(goal)) boxesForGoal = state.goals.get(goal);
-                else boxesForGoal = new ArrayList<>();
-
-                if (!boxesForGoal.contains(box)) {
-                    boxesForGoal.add(box);
-                    state.goals.put(goal, boxesForGoal);
-                }
-
-            }
-        }
-
-        //Assign goals to each box, and their plan to goal
-        for (String goal : state.goals.keySet()) {
-            ArrayList<Box> boxes = state.goals.get(goal);
-            ArrayList<String> boxPositions = new ArrayList<>();
-            for (Box box : boxes) {
-                boxPositions.add(box.position.NodeId);
-            }
-            plan.createPlan(state,goal,boxPositions,null);
-            int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
-            Box boxForGoal = boxes.get(i);
-            boxForGoal.setGoal(goal,state);
-            Collections.reverse(Arrays.asList(plan.plan));
-            boxForGoal.planToGoal = plan.plan;
-        }
-
-
-
-
-        // Create the initial plan for each agent
-        for (Agent agent : state.agents.values()) {
-            agent.subgoals.SortGoal(state);
-            agent.planPi(state, new LinkedHashSet(), false);
-            plan.createPlan(state, agent.position.NodeId, agent.Goal,agent);
-            agent.planToGoal = plan.plan;
-        }
-
-
-        for (Agent agent : state.agents.values()) {
-            agent.findPriority(state);
-        }
     }
 
 
+        for(Box box : state.boxes.values()){
+        for (String goal: box.Goal) {
+            ArrayList<Box> boxesForGoal;
+
+            if (state.goals.containsKey(goal)) boxesForGoal = state.goals.get(goal);
+            else boxesForGoal = new ArrayList<>();
+
+            if (!boxesForGoal.contains(box)) {
+                boxesForGoal.add(box);
+                state.goals.put(goal, boxesForGoal);
+            }
+
+        }
+    }
+
+    //Assign goals to each box, and their plan to goal
+        for (String goal : state.goals.keySet()) {
+        ArrayList<Box> boxes = state.goals.get(goal);
+        ArrayList<String> boxPositions = new ArrayList<>();
+        for (Box box : boxes) {
+            boxPositions.add(box.position.NodeId);
+        }
+        plan.createPlan(state,goal,boxPositions,null);
+        int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
+        Box boxForGoal = boxes.get(i);
+        boxForGoal.setGoal(goal,state);
+        Collections.reverse(Arrays.asList(plan.plan));
+        boxForGoal.planToGoal = plan.plan;
+    }
+
+
+
+
+    // Create the initial plan for each agent
+        for (Agent agent : state.agents.values()) {
+        agent.subgoals.SortGoal(state);
+        agent.planPi(state, new LinkedHashSet(), false);
+        plan.createPlan(state, agent.position.NodeId, agent.Goal,agent);
+        agent.planToGoal = plan.plan;
+    }
+
+
+        for (Agent agent : state.agents.values()) {
+        agent.findPriority(state);
+    }
 }
+}
+
+
+
