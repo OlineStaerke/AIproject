@@ -75,7 +75,6 @@ public class Plan {
                 //If second = true, it is okay to be in tunnel.
 
                     if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)&& (!node.isTunnelDynamic || second)) {
-                        route.add(node.getNodeId());
                         if (node.isTunnel) {
                             routesFinal = route;
                         }
@@ -148,8 +147,6 @@ public class Plan {
                     if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent && (!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
 
                         Tuple last_position = new Tuple(node_agent.NodeId, node_box.NodeId);
-                        route_agent.add(last_position);
-
                         if (node_box.isTunnel) {
                             routesFinal = route_agent;
                         }
