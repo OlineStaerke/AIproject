@@ -222,11 +222,16 @@ public class Agent extends Object {
 
     public void bringBlank(State state, Agent agent) throws InterruptedException {
 
+        // The agent is set in a state as "blanked"
         blank = true;
-        if (mainPlan.plan.size()!=0 && ((!state.occupiedNodes.containsKey(nextMove())))){
+
+        // If the agent has a plan and his next moving action is not occupied
+        // Then proceed to create a blanking plan
+        if (mainPlan.plan.size()!=0 && (!state.occupiedNodes.containsKey(nextMove()))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
             return;
         }
+
 
         if ( attached_box!= null && mainPlan.plan.size()!=0 ){
 
@@ -253,6 +258,7 @@ public class Agent extends Object {
 
     }
 
+    // Look-up the next agent's move (ignoring NoOP's)
     public String nextMove() {
         for (String s: mainPlan.plan) {
             if (!s.equals(position.NodeId)) {
@@ -271,14 +277,14 @@ public class Agent extends Object {
         return null;
     }
 
-
-    public String GetWantedMove() {
+    // Look-up
+    public String getWantedMoveWithBox() {
         if (mainPlan.plan == null || mainPlan.plan.size() == 0) return position.NodeId;
         String wantedMove = mainPlan.plan.get(0);
 
 
-        // if the wanted move is a box position
         if (attached_box!=null) {
+            // if the wanted move is a box position the agent will move into the box' position
             if (wantedMove.equals(attached_box.position.NodeId) && attached_box.mainPlan.plan.size() > 0) {
                 wantedMove = attached_box.mainPlan.plan.get(0);
             }
