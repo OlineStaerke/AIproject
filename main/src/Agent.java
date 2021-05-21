@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Agent extends Object {
@@ -12,9 +11,6 @@ public class Agent extends Object {
     Box attached_box;
     public int stuck;
 
-
-
-
     public Agent(Node node, String ID) {
         finalPlan = new ArrayList<>();
         finalPlan.add(node);
@@ -26,89 +22,20 @@ public class Agent extends Object {
         this.Taken = false;
         this.planToGoal = new ArrayList<>();
         stuck = 0;
-
-
-
     }
-
- //Compare to find the agent who is furthest away from goal, by looking at the plan size.
-    public static class CustomComparator implements Comparator<Agent> {
-        @Override
-        public int compare(Agent o1, Agent o2) {
-            /**Integer o2_value = 0;
-            Integer o1_value = 0;
-            //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
-
-            if(o1.nextGoal!=null && o2.nextGoal!=null) {
-
-                for (String goal : o1.nextGoal.Obj.Goal) {
-                    if (o2.nextGoal.Obj.planToGoal != null && o2.nextGoal.Obj.planToGoal.contains(goal)) {
-                        o2_value+= 100;
-                    }
-                }
-
-                for (String goal : o2.nextGoal.Obj.Goal) {
-                    if (o1.nextGoal.Obj.planToGoal != null && o1.nextGoal.Obj.planToGoal.contains(goal)) {
-                        o1_value+= 100;
-                    }
-                }
-
-            }
-
-            if (o1.subgoals.ExistsBlankGoal()) {
-
-                o1_value+= 2000;
-            }
-            if (o2.subgoals.ExistsBlankGoal()) {
-
-                o2_value+= 2000;
-            }
-
-
-
-            Integer comparevalue = o2.mainPlan.plan.size() + o2_value;
-            return (comparevalue).compareTo(((Integer) o1.mainPlan.plan.size())+o1_value);
-             **/
-
-            Integer o2_value = 0;
-            Integer o1_value = 0;
-            //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
-            if(o1.nextGoal!=null) {
-                o1_value = o1.nextGoal.Obj.PriorityValue;
-            }
-            if(o2.nextGoal!=null) {
-                o2_value = o2.nextGoal.Obj.PriorityValue;
-            }
-
-            if (o1.subgoals.ExistsBlankGoal()) {
-
-                o1_value+= 2000;
-            }
-            if (o2.subgoals.ExistsBlankGoal()) {
-
-                o2_value+= 2000;
-            }
-
-            return o2_value-o1_value;
-        }
-    }
-
 
     public ArrayList<Node> getFinalPlan(){
         return this.finalPlan;
     }
 
-
-
-
-    public void ExecuteMove(Agent agent,State state, Boolean NoOp) throws InterruptedException {
+    public void executeMove(State state, Boolean NoOp) throws InterruptedException {
 
             Node wantedMove;
             if (NoOp) {
-                wantedMove = agent.position;
+                wantedMove = this.position;
             }
             else {
-                wantedMove = state.stringToNode.get(agent.mainPlan.plan.get(0));
+                wantedMove = state.stringToNode.get(this.mainPlan.plan.get(0));
             }
 
 
@@ -126,33 +53,7 @@ public class Agent extends Object {
 
 
             if (attached_box!=null) {
-                Node wantedMoveBox;
-                if (attached_box.mainPlan.plan.size()==0 || NoOp) {
-                    wantedMoveBox = attached_box.position;
-
-
-                }
-                else {
-                    wantedMoveBox = state.stringToNode.get(attached_box.mainPlan.plan.get(0));
-                    }
-
-                attached_box.finalPlan.add(wantedMoveBox);
-                attached_box.finalPlanString.add(wantedMoveBox.NodeId);
-
-                if (attached_box.mainPlan.plan.size() > 0 && !NoOp) {
-                    attached_box.mainPlan.plan.remove(0);
-                }
-                state.occupiedNodes.put(wantedMoveBox.NodeId, attached_box);
-                attached_box.position = wantedMoveBox;
-
-                if (attached_box.mainPlan.plan.size()==0 && agent.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked)) {
-                    agent.subgoals.UpdatedBlanked((Box) agent.currentGoal.Obj, true);
-
-                }
-
-
-
-
+                executeMoveWithoutBox(state, NoOp);
             }
 
             if (currentGoal!=null && attached_box==null && attachedBox(state) && mainPlan.plan.size()==0) {
@@ -177,16 +78,11 @@ public class Agent extends Object {
                         if (conflicts.conflicts!=null && conflicts.currentGoal != null && conflicts.currentGoal.gType!= SubGoals.GoalType.BoxBlanked && conflicts.mainPlan.plan.size() ==0) {
 
                             conflicts.bringBlank(state, conflicts);
-                            //conflicts.planPi(state,new LinkedHashSet());
 
                         }
-                        else {
-                            if (conflicts.mainPlan.plan.size()==0){
-                            //conflicts.planPi(state,new LinkedHashSet());
-                            }
-                        }
+
                     }
-                    if (agent.blankInCircle()) {
+                    if (this.blankInCircle()) {
                         conflicts.conflicts = null;
                         conflicts = null;
                     }
@@ -199,11 +95,25 @@ public class Agent extends Object {
         }
 
 
+    public void executeMoveWithoutBox(State state, Boolean NoOp){
+        Node wantedMoveBox;
+        if (attached_box.mainPlan.plan.size()==0 || NoOp) wantedMoveBox = attached_box.position;
 
-    @Override
-    boolean isInGoal() {
-        return subgoals.InGoal();
+        else wantedMoveBox = state.stringToNode.get(attached_box.mainPlan.plan.get(0));
 
+        attached_box.finalPlan.add(wantedMoveBox);
+        attached_box.finalPlanString.add(wantedMoveBox.NodeId);
+
+        if (attached_box.mainPlan.plan.size() > 0 && !NoOp) {
+            attached_box.mainPlan.plan.remove(0);
+        }
+        state.occupiedNodes.put(wantedMoveBox.NodeId, attached_box);
+        attached_box.position = wantedMoveBox;
+
+        if (attached_box.mainPlan.plan.size()==0 && this.currentGoal.gType.equals(SubGoals.GoalType.BoxBlanked)) {
+            this.subgoals.UpdatedBlanked((Box) this.currentGoal.Obj, true);
+
+        }
     }
 
     boolean attachedBox(State state) {
@@ -221,7 +131,7 @@ public class Agent extends Object {
         }
     }
 
-    public void planGoals(State state) throws InterruptedException {
+    public void planGoals(State state){
         subgoals = new SubGoals(boxes, this, state);
     }
 
@@ -242,7 +152,7 @@ public class Agent extends Object {
             currentGoal.Obj.Taken = true;
             switch (currentGoal.gType) {
                 case BoxBlanked:
-                    // If this is 1:1 with BoxToGoal case, remove the code (dupliacte code)
+                    // If this is 1:1 with BoxToGoal case, remove the code (duplicate code)
                     if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
 
                         attached_box = (Box) SG.Obj;
@@ -266,21 +176,16 @@ public class Agent extends Object {
 
                         attached_box = (Box) SG.Obj;
                         mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
-                        ((Box) SG.Obj).currentowner = this;
-
-
-
                     } else {
 
                         attached_box = null;
                         mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited,this);
-                        ((Box) SG.Obj).currentowner = this;
                     }
+                    ((Box) SG.Obj).currentowner = this;
                     break;
 
                 case AgentToGoal:
-                    List<String> goalListAgent = new ArrayList<>();
-                    goalListAgent.addAll(SG.Obj.Goal);
+                    List<String> goalListAgent = new ArrayList<>(SG.Obj.Goal);
                     mainPlan.createPlan(state, position.NodeId, goalListAgent, visited,this);
                     attached_box = null;
                     planToGoal = new ArrayList<>(mainPlan.plan);
@@ -305,7 +210,6 @@ public class Agent extends Object {
     public void bringBlank(State state, Agent agent) throws InterruptedException {
 
 
-        //!state.occupiedNodes.containsKey(mainPlan.plan.get(0))
         blank = true;
         if (mainPlan.plan.size()!=0 && ((!state.occupiedNodes.containsKey(nextMove())))){
             state.blankPlan = new ArrayList<>(mainPlan.plan);
@@ -318,20 +222,17 @@ public class Agent extends Object {
             String wantedMoveAgent = mainPlan.plan.get(0);
             String wantedMoveBox = attached_box.mainPlan.plan.get(0);
 
-            Boolean check_wantedMoveAgent = (!state.occupiedNodes.containsKey(wantedMoveAgent)) || wantedMoveAgent ==attached_box.position.NodeId;
-            Boolean check_wantedMoveBox = (!state.occupiedNodes.containsKey(wantedMoveBox)) || wantedMoveBox ==position.NodeId ;
+            Boolean check_wantedMoveAgent = (!state.occupiedNodes.containsKey(wantedMoveAgent)) || wantedMoveAgent.equals(attached_box.position.NodeId);
+            Boolean check_wantedMoveBox = (!state.occupiedNodes.containsKey(wantedMoveBox)) || wantedMoveBox.equals(position.NodeId);
             if(check_wantedMoveAgent && check_wantedMoveBox) {
 
                 state.blankPlan = new ArrayList<>(mainPlan.plan);
                 return;
             }
         }
-        //System.err.println(conflicts.mainPlan.plan);
-        //System.err.println(attached_box.position.NodeId);
         if (attached_box!=null && ((conflicts.mainPlan.plan.contains(attached_box.position.NodeId))||(conflicts.attached_box!=null&&conflicts.attached_box.mainPlan.plan.contains(attached_box.position.NodeId)))) {
               subgoals.UpdatedBlanked(attached_box,false);
             planPi(state,new LinkedHashSet(), false);
-            //mainPlan.createPlanWithBox(state, this, null, attached_box);
         }
         else {
              mainPlan.createAltPaths(state, agent);
@@ -373,22 +274,18 @@ public class Agent extends Object {
             else {
                 wantedMove = mainPlan.plan.get(0);
             }
-
         }
-
-
         return wantedMove;
     }
 
     public Boolean blankInCircle() {
         Agent nextAgent = conflicts;
-        HashSet visited = new HashSet();
+        HashSet<Agent> visited = new HashSet<>();
         while (nextAgent!=null) {
             visited.add(nextAgent);
             if (nextAgent.equals(this)) return true;
             nextAgent = nextAgent.conflicts;
             if (visited.contains(nextAgent)) return false;
-
         }
         return false;
     }
@@ -418,14 +315,41 @@ public class Agent extends Object {
             }
         }
 
-        this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
-
+        this.PriorityValue = newPrio;
     }
 
+    //Compare to find the agent who is furthest away from goal, by looking at the plan size.
+    public static class CustomComparator implements Comparator<Agent> {
+        @Override
+        public int compare(Agent o1, Agent o2) {
+            int o2_value = 0;
+            int o1_value = 0;
+            //Computes of another agents goal is on the agent path. If it is, their value should be smaller.
+            if(o1.nextGoal!=null) {
+                o1_value = o1.nextGoal.Obj.PriorityValue;
+            }
+            if(o2.nextGoal!=null) {
+                o2_value = o2.nextGoal.Obj.PriorityValue;
+            }
 
+            if (o1.subgoals.ExistsBlankGoal()) {
 
+                o1_value+= 2000;
+            }
+            if (o2.subgoals.ExistsBlankGoal()) {
 
+                o2_value+= 2000;
+            }
 
+            return o2_value-o1_value;
+        }
+    }
+
+    @Override
+    boolean isInGoal() {
+        return subgoals.InGoal();
+
+    }
 }
 
 
