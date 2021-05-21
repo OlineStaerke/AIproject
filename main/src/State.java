@@ -10,6 +10,7 @@ public class State {
     public HashMap<String, Object> occupiedNodes;
     public HashMap<Character, String> NameToColor;
     public HashMap<String, Node> stringToNode;
+    public int allstuck;
 
     // Dynamic structures which are updated throughout the algorithm
     public LinkedHashSet<Agent> agentConflicts;
@@ -34,6 +35,7 @@ public class State {
         stringToNode = STN;
         map = M;
         goals = new HashMap<>();
+        allstuck = 0;
 
     }
 
@@ -313,5 +315,7 @@ public class State {
 
         return recCombined;
     }
+
+
 
 }
