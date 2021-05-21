@@ -4,7 +4,6 @@ import java.util.*;
 
 public class Plan {
     ArrayList<String> plan = new ArrayList<String>();
-    HashMap<String, ArrayList<String>> precomputedDistance;
 
     public void createPlan(State state, String Source,List<String> Destination,Set<String> visited, Agent agent) {
         Map map = state.map;
