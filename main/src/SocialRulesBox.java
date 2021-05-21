@@ -73,7 +73,7 @@ public class SocialRulesBox {
     }
 
     // Tries to find the best route under different rules
-    public ArrayList<Tuple> runBFS(Plan altPlans) throws InterruptedException {
+    public ArrayList<Tuple> runBFS(Plan altPlans, Boolean secondtry) throws InterruptedException {
         ArrayList<Tuple> tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,false, false);
 
 

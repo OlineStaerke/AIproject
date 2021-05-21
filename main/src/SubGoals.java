@@ -197,10 +197,14 @@ public class SubGoals{
 
 
         }
+        for(SubGoal sg2: goals){
+            if (!sg2.Finished && !(sg2.Obj).Taken && sg2.gType.equals(GoalType.BoxToGoal)){
+                return sg2;
+            }
+        }
         // Otherwise, select the next goal
         for(SubGoal sg2: goals){
             if (!sg2.Finished && !(sg2.Obj).Taken){
-
                 return sg2;
             }
         }
