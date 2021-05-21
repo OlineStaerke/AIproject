@@ -8,6 +8,7 @@ public class State {
     public HashMap<String, Box> boxes;
     public HashMap<String, ArrayList<Box>> goals;
     public HashMap<String, Object> occupiedNodes;
+    public HashMap<HashSet<String>, Integer> seenPositions;
     public HashMap<Character, String> NameToColor;
     public HashMap<String, Node> stringToNode;
     public int allstuck;
@@ -36,6 +37,8 @@ public class State {
         map = M;
         goals = new HashMap<>();
         allstuck = 0;
+        seenPositions = new HashMap<>();
+
 
     }
 
@@ -52,6 +55,7 @@ public class State {
         agentConflicts = new LinkedHashSet<>();
         blankPlan = new ArrayList<>();
         occupiedNodes = new HashMap<>();
+        seenPositions = new HashMap<>();
     }
 
     public ArrayList<String> occupiedNodesString() {

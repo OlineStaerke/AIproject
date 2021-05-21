@@ -15,6 +15,18 @@ public class MaPPAlgorithm {
         
         int round = 0;
         while(!goalIsReached){
+            if (state.occupiedNodesString() != null) {
+
+                if (state.seenPositions.containsKey(new HashSet<>(state.occupiedNodesString())))
+                {
+                    var x = state.seenPositions.get(new HashSet<>(state.occupiedNodesString())) + 1;
+                    state.seenPositions.replace(new HashSet<>(state.occupiedNodesString()), x);
+                }
+                else{
+                    state.seenPositions.put(new HashSet<>(state.occupiedNodesString()), 1);
+                }
+            }
+
 
             round+=1;
 

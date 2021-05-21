@@ -196,8 +196,10 @@ public class SearchClient {
 
         try {
             // Run MaPPAlgorithm: Can be done in parallel to optimize speed
-            for(State S : componentStates)
+            for(State S : componentStates){
                 MaPPAlgorithm.MaPPVanilla(S);
+            }
+
 
             plan = Converter.getConversion(initialState.agents);
         }
