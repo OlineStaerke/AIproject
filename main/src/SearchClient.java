@@ -97,7 +97,6 @@ public class SearchClient {
 
                     //Check if it's an agent
                     if ('0' <= c && c <= '9') {
-                        //System.err.println(agents_lookup);
 
                         // Add agent of certain char to the agent map
                         if (agents_lookup.containsKey(c)) {
