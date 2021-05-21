@@ -3,17 +3,17 @@ import java.util.*;
 public class Plan {
     ArrayList<String> plan = new ArrayList<String>();
 
+    //Create plan for agent, to a box or goal
     public void createPlan(State state, String Source,List<String> Destination, Agent agent) {
         if (Destination == null) return;
         SocialRules SR = new SocialRules(state, agent);
         plan = SR.findMainPlan(this, Source, Destination);
 
-
-
     }
 
+    //Create a plan with your box, either to go in goal, or to go away, if blanked.
     public void createPlanWithBox(State state,Agent agent, ArrayList<String> goal,Box box) throws InterruptedException {
-        Plan altPlans = new Plan();
+         Plan altPlans = new Plan();
         ArrayList<Tuple> tuple_plan;
         SocialRulesBox SR = new SocialRulesBox(state,agent,goal,box);
         tuple_plan = SR.runBFS(altPlans);
@@ -36,6 +36,7 @@ public class Plan {
         box.conflictRoute = new ArrayList<>();
     }
 
+    //Create alt path for an agent, who has been blanked
     public void createAltPaths(State state, Agent agent) {
 
         Plan altPlans = new Plan(); // Initialize plan
@@ -45,6 +46,7 @@ public class Plan {
         state.blankPlan = new ArrayList<>(plan);
     }
 
+    //BFS to find the best route
     public ArrayList<String> breathFirstTraversal_altpath(State state, String root, Set<String> visited,ArrayList<String> otherAgentPlan, Boolean second) {
         visited = new HashSet<>(visited);
         Map map = state.map;
@@ -67,12 +69,11 @@ public class Plan {
             route = routes.pollFirst();
             Node node = state.stringToNode.get(vertex);
 
-            
-            
-
             if (!visited.contains(vertex)) {
 
                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
+                //If second = true, it is okay to be in tunnel.
+
                     if (!otherAgentPlan.contains(node.getNodeId()) && (!node.isTunnel || second)&& (!node.isTunnelDynamic || second)) {
                         route.add(node.getNodeId());
                         if (node.isTunnel) {
@@ -81,7 +82,6 @@ public class Plan {
 
                         else return route;
                     }
-
 
                 visited.add(vertex);
 
@@ -142,8 +142,8 @@ public class Plan {
 
 
              if (!visited.contains(vertex) && !occupied.contains(vertex_box) && !occupied.contains(vertex_agent)){
-                   //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path
-
+                 //When we are out of a tunnel, and away from the conflicting agents route, return the alternative path (If second = true, it is okay to be in tunnel)
+                 //If third is true, it is okay to pull a box in to a corridor.
                  if (goal==null && !otherAgentPlan.contains(node_box.getNodeId()) && !otherAgentPlan.contains(node_agent.getNodeId()) && (!node_box.isTunnel || second)&& (!node_box.isTunnelDynamic || second)) {
                     if (node_box.NodeId!=rootbox && node_agent.NodeId!=rootagent && (!action.equals(ActionType.Pull)|| (!node_agent.isTunnel &&!node_agent.isTunnelDynamic) || third)) {
 
