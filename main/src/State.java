@@ -1,8 +1,8 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class State {
 
+    // More or less Static structures containing info of the level-component
     public Map map;
     public HashMap<String, Agent> agents;
     public HashMap<String, Box> boxes;
@@ -11,68 +11,9 @@ public class State {
     public HashMap<Character, String> NameToColor;
     public HashMap<String, Node> stringToNode;
 
+    // Dynamic structures which are updated throughout the algorithm
     public LinkedHashSet<Agent> agentConflicts;
     public ArrayList<String> blankPlan;
-
-
-    private ArrayList<State> recFindComponents(int sizeBefore){
-        ArrayList<Map> maps = findConnectedComponents();
-        var newStates = new ArrayList<State>();
-
-        for (Map M: maps){
-            var newState = new State(M, NameToColor, stringToNode);
-            newState.boxes = boxes;
-            newState.agents = agents;
-            for(Box B: boxes.values()){
-                //System.err.println(" BOXBe4: " + B + " goals: " + B.Goal + " owners: " + B.owners);
-            }
-            newState.transformBoxToWall();
-
-            newState.UpdateOccupiedNodes();
-            newState.createTunnels();
-            newStates.add(newState);
-
-        }
-        if (newStates.size() == 1 && sizeBefore == 1) return newStates;
-        var recCombined = new ArrayList<State>();
-
-        for(State S: newStates) recCombined.addAll(S.recFindComponents(newStates.size()));
-
-        return recCombined;
-    }
-
-    private void transformBoxToWall(){
-        var M = map;
-        var newAgents = new HashMap<String, Agent>();
-        for(String AS : agents.keySet()){
-            if (M.map.containsKey(agents.get(AS).position.NodeId)){
-                ArrayList<String> newGoals = new ArrayList<>();
-                for (String g : agents.get(AS).Goal){
-                    if (M.map.containsKey(g)) newGoals.add(g);
-                }
-                agents.get(AS).Goal = newGoals;
-                newAgents.put(AS, agents.get(AS));
-            }
-        }
-        var newBoxes = new HashMap<String, Box>();
-        for(String BS : boxes.keySet()){
-            if (M.map.containsKey(boxes.get(BS).position.NodeId)){
-                ArrayList<String> newGoals = new ArrayList<>();
-                for (String g : boxes.get(BS).Goal){
-                    if (M.map.containsKey(g)) newGoals.add(g);
-                }
-                boxes.get(BS).Goal = newGoals;
-                newBoxes.put(BS, boxes.get(BS));
-            }
-        }
-        boxes = newBoxes;
-        agents = newAgents;
-        for(Box B: boxes.values()){
-            //System.err.println(" BOXAFTER: " + B + " goals: " + B.Goal + " owners: " + B.owners);
-        }
-        createObjectAssociations();
-
-    }
 
 
     public ArrayList<State> allStates(){
@@ -122,6 +63,7 @@ public class State {
         return new ArrayList<>(occupiedNodes.keySet());
     }
 
+
     public void UpdateOccupiedNodes() {
         occupiedNodes = new HashMap<>();
         for (Agent agent : agents.values()) {
@@ -131,23 +73,6 @@ public class State {
         for (Box box : boxes.values()) {
             occupiedNodes.put(box.position.NodeId, box);
 
-            /**if (box.currentowner != null && !(box.currentowner.currentGoal.Obj.ID == box.ID)) {
-                for (Agent agent : agents.values()) {
-                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0)) && agent.mainPlan.plan.size() == 0) {
-                        System.err.println();
-                        box.currentowner = agent;
-                    }
-                }
-
-            } else {
-                for (Agent agent : agents.values()) {
-                    if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0))) {
-                        box.currentowner = agent;
-                        break;
-                    }
-                }
-
-            }**/
             if (box.currentowner == null) {
                 for (Agent agent : agents.values()) {
                     if (NameToColor.get(agent.ID.charAt(0)) == NameToColor.get(box.ID.charAt(0))) {
@@ -206,67 +131,88 @@ public class State {
     }
 
 
-
-
-
     // Definition of a tunnel: A node, X, is a tunnel, iff removing X disconnects the graph.
     private void createTunnels(){
+        Plan P = new Plan();
         for (String node: map.map.keySet()){
             Node n = stringToNode.get(node);
             if (n == null) continue;
 
-                var o = node.split(" ");
-                int i = Integer.parseInt(o[0]);
-                int j = Integer.parseInt(o[1]);
+            var o = node.split(" ");
+            int i = Integer.parseInt(o[0]);
+            int j = Integer.parseInt(o[1]);
 
-                boolean N = map.map.containsKey((i - 1) + " " + j);
-                boolean S = map.map.containsKey((i + 1) + " " + j);
-                boolean E = map.map.containsKey(i + " " + (1 + j));
-                boolean W = map.map.containsKey(i + " " + (j - 1));
+            boolean N = map.map.containsKey((i - 1) + " " + j);
+            boolean S = map.map.containsKey((i + 1) + " " + j);
+            boolean E = map.map.containsKey(i + " " + (1 + j));
+            boolean W = map.map.containsKey(i + " " + (j - 1));
 
-                boolean NE = map.map.containsKey((i - 1) + " " + (j + 1));
-                boolean NW = map.map.containsKey((i - 1) + " " + (j - 1));
-                boolean SE = map.map.containsKey((i + 1) + " " + (j + 1));
-                boolean SW = map.map.containsKey((i + 1) + " " + (j - 1));
+            boolean NE = map.map.containsKey((i - 1) + " " + (j + 1));
+            boolean NW = map.map.containsKey((i - 1) + " " + (j - 1));
+            boolean SE = map.map.containsKey((i + 1) + " " + (j + 1));
+            boolean SW = map.map.containsKey((i + 1) + " " + (j - 1));
 
-                if ((S & !SE & !SW)) n.isTunnel = true;
-                if ((N & !NE & !NW)) n.isTunnel = true;
-                if ((E & !SE & !NE)) n.isTunnel = true;
-                if ((W & !SW & !NW)) n.isTunnel = true;
+            if ((S & !SE & !SW)) n.isTunnel = true;
+            if ((N & !NE & !NW)) n.isTunnel = true;
+            if ((E & !SE & !NE)) n.isTunnel = true;
+            if ((W & !SW & !NW)) n.isTunnel = true;
 
 
-                if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-                if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+            if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+            if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
 
-                if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
-                if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
+            if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
+            if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
 
-                if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
-                if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
-
-                stringToNode.replace(node, n);
-
-        }
-
-        for (String node: map.map.keySet()){
-            Plan P = new Plan();
-            Node n = stringToNode.get(node);
-            if (n == null) continue;
+            if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
+            if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
 
             if (P.DFSForTunnels(map, node, map.map.get(node))){
                 n.isTunnelOneWay = true;
                 n.isTunnel = true;
-                stringToNode.replace(node, n);
             }
+            stringToNode.replace(node, n);
 
 
         }
 
-
+    }
+    // This simply checks if the agent/box is in the graph
+    private void naiveGraphCheck(){
+        var M = map;
+        var newAgents = new HashMap<String, Agent>();
+        // Add obtainable goals from agent
+        for(String AS : agents.keySet()){
+            if (M.map.containsKey(agents.get(AS).position.NodeId)){
+                ArrayList<String> newGoals = new ArrayList<>();
+                for (String g : agents.get(AS).Goal){
+                    if (M.map.containsKey(g)) newGoals.add(g);
+                }
+                agents.get(AS).Goal = newGoals;
+                newAgents.put(AS, agents.get(AS));
+            }
+        }
+        var newBoxes = new HashMap<String, Box>();
+        // Add obtainable goals for each box
+        for(String BS : boxes.keySet()){
+            if (M.map.containsKey(boxes.get(BS).position.NodeId)){
+                ArrayList<String> newGoals = new ArrayList<>();
+                for (String g : boxes.get(BS).Goal){
+                    if (M.map.containsKey(g)) newGoals.add(g);
+                }
+                boxes.get(BS).Goal = newGoals;
+                newBoxes.put(BS, boxes.get(BS));
+            }
+        }
+        boxes = newBoxes;
+        agents = newAgents;
+        deepGraphCheck();
     }
 
-    // Links boxes to agents and vice-versa
-    private void createObjectAssociations() {
+
+    // Links boxes to agents and vice-versa, if box/agent is actually reachable (using BFS)
+    // Also replaces boxes with no owner, with a wall
+    private void deepGraphCheck() {
         Plan P = new Plan();
         for (Agent A: agents.values()){
             A.boxes = new ArrayList<>();
@@ -281,6 +227,7 @@ public class State {
 
             for (Box B : boxes.values()) {
 
+                // Can we actual reach the box from the owner-agent?
                 if (NameToColor.get(A.ID.charAt(0)).equals(NameToColor.get(B.ID.charAt(0)))) {
 
                     if (P.breathFirstTraversal(map, B.position.NodeId, g, new LinkedHashSet<>()) != null){
@@ -289,6 +236,7 @@ public class State {
                     }
 
                 }
+                // What goals can the box reach?
                 var newGoals = new ArrayList<String>();
                 for (String BG : B.Goal){
                     var bg = new ArrayList<String>();
@@ -300,6 +248,7 @@ public class State {
                 }
 
             }
+            // What goals can the agent reach?
             var newGoals = new ArrayList<String>();
             for (String AG : A.Goal){
                 var ag = new ArrayList<String>();
@@ -312,6 +261,7 @@ public class State {
         }
         var BoxesCopy = new HashMap<>(boxes);
 
+        // No owners of a box? Transform box into a wall.
         for (var box : boxes.entrySet()) {
             if (box.getValue().owners.size() == 0) {
                 for (String neighbors: map.map.get(box.getValue().position.NodeId)){
@@ -326,50 +276,18 @@ public class State {
 
         boxes = BoxesCopy;
 
-
-
-        // Each box has a specific goal for now.
-            /**
-        ArrayList<String> doneGoals = new ArrayList<>();
-
-        for (Box B: boxes.values()){
-            if (B.Goal.size() == 0) continue;
-            var goals = new ArrayList<String>(B.Goal);
-            goals.removeAll(doneGoals);
-            if (goals.size() == 0){
-                B.Goal = new ArrayList<>();
-                continue;
-            }
-
-            P.createPlan(this, B.position.NodeId, goals, new HashSet<>());
-            var newGoal = new ArrayList<String>();
-            newGoal.add(P.plan.get(P.plan.size()-1));
-            B.Goal = newGoal;
-            doneGoals.add(newGoal.get(0));
-
-        }
-
-
-
-        for (Box B: boxes.values()){
-            //System.err.println("HASDHAHSDHASHD: " + B.ID + ", " + B.Goal);
-
-        }
-             **/
-
     }
-
+    // Find connected-components of the current map (graph)
     private ArrayList<Map> findConnectedComponents(){
         Plan P = new Plan();
         var DoneComponents = new HashSet<String>();
         var components = new ArrayList<Map>();
 
 
-
         for(String pos: map.map.keySet()){
             if (DoneComponents.contains(pos)) continue;
 
-            var componentNodes = P.MathiasBFS(map, pos);
+            var componentNodes = P.connectedComponentsBFS(map, pos);
             var newComponent = new Map();
 
             for(String cPos : componentNodes){
@@ -377,12 +295,33 @@ public class State {
             }
             components.add(newComponent);
             DoneComponents.addAll(componentNodes);
-
-
         }
         return components;
     }
 
+    // Recursively finds connected components in the graph
+    private ArrayList<State> recFindComponents(int sizeBefore){
 
+        ArrayList<Map> maps = findConnectedComponents();
+        var newStates = new ArrayList<State>();
+
+        for (Map M: maps){
+            // For each connected component in the graph, create a new state object
+            var newState = new State(M, NameToColor, stringToNode);
+            newState.boxes = boxes;
+            newState.agents = agents;
+            newState.naiveGraphCheck();
+            newState.UpdateOccupiedNodes();
+            newState.createTunnels();
+            newStates.add(newState);
+
+        }
+        if (newStates.size() == 1 && sizeBefore == 1) return newStates; //No more recursion can be done
+        var recCombined = new ArrayList<State>();
+
+        for(State S: newStates) recCombined.addAll(S.recFindComponents(newStates.size())); //Can continue to recurse
+
+        return recCombined;
+    }
 
 }

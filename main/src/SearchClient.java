@@ -149,21 +149,19 @@ public class SearchClient {
         line = serverMessages.readLine();
         int row = 0;
 
-        //System.err.println(agents);
         while (!line.startsWith("#")) {
             for (int col = 0; col < line.length(); ++col) {
                 char c = line.charAt(col);
-                // If the goal is just getting the agent to its goal location
+                // Add goal to agent goals
                 Node goal = new Node(row + " " + col);
                 if ('0' <= c && c <= '9') {
-                    //System.err.println(c+i_agent.toString());
                     for (Agent agent : agents_lookup.get(c)) {
                         agent.setGoal(goal);
                     }
                 }
-                // Else, the box gets the goal of getting to its goal location
+                // For boxes
                 else if ('A' <= c && c <= 'Z'){
-                    //System.err.println(c+i_box.toString());
+
                     for (Box box: boxes_lookup.get(c)) {
                         box.setGoal(goal);
                     }
@@ -182,62 +180,42 @@ public class SearchClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         // Use stderr to print to the console.
-        //System.err.println("SearchClient initializing. I am sending this using the error output stream.");
+        System.err.println("SearchClient initializing. I am sending this using the error output stream.");
 
         // Send client name to server.
-        //System.out.println("SearchClient");
-
-        // We can also print comments to stdout by prefixing with a #.
-        System.out.println("#This is a comment.");
+        System.out.println("SearchClient");
 
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
 
         State initialState = SearchClient.parseLevel(serverMessages);
-        ArrayList<State> componentStates = initialState.allStates();
-        //System.err.println(componentStates);
-        for(State S: componentStates){
-           // System.err.println(S.map);
-            for(Box B: S.boxes.values()){
-               // System.err.println(" BOX: " + B + " goals: " + B.Goal + " owners: " + B.owners);
-            }
-            for(Agent A: S.agents.values()){
-                //System.err.println(" Agent: " + A + " goals: " + A.Goal + " boxes: " + A.boxes);
-            }
-            for(String n : S.map.map.keySet()) {
-                Node N = S.stringToNode.get(n);
-                //System.err.println(n + " IS TUNNEL " + N.isTunnel);
-            }
 
-        }
-        //System.exit(0);
+        // Recursively find subcomponents of the state, s.t. the
+        ArrayList<State> componentStates = initialState.allStates();
 
         Action[][] plan;
 
         try {
-            // Run MaPPAlgorithm
+            // Run MaPPAlgorithm: Can be done in parallel to optimize speed
             for(State S : componentStates)
                 MaPPAlgorithm.MaPPVanilla(S);
 
             plan = Converter.getConversion(initialState.agents);
-            //System.err.println("Length of plan:"+plan.length);
-            //System.err.println(Arrays.deepToString(plan));
         }
+
         catch (OutOfMemoryError ex){
             System.err.println("Maximum memory usage exceeded.");
             plan = null;
         }
         if (plan == null)
         {
-            System.exit(0);
+            System.exit(0); // No plan
         }
         else
         {
-            int i =0;
+            // Print the plan to the server
             for (Action[] jointAction : plan)
             {
-                i+=1;
-                //System.err.println(i);
                 System.out.print(jointAction[0].name);
                 for (int action = 1; action < jointAction.length; ++action)
                 {

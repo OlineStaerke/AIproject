@@ -342,7 +342,7 @@ public class Plan {
     }
 
     // dont touch.
-    public HashSet<String> MathiasBFS(Map map, String root) {
+    public HashSet<String> connectedComponentsBFS(Map map, String root) {
 
         Deque<String> queue = new ArrayDeque<>();
         queue.push(root);
