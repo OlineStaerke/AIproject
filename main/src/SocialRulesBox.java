@@ -5,7 +5,6 @@ public class SocialRulesBox {
     public State state;
     public Agent agent;
     public Box box;
-    LinkedHashSet visitedBoxes;
     LinkedHashSet visited;
     ArrayList allPlans;
     ArrayList<String> goal;
@@ -57,7 +56,6 @@ public class SocialRulesBox {
                 visitedInGoal.add(n.NodeId);
             }
         }
-        //System.err.println(visitedNoTunnel);
         visitedInGoal.remove(agent.position.NodeId);
         visitedInGoal.remove(agent.attached_box.position.NodeId);
     }
@@ -70,88 +68,73 @@ public class SocialRulesBox {
                 visitedNoTunnel.add(n.NodeId);
             }
         }
-        //System.err.println(visitedNoTunnel);
         visitedNoTunnel.remove(agent.position.NodeId);
         visitedNoTunnel.remove(agent.attached_box.position.NodeId);
     }
 
+    // Tries to find the best route under different rules
     public ArrayList<Tuple> runBFS(Plan altPlans) throws InterruptedException {
         ArrayList<Tuple> tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,false, false);
-        //System.err.println("ASD"+tuple_plan);
 
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,true, false);
         }
-        //else return tuple_plan;
-        //System.err.println("Second"+tuple_plan);
 
         if (tuple_plan == null){
             InitNoTunnelVisited();
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visitedNoTunnel,allPlans,goal,false, false);
         }
-        //else return tuple_plan;
 
         if (tuple_plan == null){
             InitInGoalVisited();
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visitedInGoal,allPlans,goal,false, false);
         }
-        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,allPlans,goal,true, true);
 
         }
-        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<>(),goal,false, false);
 
         }
-        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),allPlans,goal,true, false);
 
         }
-        //else return tuple_plan;
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),allPlans,goal,true, true);
 
         }
-        //else return tuple_plan;
+
 
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),allPlans,goal,true, true);
 
         }
-        //else return tuple_plan;
+
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,false,true);
 
         }
-        //else return tuple_plan;
-        //System.err.println("SECOND"+tuple_plan);
+
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),visited,new ArrayList<String>(),goal,true,true);
 
         }
-        //else return tuple_plan;
-        //System.err.println("THIRD"+tuple_plan);
+
 
         if (tuple_plan==null) {
             tuple_plan = altPlans.breathFirstTraversal_box(state,agent,box,new LinkedHashSet<>(),new LinkedHashSet<>(),new ArrayList<String>(),goal,true,true);
 
         }
-        //else return tuple_plan;
-        //System.err.println("FOUR"+tuple_plan);
 
-
-        //if (tuple_plan!=null) return tuple_plan;
-        //System.err.println("SIXTH"+tuple_plan);
 
         return tuple_plan;
     }

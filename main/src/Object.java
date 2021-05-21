@@ -20,24 +20,17 @@ public abstract class Object{
 
     public void setGoal(Node goal) {
         Goal.add(goal.NodeId);
-
     }
 
     abstract boolean isInGoal();
     abstract boolean isInSubGoal();
-
-
     abstract void bringBlank(State state, Agent agent) throws InterruptedException;
+    abstract void findPriority(State state);
 
 
     @Override
     public String toString(){
         return "ID: " + ID + ", position: " + position.toString();
-
-    }
-
-    public void findPriority(State state)
-    {
 
     }
 

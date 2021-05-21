@@ -12,8 +12,7 @@ public final class Converter {
 
         // Remove the first move on the plan (This is always noOp)
         for (Agent A : agents.values()){
-            var q = A.finalPlan.remove(0);
-            //System.err.println("First index of final plan removed, action was: " + q);
+            A.finalPlan.remove(0);
             maxSize = Math.max(maxSize, A.finalPlan.size());
         }
         for (Agent A: agents.values()){
@@ -38,11 +37,9 @@ public final class Converter {
 
         for (Agent A : agents.values()) {
             convPlan[inc] = fromCoordsToDirections(A.getFinalPlan(), A.boxes); //Conversion of each agent's plan
-
-
-            //System.err.println("Agent size: " + A.finalPlan.size());
             inc++;
         }
+
         // For each round build the JointAction plan and add it to the ultimate plan
         for (int round = 0; round < numRounds; round++) {
             Action[] jointAction = new Action[numAgents];
@@ -69,8 +66,6 @@ public final class Converter {
         for (int action = 1; action < plan.size(); action++) {
             String node2 = plan.get(action).getNodeId();
 
-
-
             int rowDiff = Integer.parseInt(node2.split(" ")[0]) - Integer.parseInt(node1.split(" ")[0]);
             int colDiff = Integer.parseInt(node2.split(" ")[1]) - Integer.parseInt(node1.split(" ")[1]);
 
@@ -82,8 +77,6 @@ public final class Converter {
             for(Box B: boxes){
                 if (B.finalPlan.size() != plan.size()){
                     System.err.println("############### FINAL PLANS OF DIFFERENT LENGTH! ###############");
-                    //System.err.println("Agent plan: " + plan.size());
-                    //System.err.println("Box plan: " + B.finalPlan.size());
                     return null;
                 }
 

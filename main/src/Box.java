@@ -13,9 +13,6 @@ public class Box extends Object {
     Box conflict_box;
 
 
-
-
-
     public Box(Node node, String id){
         this.position = node;
         this.ID = id;
@@ -28,10 +25,6 @@ public class Box extends Object {
 
     }
 
-    public void bringBlank(State state, Map map, Agent otheragent){
-
-
-    }
 
     @Override
     boolean isInSubGoal() {
@@ -65,12 +58,6 @@ public class Box extends Object {
         }
     }
 
-    public void findPlanToGoal(State state) {
-        Plan plan = new Plan();
-        plan.createPlan(state,position.NodeId,Goal,new LinkedHashSet<>(),null);
-        planToGoal = plan.plan;
-    }
-
 
     @Override
     void bringBlank(State state, Agent agent) throws InterruptedException {
@@ -94,7 +81,6 @@ public class Box extends Object {
             currentowner.subgoals.goals.add(currentowner.currentGoal);
         }
 
-        //System.err.println("Owner current responsibility (OLD): " + currentowner.currentGoal);
 
             currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
 
