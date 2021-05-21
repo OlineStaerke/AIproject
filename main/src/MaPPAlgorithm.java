@@ -36,7 +36,7 @@ public class MaPPAlgorithm {
             for (Box box : boxes) {
                 boxPositions.add(box.position.NodeId);
             }
-            plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>(),null);
+            plan.createPlan(state,goal,boxPositions,null);
             int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
             Box boxForGoal = boxes.get(i);
             boxForGoal.setGoal(goal,state);
@@ -51,7 +51,7 @@ public class MaPPAlgorithm {
         for (Agent agent : state.agents.values()) {
             agent.subgoals.SortGoal(state);
             agent.planPi(state, new LinkedHashSet(), false);
-            plan.createPlan(state, agent.position.NodeId, agent.Goal, new LinkedHashSet<>(),agent);
+            plan.createPlan(state, agent.position.NodeId, agent.Goal,agent);
             agent.planToGoal = plan.plan;
         }
 
@@ -179,7 +179,7 @@ public class MaPPAlgorithm {
 
                                 } else {
                                     if (occupyingBox.currentowner == null) {
-                                        occupyingBox.findOwner(state);
+                                        occupyingBox.findOwner();
                                     }
 
                                     if (agent.currentGoal != null && agent.currentGoal.gType == SubGoals.GoalType.BoxToGoal) {

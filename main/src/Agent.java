@@ -165,7 +165,7 @@ public class Agent extends Object {
                     } else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited, this);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), this);
                         ((Box) SG.Obj).currentowner = this;
                     }
                     break;
@@ -180,14 +180,14 @@ public class Agent extends Object {
                     } else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited,this);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId),this);
                     }
                     ((Box) SG.Obj).currentowner = this;
                     break;
 
                 case AgentToGoal:
                     List<String> goalListAgent = new ArrayList<>(SG.Obj.Goal);
-                    mainPlan.createPlan(state, position.NodeId, goalListAgent, visited,this);
+                    mainPlan.createPlan(state, position.NodeId, goalListAgent,this);
                     attached_box = null;
                     planToGoal = new ArrayList<>(mainPlan.plan);
                     break;

@@ -82,63 +82,58 @@ public class Box extends Object {
         }
 
 
-            currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
+        currentowner.subgoals.UpdatedBlanked(this, false); //Now box is false in finished
 
 
-            //TODO: Overlook these if statements again
-        //(currentowner.currentGoal.Obj.equals(this) && currentowner.attachedBox(state))
-            if (currentowner.mainPlan.plan.size()== 0||state.occupiedNodes.containsKey(currentowner.nextMove())) {
-                currentowner.mainPlan.plan = new ArrayList<>();
-                currentowner.planPi(state, new LinkedHashSet<>(), false);
-
-                //System.err.println("Owner current responsibility (NEW): " + currentowner.currentGoal);
-            }
+        if (currentowner.mainPlan.plan.size()== 0||state.occupiedNodes.containsKey(currentowner.nextMove())) {
+            currentowner.mainPlan.plan = new ArrayList<>();
+            currentowner.planPi(state, new LinkedHashSet<>(), false);
+        }
 
 
 
     }
 
-
+    // A box's priority is calculated by how many conflicts it has with other boxes/agents and their goals
     public void findPriority(State state) {
 
 
-            var otherBoxes = state.boxes.values();
-            int newPrio = 0;
+        var otherBoxes = state.boxes.values();
+        int newPrio = 0;
 
-            for (Box B : otherBoxes) {
-                if (B.equals(this)) continue;
+        for (Box B : otherBoxes) {
+            if (B.equals(this)) continue;
 
-                for (String goal : B.Goal) {
+            for (String goal : B.Goal) {
 
 
-                    if (this.planToGoal != null && this.planToGoal.contains(goal)) {
-                        newPrio += 1;
-                    }
+                if (this.planToGoal != null && this.planToGoal.contains(goal)) {
+                    newPrio += 1;
                 }
             }
+        }
 
-            for (Agent A : state.agents.values()) {
-                for (String goal : A.Goal) {
-                    if (this.planToGoal != null && this.planToGoal.contains(goal)) {
-                        newPrio += 1;
-                    }
+        for (Agent A : state.agents.values()) {
+            for (String goal : A.Goal) {
+                if (this.planToGoal != null && this.planToGoal.contains(goal)) {
+                    newPrio += 1;
                 }
             }
-            Plan P = new Plan();
-            this.PriorityValue = newPrio;//+ P.PriobreathFirstTraversal(state, position.NodeId);
+        }
+        this.PriorityValue = newPrio;
 
 
     }
 
-        public void findOwner (State state){
-            for (Agent agent : owners) {
-                if ((!(agent.currentGoal.Obj instanceof Box) || agent.mainPlan.plan.size() == 0)) {
-                    currentowner = agent;
-                    return;
-                }
+    public void findOwner (){
+        for (Agent agent : owners) {
+            if ((!(agent.currentGoal.Obj instanceof Box) || agent.mainPlan.plan.size() == 0)) {
+                currentowner = agent;
+                return;
             }
-            currentowner = owners.get(0);
         }
+        currentowner = owners.get(0);
+    }
 
 
 
