@@ -238,7 +238,7 @@ public class Agent extends Object {
             planPi(state,new LinkedHashSet(), false);
         }
         else {
-             mainPlan.createAltPaths(state, agent);
+            mainPlan.createAltPaths(state, agent);
             attached_box = null;
         }
 
