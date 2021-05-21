@@ -168,7 +168,7 @@ public class Agent extends Object {
 
                         // Find a plan for the agent to reach this box that has been requested to be blanked
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(currentGoal.Obj.position.NodeId), visited, this);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(currentGoal.Obj.position.NodeId), this);
                         // To make sure nobody else takes this box he is going towards to
                     }
                     ((Box) SG.Obj).currentowner = this;
@@ -186,7 +186,7 @@ public class Agent extends Object {
                     else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(currentGoal.Obj.position.NodeId), visited,this);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(currentGoal.Obj.position.NodeId),this);
                     }
                     ((Box) SG.Obj).currentowner = this;
                     break;
@@ -196,7 +196,7 @@ public class Agent extends Object {
                     // Query the goal he needs to go to
                     List<String> goalListAgent = new ArrayList<>(SG.Obj.Goal);
                     // Create a plan to go to its goal
-                    mainPlan.createPlan(state, position.NodeId, goalListAgent, visited,this);
+                    mainPlan.createPlan(state, position.NodeId, goalListAgent,this);
                     attached_box = null;
                     planToGoal = new ArrayList<>(mainPlan.plan);
                     break;
