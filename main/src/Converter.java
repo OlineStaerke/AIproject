@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public final class Converter {
 
+    // Converts the final plan of agents into joint actions that are fed to the server
     public static Action[][] getConversion(HashMap<String, Agent> agents)  {
 
         int numAgents = agents.size();
