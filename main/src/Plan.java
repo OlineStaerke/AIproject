@@ -44,7 +44,7 @@ public class Plan {
             //System.err.println("2"+plan);
         }
 
-/**
+
         //Only go though your own boxes
         if (plan == null && agent!=null) {
             LinkedHashSet visitedNoTunnel = new LinkedHashSet<String>();
@@ -59,7 +59,8 @@ public class Plan {
             plan = breathFirstTraversal(map, Source, Destination,visitedNoTunnel);
             //System.err.println("2"+plan);
         }
- **/
+
+
 
         if (plan==null){
             plan = breathFirstTraversal(map, Source, Destination,new LinkedHashSet<>());
