@@ -183,7 +183,7 @@ public class SearchClient {
         System.err.println("SearchClient initializing. I am sending this using the error output stream.");
 
         // Send client name to server.
-        System.out.println("SearchClient");
+        System.out.println("MAlicious");
 
         // Parse the level.
         BufferedReader serverMessages = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.US_ASCII));
