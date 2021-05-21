@@ -6,10 +6,11 @@ public class Agent extends Object {
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
     public SubGoals.SubGoal nextGoal;
-
     public SubGoals subgoals;
     Box attached_box;
     public int stuck;
+
+    ArrayList<ArrayList<String>> earlierStuckPlans;
 
 
     public Agent(Node node, String ID) {
@@ -23,6 +24,7 @@ public class Agent extends Object {
         this.Taken = false;
         this.planToGoal = new ArrayList<>();
         stuck = 0;
+        earlierStuckPlans = new ArrayList<>();
     }
 
     public ArrayList<Node> getFinalPlan(){

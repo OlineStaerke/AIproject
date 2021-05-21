@@ -91,7 +91,7 @@ public class MaPPAlgorithm {
                         else {
                             agent.stuck++;
                             //Agent is stuck, recompute path
-                            if (agent.stuck == 1) {
+                            if (agent.stuck == 1 && (!state.seenPositions.containsKey(new HashSet<>(state.occupiedNodesString())) || !(state.seenPositions.containsKey(new HashSet<>(state.occupiedNodesString())) && state.seenPositions.get(new HashSet<>(state.occupiedNodesString()))>5))) {
                                 LinkedHashSet visited = new LinkedHashSet<>();
                                 visited.add(wantedMove);
                                 agent.planPi(state, visited, true);
