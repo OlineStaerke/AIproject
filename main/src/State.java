@@ -8,14 +8,14 @@ public class State {
     public HashMap<String, Box> boxes;
     public HashMap<String, ArrayList<Box>> goals;
     public HashMap<String, Object> occupiedNodes;
-    public HashMap<HashSet<String>, Integer> seenPositions;
     public HashMap<Character, String> NameToColor;
     public HashMap<String, Node> stringToNode;
-    public int allstuck;
 
     // Dynamic structures which are updated throughout the algorithm
     public LinkedHashSet<Agent> agentConflicts;
     public ArrayList<String> blankPlan;
+    public HashMap<HashSet<String>, Integer> seenPositions; //Keeps a counter for each previously seen map position
+
 
 
     public ArrayList<State> allStates(){
@@ -36,7 +36,6 @@ public class State {
         stringToNode = STN;
         map = M;
         goals = new HashMap<>();
-        allstuck = 0;
         seenPositions = new HashMap<>();
 
 

@@ -15,6 +15,7 @@ public class MaPPAlgorithm {
 
         int round = 0;
         while(!goalIsReached){
+            // This keeps track of which current map states we have seen before
             if (state.occupiedNodesString() != null) {
 
                 if (state.seenPositions.containsKey(new HashSet<>(state.occupiedNodesString())))
