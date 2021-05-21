@@ -21,6 +21,7 @@ public class State {
 
     }
 
+    // Constructor for recursive splitting
     public State(Map M, HashMap<Character, String> NTC, HashMap<String, Node> STN){
 
         agentConflicts = new LinkedHashSet<>();
@@ -36,7 +37,7 @@ public class State {
 
     }
 
-
+    // Constructor for the initial saving of state
     public State(HashMap<String, Node> stringToNode, HashMap<String, Agent> agents, HashMap<Character,
             String> NameToColor, HashMap<String, Box> boxes, Map map)
     {
@@ -49,14 +50,6 @@ public class State {
         agentConflicts = new LinkedHashSet<>();
         blankPlan = new ArrayList<>();
         occupiedNodes = new HashMap<>();
-
-
-        //UpdateOccupiedNodes();
-        //createObjectAssociations();
-        //UpdateOccupiedNodes();
-        //createTunnels();
-
-
     }
 
     public ArrayList<String> occupiedNodesString() {
@@ -64,6 +57,7 @@ public class State {
     }
 
 
+    // Adds all agents/boxes to occupied nodes.
     public void UpdateOccupiedNodes() {
         occupiedNodes = new HashMap<>();
         for (Agent agent : agents.values()) {
@@ -82,52 +76,7 @@ public class State {
                 }
             }
         }
-
-        for (String position : occupiedNodes.keySet()) {
-            List<String> adjacent = map.getAdjacent(position);
-            for (String adjPosition : adjacent) {
-
-                Integer i = Integer.parseInt(adjPosition.split(" ")[0]);
-                Integer j = Integer.parseInt(adjPosition.split(" ")[1]);
-
-                boolean N = map.map.containsKey((i-1) + " " + j) && (!occupiedNodes.containsKey((i-1) + " " + j) || (occupiedNodes.get((i-1) + " " + j) instanceof Agent));
-                boolean S = map.map.containsKey((i+1) + " " + j) && (!occupiedNodes.containsKey((i+1) + " " + j) || (occupiedNodes.get((i+1) + " " + j) instanceof Agent));
-                boolean E = map.map.containsKey(i + " " + (1+j)) && (!occupiedNodes.containsKey(i+ " " + (j+1)) || (occupiedNodes.get(i + " " + (j+1)) instanceof Agent));
-                boolean W = map.map.containsKey(i + " " + (j-1))&& (!occupiedNodes.containsKey(i + " " + (j-1)) || (occupiedNodes.get(i + " " + (j-1)) instanceof Agent));
-
-                boolean NE = map.map.containsKey((i-1) + " " + (j+1))&& (!occupiedNodes.containsKey((i-1) + " " + (j+1)) || (occupiedNodes.get((i-1) + " " + (j+1)) instanceof Agent));
-                boolean NW = map.map.containsKey((i-1) + " " + (j-1))&& (!occupiedNodes.containsKey((i-1) + " " + (j-1)) || (occupiedNodes.get((i-1) + " " + (j-1)) instanceof Agent));
-                boolean SE = map.map.containsKey((i+1) + " " + (j+1))&& (!occupiedNodes.containsKey((i+1) + " " + (j+1)) || (occupiedNodes.get((i+1) + " " + (j+1)) instanceof Agent));
-                boolean SW = map.map.containsKey((i+1) + " " + (j-1))&& (!occupiedNodes.containsKey((i+1) + " " + (j-1)) || (occupiedNodes.get((i+1) + " " + (j-1)) instanceof Agent));
-
-                Node n = stringToNode.get(adjPosition);
-                n.isTunnelDynamic =false;
-
-                if ((S & !SE & !SW)) n.isTunnelDynamic = true;
-                if ((N & !NE & !NW)) n.isTunnelDynamic = true;
-                if ((E & !SE & !NE)) n.isTunnelDynamic = true;
-                if ((W & !SW & !NW)) n.isTunnelDynamic = true;
-
-
-
-                if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnelDynamic = true;
-                if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnelDynamic = true;
-
-                if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnelDynamic = true;
-                if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnelDynamic = true;
-
-                if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnelDynamic = true;
-                if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnelDynamic = true;
-
-                if (S & SE && NE & !N & !E & !W & !NW & !SW) n.isTunnelDynamic = true;
-
-
-
-            }
-        }
-
-
-
+        UpdateDynamicTunnels();
     }
 
 
@@ -153,30 +102,71 @@ public class State {
             boolean SW = map.map.containsKey((i + 1) + " " + (j - 1));
 
             if ((S & !SE & !SW)) n.isTunnel = true;
-            if ((N & !NE & !NW)) n.isTunnel = true;
-            if ((E & !SE & !NE)) n.isTunnel = true;
-            if ((W & !SW & !NW)) n.isTunnel = true;
+            else if ((N & !NE & !NW)) n.isTunnel = true;
+            else if ((E & !SE & !NE)) n.isTunnel = true;
+            else if ((W & !SW & !NW)) n.isTunnel = true;
 
+            else if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
+            else if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
 
-            if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnel = true;
-            if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnel = true;
+            else if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
+            else if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
 
-            if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnel = true;
-            if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnel = true;
-
-            if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
-            if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
+            else if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnel = true;
+            else if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnel = true;
 
             if (P.DFSForTunnels(map, node, map.map.get(node))){
                 n.isTunnelOneWay = true;
                 n.isTunnel = true;
             }
-            stringToNode.replace(node, n);
 
 
         }
 
     }
+
+    // Dynamic tunnels are tunnels which are created by boxes
+    private void UpdateDynamicTunnels() {
+        for (String position : occupiedNodes.keySet()) {
+            List<String> adjacent = map.getAdjacent(position);
+            for (String adjPosition : adjacent) {
+
+                int i = Integer.parseInt(adjPosition.split(" ")[0]);
+                int j = Integer.parseInt(adjPosition.split(" ")[1]);
+
+                boolean N = map.map.containsKey((i-1) + " " + j) && (!occupiedNodes.containsKey((i-1) + " " + j) || (occupiedNodes.get((i-1) + " " + j) instanceof Agent));
+                boolean S = map.map.containsKey((i+1) + " " + j) && (!occupiedNodes.containsKey((i+1) + " " + j) || (occupiedNodes.get((i+1) + " " + j) instanceof Agent));
+                boolean E = map.map.containsKey(i + " " + (1+j)) && (!occupiedNodes.containsKey(i+ " " + (j+1)) || (occupiedNodes.get(i + " " + (j+1)) instanceof Agent));
+                boolean W = map.map.containsKey(i + " " + (j-1))&& (!occupiedNodes.containsKey(i + " " + (j-1)) || (occupiedNodes.get(i + " " + (j-1)) instanceof Agent));
+
+                boolean NE = map.map.containsKey((i-1) + " " + (j+1))&& (!occupiedNodes.containsKey((i-1) + " " + (j+1)) || (occupiedNodes.get((i-1) + " " + (j+1)) instanceof Agent));
+                boolean NW = map.map.containsKey((i-1) + " " + (j-1))&& (!occupiedNodes.containsKey((i-1) + " " + (j-1)) || (occupiedNodes.get((i-1) + " " + (j-1)) instanceof Agent));
+                boolean SE = map.map.containsKey((i+1) + " " + (j+1))&& (!occupiedNodes.containsKey((i+1) + " " + (j+1)) || (occupiedNodes.get((i+1) + " " + (j+1)) instanceof Agent));
+                boolean SW = map.map.containsKey((i+1) + " " + (j-1))&& (!occupiedNodes.containsKey((i+1) + " " + (j-1)) || (occupiedNodes.get((i+1) + " " + (j-1)) instanceof Agent));
+
+                Node n = stringToNode.get(adjPosition);
+                n.isTunnelDynamic =false;
+
+                if ((S & !SE & !SW)) n.isTunnelDynamic = true;
+                else if ((N & !NE & !NW)) n.isTunnelDynamic = true;
+                else if ((E & !SE & !NE)) n.isTunnelDynamic = true;
+                else if ((W & !SW & !NW)) n.isTunnelDynamic = true;
+
+                else if ((E & W) & !(NE & N & NW || SW & SE & S)) n.isTunnelDynamic = true;
+                else if ((N & S) & !(E & NE & SE || W & NW & SW)) n.isTunnelDynamic = true;
+                else if ((N & W) & !(NW || SW & S & SE & E & NE)) n.isTunnelDynamic = true;
+                else if ((N & E) & !(NE || S & SW & SE & W & NW)) n.isTunnelDynamic = true;
+                else if ((S & W) & !(SW || NE & N & NW & E & SE)) n.isTunnelDynamic = true;
+                else if ((S & E) & !(SE || NE & N & NW & W & SW)) n.isTunnelDynamic = true;
+                else if (S & SE && NE & !N & !E & !W & !NW & !SW) n.isTunnelDynamic = true;
+            }
+        }
+    }
+
+
+
+
+
     // This simply checks if the agent/box is in the graph
     private void naiveGraphCheck(){
         var M = map;
