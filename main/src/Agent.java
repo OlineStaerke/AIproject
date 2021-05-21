@@ -7,7 +7,7 @@ public class Agent extends Object {
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
     public SubGoals.SubGoal nextGoal;
-    public SubGoals.SubGoal lastGoal;
+
     public SubGoals subgoals;
     Box attached_box;
     public int stuck;
@@ -146,7 +146,6 @@ public class Agent extends Object {
         if (!secondTry) {
          SG = subgoals.ExtractNextGoal(currentGoal, state);}
 
-        if(!SG.equals(currentGoal)) lastGoal=currentGoal;
         currentGoal = SG;
 
 
