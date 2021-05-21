@@ -81,7 +81,7 @@ public class MaPPAlgorithm {
             // Copy of agents which are then sorted w.r.t. priority. Must be done dynamically, as order can change
            //Thread.sleep(500);
 
-            System.err.println("-----------------------------------");
+            //System.err.println("-----------------------------------");
            // System.err.println(state.occupiedNodes);
             //System.err.println("Agents in order :"+agentsInOrder);
             round+=1;
@@ -91,9 +91,9 @@ public class MaPPAlgorithm {
 
                 agent.subgoals.UpdateGoals(state);
 
-                System.err.println();
+               //System.err.println();
                 //System.err.println("OCC"+state.occupiedNodes);
-                System.err.println(agent);
+                //System.err.println(agent);
                 //System.err.println("attached box"+agent.attached_box);
                 //System.err.println(agent.mainPlan.plan);
                 //System.err.println("Current SubGoal:"+agent.currentGoal);
@@ -125,7 +125,7 @@ public class MaPPAlgorithm {
                         var occupyingObject = state.occupiedNodes.get(wantedMove);
 
 
-                        System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
+                        //System.err.println("!! I want: "+ wantedMove+" !! Occypied by :"+ occupyingObject);
                       //  System.err.println("currentplan"+agent.mainPlan.plan);
 
 
@@ -168,8 +168,10 @@ public class MaPPAlgorithm {
                             agent.stuck++;
 
                             if (agent.stuck == 1){
-                                LinkedHashSet =
-                                agent.planPi(state, new LinkedHashSet<>(), true);
+                                //System.err.println("STUCK");
+                                LinkedHashSet visited = new LinkedHashSet<>();
+                                visited.add(wantedMove);
+                                agent.planPi(state, visited, true);
                             }
 
                             var occupyingBox = (Box) occupyingObject;
@@ -331,7 +333,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==500) {
+            if (round==20000) {
                 goalIsReached = true;
             }
 
@@ -358,6 +360,7 @@ public class MaPPAlgorithm {
                 }
 
                 Collections.sort(agentsInOrder,new Agent.CustomComparator());
+                //System.err.println("Sorted agents"+agentsInOrder);
 
 
                 for (Agent agent : agentsInOrder) {
