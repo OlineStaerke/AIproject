@@ -75,7 +75,7 @@ public class MaPPAlgorithm {
 
                 agent.subgoals.UpdateGoals(state);
 
-                String wantedMove = agent.GetWantedMove();
+                String wantedMove = agent.getWantedMoveWithBox();
 
 
                 if ((agent.mainPlan.plan.size()> 0) && (state.blankPlan.size()==0||
