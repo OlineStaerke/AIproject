@@ -3,7 +3,6 @@ import java.util.*;
 public class Agent extends Object {
 
     ArrayList<Box> boxes = new ArrayList<>();
-    int distance_to_goal = 100;
     Boolean blank = false;
     public SubGoals.SubGoal currentGoal;
     public SubGoals.SubGoal nextGoal;
@@ -33,34 +32,35 @@ public class Agent extends Object {
     public void executeMove(State state, Boolean NoOp) throws InterruptedException {
 
             Node wantedMove;
+            // If a NoOP has been requested, save the agent's wanted move to be his own position
             if (NoOp) {
                 wantedMove = this.position;
             }
+            // Else query his next expected move
             else {
-                wantedMove = state.stringToNode.get(this.mainPlan.plan.get(0));
+                wantedMove = state.stringToNode.get(this.mainPlan.plan.remove(0));
             }
 
-
+            // Update agent's position to be his new move
             position = wantedMove;
+            // Add it to his final plan
             finalPlan.add(wantedMove);
             finalPlanString.add(wantedMove.getNodeId());
 
+            // Add his new position to occupiedNodes
             state.occupiedNodes.put(position.NodeId, this);
 
-            if (mainPlan.plan.size()>0 && !NoOp) {
-                mainPlan.plan.remove(0);
-            }
-
-
-
-
+            // If he is attached to a box execute a move with it
             if (attached_box!=null) {
-                executeMoveWithoutBox(state, NoOp);
+                executeMoveWithBox(state, NoOp);
             }
 
+            // If he is close to a box, plan movement with it and attach the agent to it i.e. (SecondTry == True)
             if (currentGoal!=null && attached_box==null && attachedBox(state) && mainPlan.plan.size()==0) {
                 planPi(state, new LinkedHashSet(), true);
             }
+
+            // The agent is requested to blank (move aside)
             if (blank) {
 
                 if (state.blankPlan.size()>0) {
@@ -97,7 +97,7 @@ public class Agent extends Object {
         }
 
 
-    public void executeMoveWithoutBox(State state, Boolean NoOp){
+    public void executeMoveWithBox(State state, Boolean NoOp){
         Node wantedMoveBox;
         if (attached_box.mainPlan.plan.size()==0 || NoOp) wantedMoveBox = attached_box.position;
 
@@ -121,7 +121,7 @@ public class Agent extends Object {
     boolean attachedBox(State state) {
         if (attached_box!=null) {return true;}
 
-        return (state.map.getAdjacent(position.NodeId).contains(currentGoal.Obj.position.NodeId));
+        return (isBeside(state));
     }
 
     boolean isInSubGoal() {
@@ -143,8 +143,7 @@ public class Agent extends Object {
         mainPlan.plan = new ArrayList<>();
         if (currentGoal != null) (currentGoal.Obj).Taken = false;
         var SG = currentGoal;
-        if (!secondTry) {
-         SG = subgoals.ExtractNextGoal(currentGoal, state);}
+        if (!secondTry) SG = subgoals.ExtractNextGoal(currentGoal, state);
 
         currentGoal = SG;
 
@@ -154,7 +153,7 @@ public class Agent extends Object {
             switch (currentGoal.gType) {
                 case BoxBlanked:
                     // If this is 1:1 with BoxToGoal case, remove the code (duplicate code)
-                    if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+                    if (isBeside(state)) {
 
                         attached_box = (Box) SG.Obj;
                         ((Box) SG.Obj).currentowner = this;
@@ -165,7 +164,7 @@ public class Agent extends Object {
                     } else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited, this);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(currentGoal.Obj.position.NodeId), visited, this);
                         ((Box) SG.Obj).currentowner = this;
                     }
                     break;
@@ -173,14 +172,14 @@ public class Agent extends Object {
                 case BoxToGoal:
                     // code block
 
-                    if ((state.map.getAdjacent(position.NodeId)).contains(SG.Obj.position.NodeId)) {
+                    if (isBeside(state)) {
 
                         attached_box = (Box) SG.Obj;
                         mainPlan.createPlanWithBox(state, this, SG.Obj.Goal, (Box) SG.Obj);
                     } else {
 
                         attached_box = null;
-                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(SG.Obj.position.NodeId), visited,this);
+                        mainPlan.createPlan(state, position.NodeId, state.map.getAdjacent(currentGoal.Obj.position.NodeId), visited,this);
                     }
                     ((Box) SG.Obj).currentowner = this;
                     break;
@@ -196,7 +195,6 @@ public class Agent extends Object {
 
             }
             if (mainPlan.plan == null) mainPlan.plan = new ArrayList<>();
-            distance_to_goal = mainPlan.plan.size();
 
 
         }
@@ -206,6 +204,10 @@ public class Agent extends Object {
         }
     }
 
+
+    public boolean isBeside(State state){
+        return (state.map.getAdjacent(position.NodeId)).contains(currentGoal.Obj.position.NodeId);
+    }
 
     // Must update the new position of blanked agent
     public void bringBlank(State state, Agent agent) throws InterruptedException {

@@ -38,7 +38,7 @@ public class MaPPAlgorithm {
                 boxPositions.add(box.position.NodeId);
             }
             plan.createPlan(state,goal,boxPositions,new LinkedHashSet<>(),null);
-            Integer i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
+            int i = boxPositions.indexOf(plan.plan.get(plan.plan.size()-1));
             Box boxForGoal = boxes.get(i);
             boxForGoal.setGoal(goal,state);
             Collections.reverse(Arrays.asList(plan.plan));
@@ -70,7 +70,7 @@ public class MaPPAlgorithm {
         // Follows Algo 1, has "Progression step" and "repositioning step" merged to improve speed.
 
         ArrayList<Agent> agentsInOrder = new ArrayList<>(state.agents.values());
-        Collections.sort(agentsInOrder,new Agent.CustomComparator());
+        agentsInOrder.sort(new Agent.CustomComparator());
         
         int round = 0;
         while(!goalIsReached){
@@ -297,7 +297,7 @@ public class MaPPAlgorithm {
 
 
             goalIsReached = true;
-            Boolean noroutes = true;
+            boolean noroutes = true;
 
 
 
@@ -327,7 +327,7 @@ public class MaPPAlgorithm {
 
             }
 
-            if (round==5000) {
+            if (round==20000) {
                 goalIsReached = true;
             }
 
@@ -345,8 +345,6 @@ public class MaPPAlgorithm {
 
 
 
-
-
             if (noroutes) {
 
                 for (Agent agent : agentsInOrder) {
@@ -356,7 +354,7 @@ public class MaPPAlgorithm {
                     if (agent.nextGoal!=null) agent.nextGoal.Obj.findPriority(state);
                 }
 
-                Collections.sort(agentsInOrder,new Agent.CustomComparator());
+                agentsInOrder.sort(new Agent.CustomComparator());
                 //System.err.println("Sorted agents"+agentsInOrder);
 
 
